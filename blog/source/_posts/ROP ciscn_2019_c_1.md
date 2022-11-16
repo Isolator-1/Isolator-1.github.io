@@ -2,6 +2,7 @@
 title: ROP ciscn_2019_c_1
 tags: [ctf-pwn,exp]
 date: 2022-11-16 19:07:00
+excerpt: exp
 ---
 
 **题目**

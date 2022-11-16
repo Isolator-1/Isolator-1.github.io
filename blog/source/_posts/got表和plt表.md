@@ -2,6 +2,7 @@
 title: GOT表和PLT表
 tags: [ctf-pwn]
 date: 2022-11-16 16:08:00
+excerpt: Linux 动态链接与延迟绑定机制
 ---
 
 Linux 动态链接与延迟绑定机制

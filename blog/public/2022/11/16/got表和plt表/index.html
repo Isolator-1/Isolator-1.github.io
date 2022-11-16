@@ -16,12 +16,12 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Linux 动态链接与延迟绑定机制 Q：  为什么ret2libc泄露基址时要选择已经使用过的函数？ 何为延迟绑定？  Linux 动态链接与延迟绑定机制​    假设，写了一个函数f()，调用了glibc中函数x()，在可执行文件是如何编译的？ ​    对于libc中的函数，例如system、puts、write等，需要在程序运行时动态加载到内存中，不同版本的libc加载的位置各不相同，gcc">
+    <meta name="description" content="Linux 动态链接与延迟绑定机制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GOT表和PLT表">
 <meta property="og:url" content="https://isolator-1.github.io/2022/11/16/got%E8%A1%A8%E5%92%8Cplt%E8%A1%A8/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="Linux 动态链接与延迟绑定机制 Q：  为什么ret2libc泄露基址时要选择已经使用过的函数？ 何为延迟绑定？  Linux 动态链接与延迟绑定机制​    假设，写了一个函数f()，调用了glibc中函数x()，在可执行文件是如何编译的？ ​    对于libc中的函数，例如system、puts、write等，需要在程序运行时动态加载到内存中，不同版本的libc加载的位置各不相同，gcc">
+<meta property="og:description" content="Linux 动态链接与延迟绑定机制">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/plt&got/1.png">
 <meta property="og:image" content="https://isolator-1.github.io/img/plt&got/2.jpg">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/plt&got/4.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/plt&got/5.jpg">
 <meta property="article:published_time" content="2022-11-16T08:08:00.000Z">
-<meta property="article:modified_time" content="2022-11-16T11:39:18.320Z">
+<meta property="article:modified_time" content="2022-11-16T16:03:44.613Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -101,7 +101,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>_φ_(．．) 写作业</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"

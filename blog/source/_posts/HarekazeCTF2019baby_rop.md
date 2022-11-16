@@ -2,6 +2,7 @@
 title: HarekazeCTF2019 baby_rop
 tags: [ctf-pwn,exp]
 date: 2022-11-16 16:08:00
+excerpt: exp
 ---
 
 **题目**
