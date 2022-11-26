@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>unlink</title>
+    <link href="/2022/11/25/unlink/"/>
+    <url>/2022/11/25/unlink/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>以下内容一律假设 sz = 4 bytes  ，32位系统</p></blockquote><h4 id="unlink时向任意地址写入数据原理"><a href="#unlink时向任意地址写入数据原理" class="headerlink" title="unlink时向任意地址写入数据原理"></a>unlink时向任意地址写入数据原理</h4><p>假设需要从bin中摘除一个<strong>首地址为P</strong>的chunk</p><p>32位系统下，fd相对于块首的偏移为8（prevsize和size都是4字节），bk偏移为12</p><p>即 <code>fd = P+8 </code> ，<code>bk = P+12</code></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-comment">// unlink时需要 将P.fd指向的块的bk 赋值为 P.bk上的值</span><br>*(*(P+<span class="hljs-number">8</span>)+<span class="hljs-number">12</span>) = *(P+<span class="hljs-number">12</span>)<br><span class="hljs-comment">// 将P.bk指向的块的fd 赋值为 P.fd上的值</span><br>*(*(P+<span class="hljs-number">12</span>)+<span class="hljs-number">8</span>) = *(P+<span class="hljs-number">8</span>)<br></code></pre></td></tr></table></figure><p>假设想要向0x4000000C这个地址上写入0xdeadbeef这个值</p><p>只需将<code>*(P+8)</code>赋值为0x40000000，将<code>*(P+12)</code>赋值为0xdeadbeef，在unlink时就会完成赋值</p><p>这种方法是将fd设置为了target addr - 12 ，bk设置为了expect value</p><blockquote><p>也可以将fd设置为expect value，bk设置为target addr - 8，但是后文默认均使用前一种攻击方法</p></blockquote><p>unlink漏洞同时向两个地址进行了写入，所以在保证targe taddr -12 可以写入的同时，也要保证expect value + 8 有写入权限</p><h4 id="加入检查机制之后"><a href="#加入检查机制之后" class="headerlink" title="加入检查机制之后"></a>加入检查机制之后</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C">FD = P-&gt;fd;<br>BK = P-&gt;bk;<br><span class="hljs-keyword">if</span> (__builtin_expect (FD-&gt;bk != P || BK-&gt;fd != P, <span class="hljs-number">0</span>))                      <br>  malloc_printerr (check_action, <span class="hljs-string">&quot;corrupted double-linked list&quot;</span>, P, AV); <br>FD-&gt;bk = BK;<br>BK-&gt;fd = FD;<br></code></pre></td></tr></table></figure><p>因此溢出时需要额外保证以下条件</p><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lisp">*(<span class="hljs-name">*</span>(<span class="hljs-name">P+8</span>) <span class="hljs-number">+12</span>) == P<br>*(<span class="hljs-name">*</span>(<span class="hljs-name">P+12</span>)+ <span class="hljs-number">8</span>) == P<br></code></pre></td></tr></table></figure><p>所以需要找到堆管理列表里面指向chunk P的指针<strong>ptr</strong>，让P的fd指向ptr-12，P的bk指向ptr-8，这样P-&gt;fd-&gt;bk指向P，P-&gt;bk-&gt;fd也指向P。</p><p>绕过if判断之后，下面两条赋值语句首先将 FD-&gt;bk（也就是ptr）指向了BK，再将BK-&gt;fd（还是ptr，又改变了一次ptr）指向了FD。</p><p>因此后面这两条赋值语句确实完成了FD和BK unlink 的效果，唯一被改变的是ptr，它从原本指向chunk p，变成了*(ptr - 12)</p><h4 id="利用方法"><a href="#利用方法" class="headerlink" title="利用方法"></a>利用方法</h4><p>见文章 ：stkof</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>UAF</title>
     <link href="/2022/11/22/%E5%A0%86%E5%88%A9%E7%94%A8%20UAF/"/>
     <url>/2022/11/22/%E5%A0%86%E5%88%A9%E7%94%A8%20UAF/</url>
