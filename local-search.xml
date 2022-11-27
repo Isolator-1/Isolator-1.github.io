@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>patchelf修改libc版本</title>
+    <link href="/2022/11/27/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/"/>
+    <url>/2022/11/27/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/</url>
+    
+    <content type="html"><![CDATA[<h4 id="安装glibc-all-in-one"><a href="#安装glibc-all-in-one" class="headerlink" title="安装glibc-all-in-one"></a>安装glibc-all-in-one</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone https://github.com/matrix1001/glibc-all-in-one<br>cd glibc-all-in-one<br>./update_list<br>cat list <br>./download &lt;libc-in-list&gt;<br></code></pre></td></tr></table></figure><h4 id="修改libc-so和ld-so"><a href="#修改libc-so和ld-so" class="headerlink" title="修改libc.so和ld.so"></a>修改libc.so和ld.so</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">patchelf --set-interpreter ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/ld-2.23.so  &lt;path-to-elf&gt;<br><br>patchelf --replace-needed libc.so.6 ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6  &lt;path-to-elf&gt;<br><span class="hljs-comment"># param1 : old libc.so</span><br><span class="hljs-comment"># param2 : new libc.so</span><br><span class="hljs-comment"># param3 : path to elf</span><br></code></pre></td></tr></table></figure><h4 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h4><p><img src="/img/patchelf/1.png"></p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>unlink</title>
     <link href="/2022/11/25/unlink/"/>
     <url>/2022/11/25/unlink/</url>
@@ -76,25 +95,6 @@
       <tag>ctf-pwn</tag>
       
       <tag>exp</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>patchelf修改libc版本</title>
-    <link href="/2022/11/16/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/"/>
-    <url>/2022/11/16/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/</url>
-    
-    <content type="html"><![CDATA[<h4 id="安装glibc-all-in-one"><a href="#安装glibc-all-in-one" class="headerlink" title="安装glibc-all-in-one"></a>安装glibc-all-in-one</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone https://github.com/matrix1001/glibc-all-in-one<br>cd glibc-all-in-one<br>./update_list<br>cat list <br>./download &lt;libc-in-list&gt;<br></code></pre></td></tr></table></figure><h4 id="修改libc-so和ld-so"><a href="#修改libc-so和ld-so" class="headerlink" title="修改libc.so和ld.so"></a>修改libc.so和ld.so</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">patchelf --set-interpreter ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/ld-2.23.so  &lt;path-to-elf&gt;<br><br>patchelf --replace-needed libc.so.6 ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6  &lt;path-to-elf&gt;<br><span class="hljs-comment"># param1 : old libc.so</span><br><span class="hljs-comment"># param2 : new libc.so</span><br><span class="hljs-comment"># param3 : path to elf</span><br></code></pre></td></tr></table></figure><h4 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h4><p><img src="/img/patchelf/1.png"></p>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>ctf-pwn</tag>
       
     </tags>
     
