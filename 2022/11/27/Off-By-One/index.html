@@ -16,24 +16,25 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="修改libc版本">
+    <meta name="description" content="堆中的 off-by-one 漏洞, hitcon_heapcreator exp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="patchelf修改libc版本">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/27/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/index.html">
+<meta property="og:title" content="Off-By-One">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/27/Off-By-One/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="修改libc版本">
+<meta property="og:description" content="堆中的 off-by-one 漏洞, hitcon_heapcreator exp">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/patchelf/1.png">
-<meta property="article:published_time" content="2022-11-27T08:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-27T08:04:03.223Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/off_by_one/1.png">
+<meta property="article:published_time" content="2022-11-27T11:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-28T03:44:40.001Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="exp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/patchelf/1.png">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/off_by_one/1.png">
   
   
   
-  <title>patchelf修改libc版本 - Isolator&#39;s Blog</title>
+  <title>Off-By-One - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="patchelf修改libc版本"></span>
+            <span id="subtitle" data-typed-text="Off-By-One"></span>
           
         </div>
 
@@ -209,7 +210,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-27 16:00" pubdate>
+        <time datetime="2022-11-27 19:00" pubdate>
           November 27, 2022 pm
         </time>
       </span>
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          425 words
+          619 words
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          4 mins
+          6 mins
         
       </span>
     
@@ -270,18 +271,33 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">patchelf修改libc版本</h1>
+            <h1 style="display: none">Off-By-One</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="安装glibc-all-in-one"><a href="#安装glibc-all-in-one" class="headerlink" title="安装glibc-all-in-one"></a>安装glibc-all-in-one</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone https://github.com/matrix1001/glibc-all-in-one<br>cd glibc-all-in-one<br>./update_list<br>cat list <br>./download &lt;libc-in-list&gt;<br></code></pre></td></tr></table></figure>
+                <h4 id="Off-By-One漏洞如何产生"><a href="#Off-By-One漏洞如何产生" class="headerlink" title="Off-By-One漏洞如何产生"></a>Off-By-One漏洞如何产生</h4><ol>
+<li><p>循环多一次</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C">x = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);<br><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">10</span>;i++)<br>&#123;<br>    x[i] = getchar();<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h4 id="修改libc-so和ld-so"><a href="#修改libc-so和ld-so" class="headerlink" title="修改libc.so和ld.so"></a>修改libc.so和ld.so</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">patchelf --set-interpreter ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/ld-2.23.so  &lt;path-to-elf&gt;<br><br>patchelf --replace-needed libc.so.6 ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6  &lt;path-to-elf&gt;<br><span class="hljs-comment"># param1 : old libc.so</span><br><span class="hljs-comment"># param2 : new libc.so</span><br><span class="hljs-comment"># param3 : path to elf</span><br></code></pre></td></tr></table></figure>
+<p>x的下一个chunk第一个字节被溢出了</p>
+</li>
+<li><p><code>strlen</code>和<code>strcpy</code>行为不一致</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span>(<span class="hljs-built_in">strlen</span>(buffer)==<span class="hljs-number">100</span>)<br>&#123;<br>    <span class="hljs-built_in">strcpy</span>(chunk,buffer);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>strlen</code>返回值不算结束符’<code>\0</code>，而<code>strcpy</code>复制时会把结束符在内的101个字符复制过去</p>
+</li>
+</ol>
+<h4 id="hitcon-creator"><a href="#hitcon-creator" class="headerlink" title="hitcon_creator"></a>hitcon_creator</h4><h5 id="1-create"><a href="#1-create" class="headerlink" title="1. create"></a>1. create</h5><p><img src="/img/off_by_one/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>从上述结构可以推断出heaparray是如下结构</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">heaparray_item</span>&#123;</span><br>    int_64   size;<br>    <span class="hljs-type">char</span> * content;<br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">heaparray_item</span> * <span class="hljs-title">heaparray</span>[10];</span><br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h4><p><img src="/img/patchelf/1.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="2-edit"><a href="#2-edit" class="headerlink" title="2. edit"></a>2. edit</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span> ( *(&amp;heaparray + v1) )<br>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Content of heap : &quot;</span>);<br>    read_input(*((_QWORD *)*(&amp;heaparray + v1) + <span class="hljs-number">1</span>), *(_QWORD *)*(&amp;heaparray + v1) + <span class="hljs-number">1LL</span>);<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Done !&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>read_input</code>读取size+1字节，出现了off_by_one漏洞</p>
+<p>可以覆盖下一个chunk的size字段</p>
 
                 
               </div>
@@ -296,6 +312,8 @@
       
         <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
+        <a href="/tags/exp/">#exp</a>
+      
     </div>
   
 </div>
@@ -306,8 +324,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>patchelf修改libc版本</div>
-      <div>https://isolator-1.github.io/2022/11/27/patchelf修改程序libc版本/</div>
+      <div>Off-By-One</div>
+      <div>https://isolator-1.github.io/2022/11/27/Off-By-One/</div>
     </div>
     <div class="license-meta">
       
@@ -351,18 +369,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/27/Off-By-One/" title="Off-By-One">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Off-By-One</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/25/unlink/" title="unlink">
-                        <span class="hidden-mobile">unlink</span>
+                      <a href="/2022/11/27/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/" title="patchelf修改libc版本">
+                        <span class="hidden-mobile">patchelf修改libc版本</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
