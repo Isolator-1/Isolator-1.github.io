@@ -34,6 +34,10 @@ excerpt: 堆中的 off-by-one 漏洞, hitcon_heapcreator exp
 
 #### hitcon_creator
 
+题目来源
+
+<https://buuoj.cn/challenges#hitcontraining_heapcreator>
+
 ##### 1. create
 
 ![](/img/off_by_one/1.png)
