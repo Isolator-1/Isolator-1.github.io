@@ -1,6 +1,6 @@
 ---
 title: 菜鸡的2022datacon记录
-tags: [datacon,exp,iot-sec，powershell]
+tags: [datacon,exp,iot-sec,powershell]
 date: 2022-12-11 15:37:00
 excerpt: 打开新世界的大门
 ---
@@ -103,9 +103,68 @@ Scanning with 2 threads...
 
    猜测：首先，基地址是一个offset的倍数，那么遍历0~2^32所有offset的倍数（也就是current_offset），字符串在程序运行时会被装载到基地址后面的一段空间内，而pointers里会有很多指向字符串真实地址的指针，如果能将strings和pointers匹配上很多，说明这个current_addr就是程序的基地址
 
-   （纯瞎猜:broken_heart:）
+   （纯瞎猜💔）
 
    
 
 #### 函数符号恢复
 
+##### 几个已知的方法
+
+我认为这篇文章写的很不错 <https://blog.csdn.net/abel_big_xu/article/details/124388798>
+
+1. FLIRT
+
+   ida自带的一个插件，FLIRT可以对某个静态函数库生成签名，然后和待分析的程序匹配
+
+   缺点在于需要已知库函数文件
+
+2. lscan   
+
+   <https://github.com/maroueneboubakri/lscan>（我和前面挂着的那篇csdn文章作者一样，没搞懂这个工具）
+
+   lscan算是对flirt进行了一个包装，只要把一堆静态库放在一个文件夹里，他会遍历这个文件夹对每个静态库生成签名，然后再用FLIRT进行比对
+
+   lscan项目里自带的一些静态库是可以成功运行的，但是我试了一下写的静态库，例如sigdatabase <https://github.com/push0ebp/sig-database> 运行会报错
+
+   然后还有一个很奇怪的点在于匹配时对于某个库的相似度会超过百分之100%（在lscan的issue里也有人提到），但实际用ida的flirt打开时这个库并不能很好地匹配分析文件
+
+3. Rizzo
+
+   没实际测试过，略
+
+4. finger
+
+   finger是阿里云开发的ida插件  -  <https://github.com/aliyunav/Finger>
+
+   用起来很简单
+
+5. lumina 
+
+   没有测试过，ida的一个官方符号识别插件，需要远程连接到ida lumina的服务器
+
+   有一个山寨版的服务器lumen，可以替代lumina，但好像现在已经不好使了
+
+##### 在datacon符号恢复数据集上的实测
+
+给了20个程序，只有一个x86的程序，用finger基本能识别出来，有几个arm、mips的程序，还有其他很多奇奇怪怪的平台ida都反汇编不了，跟不用说符号恢复了，寄
+
+
+
+#### powershell反混淆
+
+PowerDecode  -  <https://github.com/Malandrone/PowerDecode>
+
+对于单个文件反混淆很好用，而且实测比下边那个工具效果要好
+
+但是问题在于，它提供的“分析整个文件夹下所有文件”功能，输出结果全是 1.txt 2.txt 3.txt .....
+
+然后这些txt里也看不出来对应着哪个pwsh脚本，一开始想着是不是文件名称排列的顺序，但好像不对，代码全是powershell写的，也没搞懂该咋办
+
+因此只能换了第二个工具
+
+PSDecode - https://github.com/R3MRUM/PSDecode 
+
+会在TEMP路径下留下解析过程中各个layer的数据
+
+![](/img/datacon/2.jpg)
