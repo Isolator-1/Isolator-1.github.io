@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/basic/7.png">
+  <link rel="icon" href="/img/basic/7.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="打开新世界的大门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="菜鸡的2022datacon记录">
+<meta property="og:url" content="https://isolator-1.github.io/2022/12/11/%E6%9D%82%E9%A1%B9/%E8%8F%9C%E9%B8%A1%E7%9A%842022datacon/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="打开新世界的大门">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/datacon/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/datacon/2.jpg">
+<meta property="article:published_time" content="2022-12-11T07:37:00.000Z">
+<meta property="article:modified_time" content="2022-12-23T08:41:36.337Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="exp">
+<meta property="article:tag" content="datacon">
+<meta property="article:tag" content="iot-sec">
+<meta property="article:tag" content="powershell">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/datacon/1.jpg">
+  
+  
+  
+  <title>菜鸡的2022datacon记录 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) 写作业</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="菜鸡的2022datacon记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-11 15:37" pubdate>
+          December 11, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">菜鸡的2022datacon记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="固件基地址识别"><a href="#固件基地址识别" class="headerlink" title="固件基地址识别"></a>固件基地址识别</h4><p>rbasefind - <a target="_blank" rel="noopener" href="https://github.com/sgayou/rbasefind">https://github.com/sgayou/rbasefind</a></p>
+<p>此项目用rust写的，用<code>cargo build</code>之后会生成可执行文件在<code>target</code>路径下</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">rbasefind &lt;<span class="hljs-type">path</span>-<span class="hljs-keyword">to</span>-bin&gt; <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sh">Located 4052 strings<br>Located 197089 pointers<br>Scanning with 2 threads...<br>0x2c0dc000: 3818<br>0x2c0dd000: 280<br>0x2c0db000: 274<br>0x2c0da000: 232<br>0x2c0de000: 228<br>0x2c0d7000: 202<br>0x2c0d9000: 200<br>0x2c0df000: 199<br>0x2c0e1000: 184<br>0x2c0e6000: 181<br></code></pre></td></tr></table></figure>
+
+<p>通常来讲第一行（也就是数字最大的那个）为固件的基地址，但是很多时候识别不出来（比如几行都是1）</p>
+<p>实际在datacon的数据上测试的结果，使用的时候所有参数都是default（因为当时并没有仔细看代码….）</p>
+<p><img src="/img/datacon/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>应该是50个固件识别成功了38个</p>
+<h5 id="对rbasefind源码的分析"><a href="#对rbasefind源码的分析" class="headerlink" title="对rbasefind源码的分析"></a>对rbasefind源码的分析</h5><p>按程序执行顺序分析</p>
+<ol>
+<li><p><code>get_strings()</code></p>
+<p>利用一个正则表达式匹配</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs taggerscript">[ -~<span class="hljs-symbol">\t</span>\r<span class="hljs-symbol">\n</span>]&#123;10,&#125;  // 从空格(48)到制表符(126) 以及 \r<span class="hljs-symbol">\n</span> 的所有有效字符 <br></code></pre></td></tr></table></figure>
+
+<p>长度至少是10的字符串（10为参数minstrlen，最小字符串搜索长度）</p>
+</li>
+<li><p><code>get_pointers()</code></p>
+<p>提取整个文件的u32（？），会根据参数<code>big_endian</code>判断文件的大小端</p>
+</li>
+<li><p><code>find_match() -&gt; Interval::get_range()</code></p>
+<p>把32位地址空间平均分为n部分，n位参数的threads（开启的线程数）</p>
+</li>
+<li><p>每一个interval对应一个线程，以offset字节为一组（offset为输入的参数，默认为4096）</p>
+</li>
+<li><p>下面的代码中current_addr遍历了<code> [interval.start_addr : interval.end_addr : offset]</code></p>
+<p>将每个str的首地址加上current_addr，把这些地址和pointers集合取交集</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">while</span> current_addr &lt;= interval.end_addr &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">news</span> = FnvHashSet::<span class="hljs-title function_ invoke__">default</span>();<br>    <span class="hljs-keyword">for</span> <span class="hljs-variable">s</span> <span class="hljs-keyword">in</span> strings &#123;<br>        <span class="hljs-keyword">match</span> s.<span class="hljs-title function_ invoke__">checked_add</span>(current_addr) &#123;<br>            <span class="hljs-title function_ invoke__">Some</span>(add) =&gt; news.<span class="hljs-title function_ invoke__">insert</span>(add),<br>            <span class="hljs-literal">None</span> =&gt; <span class="hljs-keyword">continue</span>,<br>        &#125;;<br>    &#125;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">intersection</span>: FnvHashSet&lt;_&gt; = news.<span class="hljs-title function_ invoke__">intersection</span>(pointers).<span class="hljs-title function_ invoke__">collect</span>();<br>    <span class="hljs-keyword">if</span> !intersection.<span class="hljs-title function_ invoke__">is_empty</span>() &#123;<br>        heap.<span class="hljs-title function_ invoke__">push</span>((intersection.<span class="hljs-title function_ invoke__">len</span>(), current_addr));<br>    &#125;<br>    <span class="hljs-keyword">match</span> current_addr.<span class="hljs-title function_ invoke__">checked_add</span>(config.offset) &#123;<br>        <span class="hljs-title function_ invoke__">Some</span>(_) =&gt; current_addr += config.offset,<br>        <span class="hljs-literal">None</span> =&gt; <span class="hljs-keyword">break</span>,<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>取出交集size最大的top n个current_addr进行输出</p>
+<p>见本节最开头的示例，输出格式为 addr :  interaction_size</p>
+<p>size最大的即认为是最有可能的基地址</p>
+<p><strong>目前尚不清楚这样做的道理是什么</strong></p>
+<p>猜测：首先，基地址是一个offset的倍数，那么遍历0~2^32所有offset的倍数（也就是current_offset），字符串在程序运行时会被装载到基地址后面的一段空间内，而pointers里会有很多指向字符串真实地址的指针，如果能将strings和pointers匹配上很多，说明这个current_addr就是程序的基地址</p>
+<p>（纯瞎猜💔）</p>
+</li>
+</ol>
+<h4 id="函数符号恢复"><a href="#函数符号恢复" class="headerlink" title="函数符号恢复"></a>函数符号恢复</h4><h5 id="几个已知的方法"><a href="#几个已知的方法" class="headerlink" title="几个已知的方法"></a>几个已知的方法</h5><p>我认为这篇文章写的很不错 <a target="_blank" rel="noopener" href="https://blog.csdn.net/abel_big_xu/article/details/124388798">https://blog.csdn.net/abel_big_xu/article/details/124388798</a></p>
+<ol>
+<li><p>FLIRT</p>
+<p>ida自带的一个插件，FLIRT可以对某个静态函数库生成签名，然后和待分析的程序匹配</p>
+<p>缺点在于需要已知库函数文件</p>
+</li>
+<li><p>lscan   </p>
+<p><a target="_blank" rel="noopener" href="https://github.com/maroueneboubakri/lscan">https://github.com/maroueneboubakri/lscan</a>（我和前面挂着的那篇csdn文章作者一样，没搞懂这个工具）</p>
+<p>lscan算是对flirt进行了一个包装，只要把一堆静态库放在一个文件夹里，他会遍历这个文件夹对每个静态库生成签名，然后再用FLIRT进行比对</p>
+<p>lscan项目里自带的一些静态库是可以成功运行的，但是我试了一下写的静态库，例如sigdatabase <a target="_blank" rel="noopener" href="https://github.com/push0ebp/sig-database">https://github.com/push0ebp/sig-database</a> 运行会报错</p>
+<p>然后还有一个很奇怪的点在于匹配时对于某个库的相似度会超过百分之100%（在lscan的issue里也有人提到），但实际用ida的flirt打开时这个库并不能很好地匹配分析文件</p>
+</li>
+<li><p>Rizzo</p>
+<p>没实际测试过，略</p>
+</li>
+<li><p>finger</p>
+<p>finger是阿里云开发的ida插件  -  <a target="_blank" rel="noopener" href="https://github.com/aliyunav/Finger">https://github.com/aliyunav/Finger</a></p>
+<p>用起来很简单</p>
+</li>
+<li><p>lumina </p>
+<p>没有测试过，ida的一个官方符号识别插件，需要远程连接到ida lumina的服务器</p>
+<p>有一个山寨版的服务器lumen，可以替代lumina，但好像现在已经不好使了</p>
+</li>
+</ol>
+<h5 id="在datacon符号恢复数据集上的实测"><a href="#在datacon符号恢复数据集上的实测" class="headerlink" title="在datacon符号恢复数据集上的实测"></a>在datacon符号恢复数据集上的实测</h5><p>给了20个程序，只有一个x86的程序，用finger基本能识别出来，有几个arm、mips的程序，还有其他很多奇奇怪怪的平台ida都反汇编不了，跟不用说符号恢复了，寄</p>
+<h4 id="powershell反混淆"><a href="#powershell反混淆" class="headerlink" title="powershell反混淆"></a>powershell反混淆</h4><p>PowerDecode  -  <a target="_blank" rel="noopener" href="https://github.com/Malandrone/PowerDecode">https://github.com/Malandrone/PowerDecode</a></p>
+<p>对于单个文件反混淆很好用，而且实测比下边那个工具效果要好</p>
+<p>但是问题在于，它提供的“分析整个文件夹下所有文件”功能，输出结果全是 1.txt 2.txt 3.txt …..</p>
+<p>然后这些txt里也看不出来对应着哪个pwsh脚本，一开始想着是不是文件名称排列的顺序，但好像不对，代码全是powershell写的，也没搞懂该咋办</p>
+<p>因此只能换了第二个工具</p>
+<p>PSDecode - <a target="_blank" rel="noopener" href="https://github.com/R3MRUM/PSDecode">https://github.com/R3MRUM/PSDecode</a> </p>
+<p>会在TEMP路径下留下解析过程中各个layer的数据</p>
+<p><img src="/img/datacon/2.jpg" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/misc/" class="category-chain-item">misc</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/exp/">#exp</a>
+      
+        <a href="/tags/datacon/">#datacon</a>
+      
+        <a href="/tags/iot-sec/">#iot-sec</a>
+      
+        <a href="/tags/powershell/">#powershell</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>菜鸡的2022datacon记录</div>
+      <div>https://isolator-1.github.io/2022/12/11/杂项/菜鸡的2022datacon/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 11, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/" title="CVE-2019-17621 dlink-822 命令注入漏洞复现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CVE-2019-17621 dlink-822 命令注入漏洞复现</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/29/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="遇到的奇奇怪怪问题汇总">
+                        <span class="hidden-mobile">遇到的奇奇怪怪问题汇总</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
