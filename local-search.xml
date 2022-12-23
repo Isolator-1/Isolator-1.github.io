@@ -23,6 +23,25 @@
   
   
   <entry>
+    <title>mips的堆栈</title>
+    <link href="/2022/12/23/new%20cate/mips%E5%A0%86%E6%A0%88/"/>
+    <url>/2022/12/23/new%20cate/mips%E5%A0%86%E6%A0%88/</url>
+    
+    <content type="html"><![CDATA[<p>1</p><p>1</p><p>1</p><p>1</p><p>1</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>firmware analysis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CVE-2019-17621 dlink-822 命令注入漏洞复现</title>
     <link href="/2022/12/17/CVE-2019-17621/"/>
     <url>/2022/12/17/CVE-2019-17621/</url>
