@@ -16,22 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="qemu的user-mode使用方法">
+    <meta name="description" content="修改libc版本">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mips的堆栈">
-<meta property="og:url" content="https://isolator-1.github.io/2022/12/23/mips%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/mips%E5%A0%86%E6%A0%88/index.html">
+<meta property="og:title" content="patchelf修改libc版本">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/27/ctf-pwn/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="qemu的user-mode使用方法">
+<meta property="og:description" content="修改libc版本">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-12-23T08:08:00.000Z">
-<meta property="article:modified_time" content="2022-12-23T08:26:58.280Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/patchelf/1.png">
+<meta property="article:published_time" content="2022-11-27T08:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-23T08:29:45.245Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="firmware analysis">
+<meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/patchelf/1.png">
   
   
   
-  <title>mips的堆栈 - Isolator&#39;s Blog</title>
+  <title>patchelf修改libc版本 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="mips的堆栈"></span>
+            <span id="subtitle" data-typed-text="patchelf修改libc版本"></span>
           
         </div>
 
@@ -207,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-12-23 16:08" pubdate>
-          December 23, 2022 pm
+        <time datetime="2022-11-27 16:00" pubdate>
+          November 27, 2022 pm
         </time>
       </span>
     
@@ -219,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5 words
+          425 words
         
       </span>
     
@@ -230,7 +232,7 @@
         
         
         
-          1 mins
+          4 mins
         
       </span>
     
@@ -268,16 +270,18 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">mips的堆栈</h1>
+            <h1 style="display: none">patchelf修改libc版本</h1>
             
             
               <div class="markdown-body">
                 
-                <p>1</p>
-<p>1</p>
-<p>1</p>
-<p>1</p>
-<p>1</p>
+                <h4 id="安装glibc-all-in-one"><a href="#安装glibc-all-in-one" class="headerlink" title="安装glibc-all-in-one"></a>安装glibc-all-in-one</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">git clone https://github.com/matrix1001/glibc-all-in-one<br>cd glibc-all-in-one<br>./update_list<br>cat list <br>./download &lt;libc-in-list&gt;<br></code></pre></td></tr></table></figure>
+
+<h4 id="修改libc-so和ld-so"><a href="#修改libc-so和ld-so" class="headerlink" title="修改libc.so和ld.so"></a>修改libc.so和ld.so</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">patchelf --set-interpreter ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/ld-2.23.so  &lt;path-to-elf&gt;<br><br>patchelf --replace-needed libc.so.6 ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6  &lt;path-to-elf&gt;<br><span class="hljs-comment"># param1 : old libc.so</span><br><span class="hljs-comment"># param2 : new libc.so</span><br><span class="hljs-comment"># param3 : path to elf</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h4><p><img src="/img/patchelf/1.png" srcset="/img/loading.gif" lazyload></p>
 
                 
               </div>
@@ -296,7 +300,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/mips%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" class="category-chain-item">mips语言学习</a>
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
   
   
 
@@ -311,7 +315,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/firmware-analysis/">#firmware analysis</a>
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
     </div>
   
@@ -323,8 +327,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>mips的堆栈</div>
-      <div>https://isolator-1.github.io/2022/12/23/mips语言学习/mips堆栈/</div>
+      <div>patchelf修改libc版本</div>
+      <div>https://isolator-1.github.io/2022/11/27/ctf-pwn/patchelf修改程序libc版本/</div>
     </div>
     <div class="license-meta">
       
@@ -336,7 +340,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>December 23, 2022</div>
+          <div>November 27, 2022</div>
         </div>
       
       
@@ -368,12 +372,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2022/11/27/ctf-pwn/Off-By-One/" title="Off-By-One">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Off-By-One</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/12/23/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/qemu%E4%BB%BF%E7%9C%9Fmips%E7%A8%8B%E5%BA%8F/" title="qemu的安装与仿真第一个mips程序">
-                        <span class="hidden-mobile">qemu的安装与仿真第一个mips程序</span>
+                      <a href="/2022/11/25/ctf-pwn/unlink/" title="unlink">
+                        <span class="hidden-mobile">unlink</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
