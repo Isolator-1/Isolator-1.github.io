@@ -5,15 +5,15 @@
   
   <entry>
     <title>mips的堆栈</title>
-    <link href="/2022/12/23/mips%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/mips%E5%A0%86%E6%A0%88/"/>
-    <url>/2022/12/23/mips%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/mips%E5%A0%86%E6%A0%88/</url>
+    <link href="/2022/12/23/mips%E6%B1%87%E7%BC%96/mips%E5%A0%86%E6%A0%88/"/>
+    <url>/2022/12/23/mips%E6%B1%87%E7%BC%96/mips%E5%A0%86%E6%A0%88/</url>
     
-    <content type="html"><![CDATA[<p>1</p><p>1</p><p>1</p><p>1</p><p>1</p>]]></content>
+    <content type="html"><![CDATA[<h4 id="MIPS的栈💣"><a href="#MIPS的栈💣" class="headerlink" title="MIPS的栈💣"></a>MIPS的栈💣</h4><ol><li><p>栈增长方向：同x86，向低地址增长</p></li><li><p>没有EBP指针</p></li><li><p>传参：前四个参数通过$a0~$a3传递，多出的参数放入栈空间</p></li><li><p>返回值：$RA寄存器 </p></li></ol><h4 id="函数调用过程"><a href="#函数调用过程" class="headerlink" title="函数调用过程"></a>函数调用过程</h4><ol><li>将$PC寄存器移到$RA寄存器</li><li>如果被调用的函数是如果是非叶函数（调用其他函数），将$RA存在栈；叶函数则不变</li><li>函数返回时，叶函数直接 <code>jr $RA</code>，非叶函数先把返回地址存入$RA再跳转</li></ol><p>《家用路由器0day漏洞挖掘》这本书上的图例：</p><p><img src="/img/mips/1.jpg"></p><h5 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h5><ol><li><p>创建 <code>more argument.c</code></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-comment">//more argument.c</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">more_arg</span><span class="hljs-params">(<span class="hljs-type">int</span> a,<span class="hljs-type">int</span> b,<span class="hljs-type">int</span> c,<span class="hljs-type">int</span> d,<span class="hljs-type">int</span> e)</span><br>&#123;<br>    <span class="hljs-type">char</span> dst[<span class="hljs-number">100</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br>    <span class="hljs-built_in">sprintf</span>(dst,<span class="hljs-string">&quot;%d%d%d%d%d\n&quot;</span>,a,b,c,d,e);<br>&#125;<br><span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>    <span class="hljs-type">int</span> a1=<span class="hljs-number">1</span>;<br>    <span class="hljs-type">int</span> a2=<span class="hljs-number">2</span>;<br>    <span class="hljs-type">int</span> a3=<span class="hljs-number">3</span>;<br>    <span class="hljs-type">int</span> a4=<span class="hljs-number">4</span>;<br>    <span class="hljs-type">int</span> a5=<span class="hljs-number">5</span>;<br>    more_arg(a1,a2,a3,a4,a5);<br>    <span class="hljs-keyword">return</span> ;<br>&#125;<br></code></pre></td></tr></table></figure></li><li><p>编译</p><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dos">mips-linux-gnu-gcc ./<span class="hljs-built_in">more</span>\ argument.c  -o   <span class="hljs-built_in">more</span>\ argument<br></code></pre></td></tr></table></figure></li><li><p>ida打开</p><p>首先可以看到前四个参数存入了$a0~$a3</p><p><img src="/img/2.jpg"></p><p>然后前面5个：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">li      $v0, ?<br>sw      $v0, 0x??+var_18($fp)<br></code></pre></td></tr></table></figure><p>是赋值操作，因此中间的</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">lw      $v0, 0x38+var_8($fp)<br>sw      $v0, 0x38+var_28($sp)<br></code></pre></td></tr></table></figure><p>即为第五个参数的传递</p><p>在more argument函数中</p><p><img src="/img/mips/3.jpg"></p><p>首先把前四个参数，存入main函数给more argument函数预留的参数空间</p><p>这部分的栈依旧属于main函数，其余内容如上图，<code>var_s0</code>是保存现场，<code>arg_10</code>是main函数已经存好的第五个参数</p><p><img src="/img/mips/4.jpg"></p></li></ol>]]></content>
     
     
     <categories>
       
-      <category>mips语言学习</category>
+      <category>mips汇编</category>
       
     </categories>
     
@@ -88,7 +88,7 @@
     
     <categories>
       
-      <category>misc</category>
+      <category>杂项</category>
       
     </categories>
     
