@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/mips/3.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/mips/4.jpg">
 <meta property="article:published_time" content="2022-12-23T08:08:00.000Z">
-<meta property="article:modified_time" content="2023-03-14T06:31:29.066Z">
+<meta property="article:modified_time" content="2023-03-14T09:00:10.237Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="assembly">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          808 words
+          1k words
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          7 mins
+          9 mins
         
       </span>
     
@@ -288,14 +288,14 @@
 <li><p>返回值：$RA寄存器 </p>
 </li>
 </ol>
-<h4 id="函数调用过程"><a href="#函数调用过程" class="headerlink" title="函数调用过程"></a>函数调用过程</h4><ol>
+<h4 id="mips与x86函数调用区别"><a href="#mips与x86函数调用区别" class="headerlink" title="mips与x86函数调用区别"></a>mips与x86函数调用区别</h4><ol>
 <li>将$PC寄存器移到$RA寄存器</li>
 <li>如果被调用的函数是如果是非叶函数（调用其他函数），将$RA存在栈；叶函数则不变</li>
 <li>函数返回时，叶函数直接 <code>jr $RA</code>，非叶函数先把返回地址存入$RA再跳转</li>
 </ol>
 <p>《家用路由器0day漏洞挖掘》这本书上的图例：</p>
 <p><img src="/img/mips/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<h5 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h5><ol>
+<h4 id="主调函数干的事"><a href="#主调函数干的事" class="headerlink" title="主调函数干的事"></a>主调函数干的事</h4><h5 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h5><ol>
 <li><p>创建 <code>more argument.c</code></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-comment">//more argument.c</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">more_arg</span><span class="hljs-params">(<span class="hljs-type">int</span> a,<span class="hljs-type">int</span> b,<span class="hljs-type">int</span> c,<span class="hljs-type">int</span> d,<span class="hljs-type">int</span> e)</span><br>&#123;<br>    <span class="hljs-type">char</span> dst[<span class="hljs-number">100</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br>    <span class="hljs-built_in">sprintf</span>(dst,<span class="hljs-string">&quot;%d%d%d%d%d\n&quot;</span>,a,b,c,d,e);<br>&#125;<br><span class="hljs-type">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>    <span class="hljs-type">int</span> a1=<span class="hljs-number">1</span>;<br>    <span class="hljs-type">int</span> a2=<span class="hljs-number">2</span>;<br>    <span class="hljs-type">int</span> a3=<span class="hljs-number">3</span>;<br>    <span class="hljs-type">int</span> a4=<span class="hljs-number">4</span>;<br>    <span class="hljs-type">int</span> a5=<span class="hljs-number">5</span>;<br>    more_arg(a1,a2,a3,a4,a5);<br>    <span class="hljs-keyword">return</span> ;<br>&#125;<br></code></pre></td></tr></table></figure></li>
 <li><p>编译</p>
@@ -310,13 +310,16 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">lw      $v0, 0x38+var_8($fp)<br>sw      $v0, 0x38+var_28($sp)<br></code></pre></td></tr></table></figure>
 
 <p>即为第五个参数的传递</p>
-<p>在more argument函数中</p>
-<p><img src="/img/mips/3.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>首先把前四个参数，存入main函数给more argument函数预留的参数空间</p>
-<p>这部分的栈依旧属于main函数，其余内容如上图，<code>var_s0</code>是保存现场，<code>arg_10</code>是main函数已经存好的第五个参数</p>
-<p><img src="/img/mips/4.jpg" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ol>
+<h4 id="被调函数干的事"><a href="#被调函数干的事" class="headerlink" title="被调函数干的事"></a>被调函数干的事</h4><p>被调用函数的开头干了以下几件事（仅针对非叶函数）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">addiu   $sp, -0x40<br>sw      $ra, 0x38+var_s4($sp)<br>sw      $fp, 0x38+var_s0($sp)<br>move    $fp, $sp<br></code></pre></td></tr></table></figure>
+
+<p>首先，抬高sp 0x40个字节<em><strong>（这里0x40是随便写的）</strong></em>。然后将ra放到<code>sp + 0x38 + 4</code>，fp放到<code>sp + 0x38 + 0</code>的位置，也就是被调函数的栈底为ra，然后是fp。最后将fp赋值为sp。</p>
+<p>然后需要对参数进行处理，arg_0 到arg_C是主调函数预留出来的空间，需要被调函数再把$a0-$a3存入进去，然后arg_10本身主调函数就已经存好了第五个参数，不需要动。</p>
+<p><img src="/img/mips/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>最终主调和被调函数的栈长这样：</p>
+<p><img src="/img/mips/4.jpg" srcset="/img/loading.gif" lazyload></p>
 
                 
               </div>
@@ -406,6 +409,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/03/14/mips%E6%B1%87%E7%BC%96/mips%E6%A0%88%E6%BA%A2%E5%87%BA%E4%BE%8B%E9%A2%98/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
