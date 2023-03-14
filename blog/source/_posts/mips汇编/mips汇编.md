@@ -1,5 +1,5 @@
 ---
-title: mips的堆栈
+title: mip汇编
 tags: [assembly]
 date: 2022-12-23 16:08:00
 categories: [mips汇编]

