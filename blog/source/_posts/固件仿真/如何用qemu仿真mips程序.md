@@ -39,4 +39,4 @@ sudo chroot . ./qemu-mipsel-static <path-to-elf>
 
 不管了，直接用fap（
 
-见上一篇文章 <https://isolator-1.github.io/2022/12/17/CVE-2019-17621/>
+见上一篇文章 <https://isolator-1.github.io/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/>
