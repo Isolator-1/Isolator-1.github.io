@@ -12,6 +12,10 @@ excerpt: exp
 
 从给定libc获取获取基址
 
+由于给了libc版本，此exp展示使用指定的libc文件获取偏移的方法
+
+不用给的libc文件的见下一道题，harekaze2019的babyrop2
+
 **Exp**
 
 ```python
