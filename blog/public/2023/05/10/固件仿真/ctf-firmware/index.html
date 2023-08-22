@@ -39,8 +39,9 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/firmware/13_.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/firmware/14.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/firmware/15.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/firmware/16.jpg">
 <meta property="article:published_time" content="2023-05-10T07:58:00.000Z">
-<meta property="article:modified_time" content="2023-05-11T05:14:13.969Z">
+<meta property="article:modified_time" content="2023-05-12T05:45:02.503Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="firmware analysis">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          923 words
+          2k words
         
       </span>
     
@@ -247,7 +248,7 @@
         
         
         
-          8 mins
+          18 mins
         
       </span>
     
@@ -326,7 +327,14 @@
 <p>用ida打开，选择PowerPC big-endian[PPC]，使用0x10000作为固件加载地址</p>
 <p><img src="/img/firmware/14.jpg" srcset="/img/loading.gif" lazyload></p>
 <p><img src="/img/firmware/15.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>发现ida识别不出来函数</p>
+<p>发现ida识别不出来函数，由于固件里编入了符号表，可以手动恢复函数名</p>
+<p>从网上找了这个idc脚本，用于恢复VxWorks符号表</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* 脚本内容 */</span><br><span class="hljs-comment">/* Ruben Santamarta - IOActive */</span><br><span class="hljs-comment">/* Rebuild VxWorks Symbol Table */</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;idc.idc&gt;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>     <span class="hljs-keyword">auto</span> load_addr;<br>	 <span class="hljs-keyword">auto</span> ea;<br>	 <span class="hljs-keyword">auto</span> offset;<br>	 <span class="hljs-keyword">auto</span> sName;<br>	 <span class="hljs-keyword">auto</span> eaStart;<br>	 <span class="hljs-keyword">auto</span> eaEnd; <br><br>	<span class="hljs-comment">// You&#x27;ll need to adjust these values</span><br>	load_addr = <span class="hljs-number">0x10000</span>; <span class="hljs-comment">/* 加载地址 */</span> <br>	eaStart = <span class="hljs-number">0x301E74</span> + load_addr; <span class="hljs-comment">/* 符号表起始地 */</span><br>	eaEnd = <span class="hljs-number">0x3293b4</span> + load_addr; <span class="hljs-comment">/* 符号表结束地址 */</span><br>	<br>	 SetStatus(IDA_STATUS_WORK);<br>	 ea = eaStart;<br>	 <br>	 <span class="hljs-keyword">while</span>( ea &lt; eaEnd) &#123;<br>	 	MakeDword( ea );<br>	 	offset = <span class="hljs-number">0</span>;<br>	 	<span class="hljs-keyword">if</span> ( Dword( ea ) == <span class="hljs-number">0x900</span> || Dword( ea ) == <span class="hljs-number">0x500</span>)<br>	 	&#123;<br>	 		offset = <span class="hljs-number">8</span>;<br>	 	&#125;<br>	 	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>( Dword( ea ) == <span class="hljs-number">0x90000</span> || Dword( ea ) == <span class="hljs-number">0x50000</span> )<br>	 	&#123;	<br>	 		offset = <span class="hljs-number">0xc</span>;<br>	 	&#125;	 	<br>	 	<span class="hljs-keyword">if</span>( offset )<br>	 	&#123;<br>	 		MakeStr( Dword( ea - offset ), BADADDR);	 		<br>	 		sName = GetString( Dword( ea - offset ), <span class="hljs-number">-1</span>, ASCSTR_C ) ; <br>	 	 	<span class="hljs-keyword">if</span> ( sName )<br>	 	 	&#123;<br>	 	 		<span class="hljs-keyword">if</span>( Dword( ea ) == <span class="hljs-number">0x500</span> || Dword( ea ) == <span class="hljs-number">0x50000</span>)<br>	 	 		&#123;<br>	 	 	    	<span class="hljs-keyword">if</span> (  GetFunctionName( Dword( ea - offset + <span class="hljs-number">4</span>) ) == <span class="hljs-string">&quot;&quot;</span> )<br>	 	 	    	&#123;<br>	 	 	    		MakeCode( Dword( ea - offset + <span class="hljs-number">4</span>) );<br>	 					MakeFunction( Dword( ea - offset + <span class="hljs-number">4</span>), BADADDR );	<br>	 	 	    	&#125;<br>	 	 	    &#125;<br>	 	 		MakeName( Dword( ea - offset + <span class="hljs-number">4</span> ), sName ); 	 		<br>	 	 	&#125;<br>	 	&#125;<br>	 	ea = ea + <span class="hljs-number">4</span>; 	 	 	<br>	 &#125;<br>	 <br>	 SetStatus(IDA_STATUS_READY);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>导入之后函数确实恢复出来了</p>
+<p>如果直接搜ftpuser字符串，它下面这个就是密码，也就是flag答案…</p>
+<p><img src="/img/firmware/16.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>不做具体分析了（代码太多</p>
 
                 
               </div>
@@ -416,6 +424,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/" title="VxWorks固件函数符号恢复、固件加载地址识别">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">VxWorks固件函数符号恢复、固件加载地址识别</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
