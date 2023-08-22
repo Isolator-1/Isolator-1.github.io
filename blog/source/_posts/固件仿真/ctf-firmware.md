@@ -88,5 +88,73 @@ https://buuoj.cn/challenges#firmware
 
 ![](/img/firmware/15.jpg)
 
-发现ida识别不出来函数
+发现ida识别不出来函数，由于固件里编入了符号表，可以手动恢复函数名
 
+从网上找了这个idc脚本，用于恢复VxWorks符号表
+
+```c
+/* 脚本内容 */
+/* Ruben Santamarta - IOActive */
+/* Rebuild VxWorks Symbol Table */
+
+#include <idc.idc>
+
+static main()
+{
+     auto load_addr;
+	 auto ea;
+	 auto offset;
+	 auto sName;
+	 auto eaStart;
+	 auto eaEnd; 
+
+	// You'll need to adjust these values
+	load_addr = 0x10000; /* 加载地址 */ 
+	eaStart = 0x301E74 + load_addr; /* 符号表起始地 */
+	eaEnd = 0x3293b4 + load_addr; /* 符号表结束地址 */
+	
+	 SetStatus(IDA_STATUS_WORK);
+	 ea = eaStart;
+	 
+	 while( ea < eaEnd) {
+	 	MakeDword( ea );
+	 	offset = 0;
+	 	if ( Dword( ea ) == 0x900 || Dword( ea ) == 0x500)
+	 	{
+	 		offset = 8;
+	 	}
+	 	else if( Dword( ea ) == 0x90000 || Dword( ea ) == 0x50000 )
+	 	{	
+	 		offset = 0xc;
+	 	}	 	
+	 	if( offset )
+	 	{
+	 		MakeStr( Dword( ea - offset ), BADADDR);	 		
+	 		sName = GetString( Dword( ea - offset ), -1, ASCSTR_C ) ; 
+	 	 	if ( sName )
+	 	 	{
+	 	 		if( Dword( ea ) == 0x500 || Dword( ea ) == 0x50000)
+	 	 		{
+	 	 	    	if (  GetFunctionName( Dword( ea - offset + 4) ) == "" )
+	 	 	    	{
+	 	 	    		MakeCode( Dword( ea - offset + 4) );
+	 					MakeFunction( Dword( ea - offset + 4), BADADDR );	
+	 	 	    	}
+	 	 	    }
+	 	 		MakeName( Dword( ea - offset + 4 ), sName ); 	 		
+	 	 	}
+	 	}
+	 	ea = ea + 4; 	 	 	
+	 }
+	 
+	 SetStatus(IDA_STATUS_READY);
+}
+```
+
+导入之后函数确实恢复出来了
+
+如果直接搜ftpuser字符串，它下面这个就是密码，也就是flag答案...
+
+![](/img/firmware/16.jpg)
+
+不做具体分析了（代码太多
