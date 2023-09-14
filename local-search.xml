@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>firmae安装及D-Link DSL-3782仿真</title>
+    <link href="/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/"/>
+    <url>/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/</url>
+    
+    <content type="html"><![CDATA[<h3 id="FirmAE安装"><a href="#FirmAE安装" class="headerlink" title="FirmAE安装"></a>FirmAE安装</h3><p><code>https://github.com/pr0v3rbs/FirmAExu</code></p><p>需要注意的点：</p><ol><li>git clone时记得recursive，不能git clone就把 routersploit这个库复制到<code>./analysis</code>里</li><li><code>download.sh</code>里的下载最好自己下来复制到<code>./binaries</code>里</li><li><code>install.sh</code>中 open-jdk-8和fusecram没法直接从apt安装（暂时当它不存在）</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>固件仿真</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>firmware analysis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>VxWorks固件函数符号恢复、固件加载地址识别</title>
     <link href="/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/"/>
     <url>/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/</url>
