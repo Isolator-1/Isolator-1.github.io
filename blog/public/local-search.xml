@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>firmae安装及D-Link DSL-3782仿真</title>
+    <link href="/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/"/>
+    <url>/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/</url>
+    
+    <content type="html"><![CDATA[<h3 id="FirmAE安装"><a href="#FirmAE安装" class="headerlink" title="FirmAE安装"></a>FirmAE安装</h3><p><code>https://github.com/pr0v3rbs/FirmAExu</code></p><p>需要注意的点：</p><ol><li>git clone时记得recursive，不能git clone就把 routersploit这个库复制到<code>./analysis</code>里</li><li><code>download.sh</code>里的下载最好自己下来复制到<code>./binaries</code>里</li><li><code>install.sh</code>中 open-jdk-8和fusecram没法直接从apt安装（暂时当它不存在）</li></ol><h3 id="DLink-DSL-3782漏洞复现"><a href="#DLink-DSL-3782漏洞复现" class="headerlink" title="DLink DSL-3782漏洞复现"></a>DLink DSL-3782漏洞复现</h3><p>固件地址：<a href="https://media.dlink.eu/support/products/dsl/dsl-3782/driver_software/dsl-3782_a1_eu_1.01_07282016.zip">https://media.dlink.eu/support/products/dsl/dsl-3782/driver_software/dsl-3782_a1_eu_1.01_07282016.zip</a></p><p>参考方法：<a href="https://bbs.kanxue.com/thread-278413.htm">https://bbs.kanxue.com/thread-278413.htm</a></p><p>先直接把固件跑起来，抄一下exp试一试：</p><p><img src="/img/CVE-2023-27216/1.jpg"></p><h4 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a><strong>漏洞原理</strong></h4>]]></content>
+    
+    
+    <categories>
+      
+      <category>固件仿真</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>firmware analysis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>VxWorks固件函数符号恢复、固件加载地址识别</title>
     <link href="/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/"/>
     <url>/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/</url>
@@ -582,7 +607,7 @@
   
   
   <entry>
-    <title>ROP ciscn_2019_c_1</title>
+    <title>ROP ciscn_2019_n_5</title>
     <link href="/2022/11/16/ctf-pwn/ciscn_2019_n_5/"/>
     <url>/2022/11/16/ctf-pwn/ciscn_2019_n_5/</url>
     
