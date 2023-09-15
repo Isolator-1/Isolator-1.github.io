@@ -16,24 +16,25 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="CVE-2023-27216">
+    <meta name="description" content="learning notes">
 <meta property="og:type" content="article">
-<meta property="og:title" content="firmae安装及D-Link DSL-3782仿真">
-<meta property="og:url" content="https://isolator-1.github.io/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/index.html">
+<meta property="og:title" content="计算机网络知识补习">
+<meta property="og:url" content="https://isolator-1.github.io/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="CVE-2023-27216">
+<meta property="og:description" content="learning notes">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/CVE-2023-27216/1.jpg">
-<meta property="article:published_time" content="2023-09-14T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-09-14T02:52:41.962Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/arp.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ICMP.jpg">
+<meta property="article:published_time" content="2023-09-15T07:32:00.000Z">
+<meta property="article:modified_time" content="2023-09-15T12:25:58.219Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="firmware analysis">
+<meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/CVE-2023-27216/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/arp.jpg">
   
   
   
-  <title>firmae安装及D-Link DSL-3782仿真 - Isolator&#39;s Blog</title>
+  <title>计算机网络知识补习 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="firmae安装及D-Link DSL-3782仿真"></span>
+            <span id="subtitle" data-typed-text="计算机网络知识补习"></span>
           
         </div>
 
@@ -209,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-14 10:00" pubdate>
-          September 14, 2023 am
+        <time datetime="2023-09-15 15:32" pubdate>
+          September 15, 2023 pm
         </time>
       </span>
     
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          389 words
+          1k words
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          4 mins
+          9 mins
         
       </span>
     
@@ -270,23 +271,53 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">firmae安装及D-Link DSL-3782仿真</h1>
+            <h1 style="display: none">计算机网络知识补习</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="FirmAE安装"><a href="#FirmAE安装" class="headerlink" title="FirmAE安装"></a>FirmAE安装</h3><p><code>https://github.com/pr0v3rbs/FirmAExu</code></p>
-<p>需要注意的点：</p>
-<ol>
-<li>git clone时记得recursive，不能git clone就把 routersploit这个库复制到<code>./analysis</code>里</li>
-<li><code>download.sh</code>里的下载最好自己下来复制到<code>./binaries</code>里</li>
-<li><code>install.sh</code>中 open-jdk-8和fusecram没法直接从apt安装（暂时当它不存在）</li>
-</ol>
-<h3 id="DLink-DSL-3782漏洞复现"><a href="#DLink-DSL-3782漏洞复现" class="headerlink" title="DLink DSL-3782漏洞复现"></a>DLink DSL-3782漏洞复现</h3><p>固件地址：<a target="_blank" rel="noopener" href="https://media.dlink.eu/support/products/dsl/dsl-3782/driver_software/dsl-3782_a1_eu_1.01_07282016.zip">https://media.dlink.eu/support/products/dsl/dsl-3782/driver_software/dsl-3782_a1_eu_1.01_07282016.zip</a></p>
-<p>参考方法：<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-278413.htm">https://bbs.kanxue.com/thread-278413.htm</a></p>
-<p>先直接把固件跑起来，抄一下exp试一试：</p>
-<p><img src="/img/CVE-2023-27216/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<h4 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a><strong>漏洞原理</strong></h4>
+                <h3 id="Ethernet-II-帧"><a href="#Ethernet-II-帧" class="headerlink" title="Ethernet_II 帧"></a>Ethernet_II 帧</h3><p>14个字节</p>
+<blockquote>
+<p>dst MAC + src Mac + Type    =    6 + 6 + 2   =  14Bytes</p>
+</blockquote>
+<p>在数据链路层还会在报文结尾添加FCS（帧校验序列），<strong>但是Wireshark里并不会把他显示出来</strong></p>
+<h3 id="ARP和RARP协议"><a href="#ARP和RARP协议" class="headerlink" title="ARP和RARP协议"></a>ARP和RARP协议</h3><p>（Reverse) Address Resolution Protocal </p>
+<p>将32位网络层地址转为链路层48位MAC地址，逆地址解析协议相反。</p>
+<p>关于属于哪一层协议比较模糊，目前比较多的人认为:</p>
+<blockquote>
+<p>在tcp/ip里属于网络层，在OSI里属于链路层（存疑）</p>
+</blockquote>
+<p><strong>报文格式：</strong></p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/arp.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>由<code>Ethernet_II</code>和<code>ARP</code>两部分构成（所以从这里来看还是当成网络层比较好）</p>
+<p>ARP部分共28字节</p>
+<p>包括8字节的报头（硬件类型，上层协议类型，MAC地址长度，IP地址长度，操作类型）</p>
+<p>剩下20字节为：源mac，源IP，目的mac（00填充），目的IP</p>
+<p>某个主机收到一个arp广播之后，查看报文里的IP是不是自己的IP，如果不是就只将对方IP/MAC记录到arp表里</p>
+<blockquote>
+<p>arp -a # 查看arp表</p>
+</blockquote>
+<p>如果是自己的IP，返回</p>
+<blockquote>
+<p>ARP协议在IPV6中不再使用，取代其的是NDP</p>
+</blockquote>
+<h3 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h3><p>Internet Control Message Protocol，”主要用来检测网络通信故障和实现链路追踪“</p>
+<p>虽然从报文格式来看，ICMP报文在IP报头之后，但<strong>ICMP属于网络层协议</strong>，常见的用途包括PING和traceRoute</p>
+<p>例如PING：</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ICMP.jpg" srcset="/img/loading.gif" lazyload></p>
+<p> 包括8字节的报头，以及后面的报文，PING的报文为32个小写的英文字母（请求和响应都是这个结构）</p>
+<h3 id="内网IP"><a href="#内网IP" class="headerlink" title="内网IP"></a>内网IP</h3><p>因特网分配编号委员会（IANA）保留了3块IP地址做为私有IP地址：</p>
+<p>10.0.0.0 ——— 10.255.255.255</p>
+<p>172.16.0.0——— 172.16.255.255</p>
+<p>192.168.0.0———192.168.255.255</p>
+<h3 id="NAT机制"><a href="#NAT机制" class="headerlink" title="NAT机制"></a>NAT机制</h3><p>Network Address Translation</p>
+<p><strong>静态NAT</strong>：内网IP与公网IP一一对应，静态NAT不能减少公网IP地址的使用</p>
+<p><strong>动态NAT</strong>：将公有地址池以先到先得的方式分配（公网IP少于内网IP）</p>
+<p>**端口地址转换（NAPT/PAT)**：路由器通过报文的IP是0~65535的哪个，决定将报文发送给内网哪台主机</p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS解析：UDP协议，端口53</p>
+<p>解析顺序：浏览器缓存，本地Hosts文件，路由器缓存，然后才是DNS服务器解析（循环解析，递归解析）</p>
+<h3 id="DHCP"><a href="#DHCP" class="headerlink" title="DHCP"></a>DHCP</h3><p>Dynamic Host Configuration Protocol，UDP协议</p>
+
                 
               </div>
             
@@ -304,7 +335,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/" class="category-chain-item">固件仿真</a>
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
   
   
 
@@ -319,7 +350,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/firmware-analysis/">#firmware analysis</a>
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">#计算机网络</a>
       
     </div>
   
@@ -331,8 +362,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>firmae安装及D-Link DSL-3782仿真</div>
-      <div>https://isolator-1.github.io/2023/09/14/固件仿真/firmae安装及D-Link DSL-3782仿真/</div>
+      <div>计算机网络知识补习</div>
+      <div>https://isolator-1.github.io/2023/09/15/学习笔记/计算机网络/</div>
     </div>
     <div class="license-meta">
       
@@ -344,7 +375,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 14, 2023</div>
+          <div>September 15, 2023</div>
         </div>
       
       
@@ -376,18 +407,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Eng/" title="英语课笔记">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">英语课笔记</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/" title="VxWorks固件函数符号恢复、固件加载地址识别">
-                        <span class="hidden-mobile">VxWorks固件函数符号恢复、固件加载地址识别</span>
+                      <a href="/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Eng/" title="英语课笔记">
+                        <span class="hidden-mobile">英语课笔记</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
