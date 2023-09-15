@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>计算机网络知识补习</title>
+    <link href="/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    <url>/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Ethernet-II-帧"><a href="#Ethernet-II-帧" class="headerlink" title="Ethernet_II 帧"></a>Ethernet_II 帧</h3><p>14个字节</p><blockquote><p>dst MAC + src Mac + Type    =    6 + 6 + 2   =  14Bytes</p></blockquote><p>在数据链路层还会在报文结尾添加FCS（帧校验序列），<strong>但是Wireshark里并不会把他显示出来</strong></p><h3 id="ARP和RARP协议"><a href="#ARP和RARP协议" class="headerlink" title="ARP和RARP协议"></a>ARP和RARP协议</h3><p>（Reverse) Address Resolution Protocal </p><p>将32位网络层地址转为链路层48位MAC地址，逆地址解析协议相反。</p><p>关于属于哪一层协议比较模糊，目前比较多的人认为:</p><blockquote><p>在tcp/ip里属于网络层，在OSI里属于链路层（存疑）</p></blockquote><p><strong>报文格式：</strong></p><p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/arp.jpg"></p><p>由<code>Ethernet_II</code>和<code>ARP</code>两部分构成（所以从这里来看还是当成网络层比较好）</p><p>ARP部分共28字节</p><p>包括8字节的报头（硬件类型，上层协议类型，MAC地址长度，IP地址长度，操作类型）</p><p>剩下20字节为：源mac，源IP，目的mac（00填充），目的IP</p><p>某个主机收到一个arp广播之后，查看报文里的IP是不是自己的IP，如果不是就只将对方IP/MAC记录到arp表里</p><blockquote><p>arp -a # 查看arp表</p></blockquote><p>如果是自己的IP，返回</p><blockquote><p>ARP协议在IPV6中不再使用，取代其的是NDP</p></blockquote><h3 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h3><p>Internet Control Message Protocol，”主要用来检测网络通信故障和实现链路追踪“</p><p>虽然从报文格式来看，ICMP报文在IP报头之后，但<strong>ICMP属于网络层协议</strong>，常见的用途包括PING和traceRoute</p><p>例如PING：</p><p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ICMP.jpg"></p><p> 包括8字节的报头，以及后面的报文，PING的报文为32个小写的英文字母（请求和响应都是这个结构）</p><h3 id="内网IP"><a href="#内网IP" class="headerlink" title="内网IP"></a>内网IP</h3><p>因特网分配编号委员会（IANA）保留了3块IP地址做为私有IP地址：</p><p>10.0.0.0 ——— 10.255.255.255</p><p>172.16.0.0——— 172.16.255.255</p><p>192.168.0.0———192.168.255.255</p><h3 id="NAT机制"><a href="#NAT机制" class="headerlink" title="NAT机制"></a>NAT机制</h3><p>Network Address Translation</p><p><strong>静态NAT</strong>：内网IP与公网IP一一对应，静态NAT不能减少公网IP地址的使用</p><p><strong>动态NAT</strong>：将公有地址池以先到先得的方式分配（公网IP少于内网IP）</p><p>**端口地址转换（NAPT/PAT)**：路由器通过报文的IP是0~65535的哪个，决定将报文发送给内网哪台主机</p><h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS解析：UDP协议，端口53</p><p>解析顺序：浏览器缓存，本地Hosts文件，路由器缓存，然后才是DNS服务器解析（循环解析，递归解析）</p><h3 id="DHCP"><a href="#DHCP" class="headerlink" title="DHCP"></a>DHCP</h3><p>Dynamic Host Configuration Protocol，UDP协议</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习笔记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>计算机网络</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>英语课笔记</title>
+    <link href="/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Eng/"/>
+    <url>/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Eng/</url>
+    
+    <content type="html"><![CDATA[<p>listening and speaking resources</p><ol><li><p><a href="http://www.ted.com/">www.ted.com</a></p></li><li><p><a href="http://www.bbc.co.uk/learningenglish">www.bbc.co.uk/learningenglish</a></p></li><li><p><a href="http://www.elllo.org/">www.elllo.org</a></p></li></ol><p>academic reading and writing resources</p><ol><li>&lt;<a href="http://www.idebate.org&gt;/">www.idebate.org&gt;</a></li><li><a href="http://www.nottingham.ac.uk/">www.nottingham.ac.uk</a></li><li>academic phrasebank <a href="http://www.phrasebank.manchester.ac.uk/">www.phrasebank.manchester.ac.uk</a></li></ol><p>vocablulary learning tools</p><ol><li><a href="http://www.dictionary.com/">www.dictionary.com</a></li><li><a href="http://www.linguee.com/">www.linguee.com</a></li><li><a href="http://www.wantwords.net/">www.wantwords.net</a></li></ol><p>corpus</p><ol><li>corpus of contemporary American English</li><li></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习笔记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>英语</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>firmae安装及D-Link DSL-3782仿真</title>
     <link href="/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/"/>
     <url>/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/</url>

@@ -3,7 +3,7 @@ title: 英语课笔记
 tags: [英语]
 date: 2023-09-15 11:00:00
 categories: [学习笔记]
-excerpt: 
+excerpt: learning notes
 ---
 
 listening and speaking resources
