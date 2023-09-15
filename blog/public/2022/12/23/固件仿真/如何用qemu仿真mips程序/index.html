@@ -25,7 +25,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/qemu/1.jpg">
 <meta property="article:published_time" content="2022-12-23T07:33:00.000Z">
-<meta property="article:modified_time" content="2023-09-14T01:44:32.258Z">
+<meta property="article:modified_time" content="2023-09-14T08:20:47.147Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="firmware analysis">
 <meta name="twitter:card" content="summary_large_image">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          604 words
+          513 words
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          6 mins
+          5 mins
         
       </span>
     
@@ -288,8 +288,7 @@
 <p>A1：xxx-static表示使用静态链接的qemu程序，不依赖外部动态链接程序，由于使用是要chroot改变根目录，原本的动态链接库会无法找到，除非使用ldd命令把所有依赖全都复制到新的根目录下，否则无法运行。</p>
 <p>而且真的复制动态链接库过来可能会和原本存在的文件重名（我猜的，没验证过😅）</p>
 </blockquote>
-<h5 id="系统模式"><a href="#系统模式" class="headerlink" title="系统模式"></a>系统模式</h5><p>不管了，直接用fap（</p>
-<p>见上一篇文章 <a href="https://isolator-1.github.io/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/">https://isolator-1.github.io/2022/12/17/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/CVE-2019-17621/</a></p>
+<h5 id="系统模式"><a href="#系统模式" class="headerlink" title="系统模式"></a>系统模式</h5><p>不管了，直接用fap或者firmae</p>
 
                 
               </div>

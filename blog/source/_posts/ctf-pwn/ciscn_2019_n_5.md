@@ -8,7 +8,7 @@ excerpt: exp
 
 **题目**
 
-<https://buuoj.cn/challenges#ciscn_2019_n_5
+<https://buuoj.cn/challenges#ciscn_2019_n_5>
 
 ![](/img/ciscn_2019_n_5/1.jpg)
 
