@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/arp.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ICMP.jpg">
 <meta property="article:published_time" content="2023-09-15T07:32:00.000Z">
-<meta property="article:modified_time" content="2023-09-15T12:25:58.219Z">
+<meta property="article:modified_time" content="2023-09-19T06:56:43.844Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k words
+          1.3k words
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          9 mins
+          11 mins
         
       </span>
     
@@ -317,6 +317,10 @@
 <h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>DNS解析：UDP协议，端口53</p>
 <p>解析顺序：浏览器缓存，本地Hosts文件，路由器缓存，然后才是DNS服务器解析（循环解析，递归解析）</p>
 <h3 id="DHCP"><a href="#DHCP" class="headerlink" title="DHCP"></a>DHCP</h3><p>Dynamic Host Configuration Protocol，UDP协议</p>
+<p>简单来说，DHCP就是一个不需要账号密码登录的、自动给内网机器分配IP地址等信息的协议。</p>
+<p>在DHCP报文开始会有一个op字段，包括：</p>
+<p>请求报文：DHCP Discover、DHCP Request、DHCP Release、DHCP Inform和DHCP Decline。<br>应答报文：DHCP Offer、DHCP ACK和DHCP NAK。</p>
+<p>首先客户端广播（Discover），然后服务器应答（Offer)，客户端选择最先收到的offer进行广播（Request），服务器对其进行IP地址分配（DHCP ACK）</p>
 
                 
               </div>
@@ -406,6 +410,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/10/10/ctf-misc/word%E9%9A%90%E5%86%99/" title="word隐写">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">word隐写</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
