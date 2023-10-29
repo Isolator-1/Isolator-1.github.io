@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/arp.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/ICMP.jpg">
 <meta property="article:published_time" content="2023-09-15T07:32:00.000Z">
-<meta property="article:modified_time" content="2023-09-19T06:56:43.844Z">
+<meta property="article:modified_time" content="2023-10-26T06:15:20.825Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k words
+          1.8k words
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          11 mins
+          15 mins
         
       </span>
     
@@ -276,7 +276,7 @@
             
               <div class="markdown-body">
                 
-                <h3 id="Ethernet-II-帧"><a href="#Ethernet-II-帧" class="headerlink" title="Ethernet_II 帧"></a>Ethernet_II 帧</h3><p>14个字节</p>
+                <h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><h3 id="Ethernet-II-帧"><a href="#Ethernet-II-帧" class="headerlink" title="Ethernet_II 帧"></a>Ethernet_II 帧</h3><p>14个字节</p>
 <blockquote>
 <p>dst MAC + src Mac + Type    =    6 + 6 + 2   =  14Bytes</p>
 </blockquote>
@@ -321,6 +321,32 @@
 <p>在DHCP报文开始会有一个op字段，包括：</p>
 <p>请求报文：DHCP Discover、DHCP Request、DHCP Release、DHCP Inform和DHCP Decline。<br>应答报文：DHCP Offer、DHCP ACK和DHCP NAK。</p>
 <p>首先客户端广播（Discover），然后服务器应答（Offer)，客户端选择最先收到的offer进行广播（Request），服务器对其进行IP地址分配（DHCP ACK）</p>
+<h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><blockquote>
+<p>为什么要用子网掩码？</p>
+</blockquote>
+<p>分离网络地址和主机地址，两台主机通信时，对子网掩码进行与操作得到网络地址</p>
+<p>网络地址相同，就用ARP协议发现mac地址，如果不同就发送到网关（路由器的IP地址）</p>
+<p>192.168.1.1/30 斜杠后面的就是子网掩码，表示有几个1，例如24就是255.255.255.0</p>
+<blockquote>
+<p>IPv4数据包的选项部分</p>
+</blockquote>
+<p>变长、可选。有一个一字节的选项码。例如</p>
+<p>严格源路由，选项后面会跟着一个列表，数据包必须严格经过上面所有路由器</p>
+<p>宽松源路由，只给出关键点，剩下的由自动路由选择功能补充</p>
+<blockquote>
+<p>广播</p>
+</blockquote>
+<p>受限广播：ip.dst==255.255.255.255，只能本地广播，路由不会转发。（Ether帧的dst是ff:ff:ff:ff:ff:ff）</p>
+<p>直接广播：ip.dst的主机地址全设置为1，网络地址同ip.src（Ether的dst还是6个ff），例如：</p>
+<p>192.168.1.1/30可以发送广播包(192.168.1.7)，使主机192.168.1.5/30 也可以接收到该数据包，前提是之间的路由器要开启定向广播功能。</p>
+<h2 id="ICMP"><a href="#ICMP" class="headerlink" title="ICMP"></a>ICMP</h2><blockquote>
+<p>ping of death</p>
+</blockquote>
+<p>数据包分片之后重组，重组之后缓冲区溢出</p>
+<blockquote>
+<p>ICMP Smurf 反射放大攻击</p>
+</blockquote>
+<p>伪造ip.src，大量机器向被攻击主机返回icmp echo</p>
 
                 
               </div>

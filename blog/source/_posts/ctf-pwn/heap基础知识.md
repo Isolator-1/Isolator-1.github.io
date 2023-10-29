@@ -53,11 +53,13 @@ typedef struct malloc_chunk* mchunkptr;
 
 #### allocated chunk
 
-`prevsize `：如果前一个chunk是free的***（这里指的是内存中的前一个，而不是freelist中的前一个）***，它代表前一个chunk的大小；如果不是free的，存储前一个的user data 。32位中是4字节，64位中是8字节
+**`prevsize `：**如果前一个chunk是free的***（这里指的是内存中的前一个，而不是freelist中的前一个）***，它代表前一个chunk的大小；如果不是free的，存储前一个的user data 。32位中是4字节，64位中是8字节
 
-`size`：此chunk大小。最低3位用来存储N（chunk 在 non_main_arena里为1）、M（chunk是mmap得到的为1）、P（前一个chunk已被分配为1 对应prevsize），因此size是8字节对齐的
+**`size`：**此chunk大小。最低3位用来存储N（chunk 在 non_main_arena里为1）、M（chunk是mmap得到的为1）、P（前一个chunk已被分配为1 对应prevsize），因此size是8字节对齐的
 
-`userdata`：数据
+没有 **fd bk fd_nextsieze bk_nextsize**
+
+**`userdata`：**数据
 
 （下一个chunk的prevsize也会存储userdata）
 
@@ -89,27 +91,56 @@ top chunk 不够，在main_arena中会用brk扩张top chunk，non_main_arena中�
 
 ### Bin
 
+除了fastbin被存储在一个长度为10的fastbinY的数组里，其余的small large unsorted bin都存储在一个bins数组里
+
+bins的大小是126，包括1个unsorted bin，62个small bin，63个large bin。
+
 <div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;toolbar&quot;:&quot;zoom layers tags lightbox&quot;,&quot;edit&quot;:&quot;_blank&quot;,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; modified=\&quot;2022-11-17T04:09:19.532Z\&quot; agent=\&quot;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36\&quot; etag=\&quot;ojfzveORWWdzC3RN6ooc\&quot; version=\&quot;20.5.3\&quot; type=\&quot;device\&quot;&gt;&lt;diagram id=\&quot;FyZdLwTWtfESSsWo7Yml\&quot; name=\&quot;第 1 页\&quot;&gt;7ZlNc5swEIZ/jY/JgASCHOPEaQ7pNDNups0poxoF6GCJCvmrv74rIwyCEieeSUybnMyupEV6tK9YwwhfzNefJM2TzyJi2Qg50XqEL0cIuTg8gx/t2RiPEzilJ5ZpVPoajmn6m1UdjXeRRqwwvtKlhMhUmtvOmeCczZTlo1KKld3tUWSR5chpzKxpaMd0RjPW6fYtjVRSekMU1P5rlsZJdWeXmBXPadXZBC4SGolVw4UnI3whhVDl1Xx9wTJNz+Zy1dO6m5hkXD1nwPVEnE/c5bn/8JD9ouvwhn+5OzFRljRbmAV/FYrqYeOUFyNEMog9/iHhKtZXLiZmNWpTIZJiwSOm7+JAj1WSKjbN6Uy3riArwJeoeQaWC5ePgiuzyy4B29yfScXWvQtzd7gg0ZiYMyU30MUMQBVyk2MnQVjaq3rDXGJ2IWlsVmh81ORIvAtdY4QLQ/IFVHGH6hUtVD9UZ3BMXddCivzgyEi9DtI7XghYYdSPdXBUEQkGhtXvYL2hEk7EPqYEDw6qj52BQSUdqNM5zfoPVYIGBzVonanHhxp0oPaoHg3vCdVO0QAdGeZZB2aHGYugDjImFxx+xnDcJiIWnGY3QuQG10+m1MbwogslbJg2+SZawDVmPDrXNRrYImccPIWictfFK7s0zUIs5IzdMpkCCCb1LqY8htYQGpU+ulRP42whl9uJ6Gmxdaq+60mdIt+Y942my7WZ8NbYVAYH9OUovzLvm231sK1VjSvRap5Ppw/g365uf7lWLnRfAdJNx2a+eSa3JMuoSpf23P6WcCbcrUi5qlMbO61KISR2CLNj5ahmedoK5Hl7ApndbQeCBKKbRrdcdyg6CtlROFw0VZn2flVzoAAqtbkNqUGIwH9abmDsZnU8KQUfUnoFKXX/d74zKf2jD6Dgmarx3kw17drKdfCBqsF2yYvdVqDjqwZ9qEY18v9/E43/ZqJBDrJyvXov8VLNuO33REEr0PE1030X9141ExwkGo80VXPinML5uqfc09YrVm7PlRN5MzkR1HoGVW90Xqongj1bT21hvqKewKw/RpTd6286ePIH&lt;/diagram&gt;&lt;/mxfile&gt;&quot;}"></div>
 <script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
 #### fast bin
 
 在free一个chunk到fast bin时，它下一个chunk的P位（PREV_INUSE)是不会变的，还是为1，为了加快free的效率。**因此地址连续的两个chunk 被free到fast bin，他们不会被合并**。
 
-大小范围：0x10-0x40 （64位中0x20-0x80）每一个链表中存放的chunk大小相同，相邻bin存放的大小差0x8（0x10）字节
+**content的大小范围：32位：8~80，64位：16~160**，都是10个bin，但是实际上fastbin的大小范围并不包含最大的两个bin
 
-新的chunk加入bin时，**fd**指向原来的栈顶
-
-#### unsorted bin
-
-大于global_max_fast（fast bin最大大小）的chunk都会放进来
+新的chunk加入bin时，**fd**指向原来的栈顶，先进后出（LIFO）
 
 #### small bin
 
-存放小于0x200（0x400）的，也就是0x10-0x1f0（0x20-0x3f0）chunk，和fast bin相同，每个bin大小递增，因此有62个small bin
+大小范围
+
+32位，最小为16字节，公差为8，最大为504字节，所以是62个small bin
+
+64为，最小为32字节，公差为16，最大为1008字节
 
 #### large bin
 
-大于0x200（0x400），每一个bin中chunk大小不是相同的，按照大小降序排列
+大小范围
+
+32位（大于等于512字节）64位（大于等于1024字节），每个链表里的chunk不一定一样大，只要是属于某个特定区间就行
+
+63个bin被分为6组
+
+|      | 数量 |  公差  |
+| :--: | :--: | :----: |
+|  1   |  32  | 64字节 |
+|  2   |  16  |  512   |
+|  3   |  8   |  4096  |
+|  4   |  4   | 32768  |
+|  5   |  2   | 262144 |
+|  6   |  1   | 不限制 |
+
+第一组起始大小是512，也就是第一组的第一个bin的范围为[512,512+64) ， 最后一个为[512 + 64\*31, 512 + 64\*32)
+
+第二组接着第一组的末尾，第一个bin也就是[2560, 2560+ 512)，以此类推
+
+每个的具体大小可在第四个参考文献里看
+
+#### unsorted bin
+
+释放一个不属于 fast bin 的 chunk，并且该 chunk 不和 top chunk 紧邻时，该 chunk 会被首先放到 unsorted bin 中
+
+分配时，如果在unsorted bin里没找到合适的chunk，则把unsorted bin里的chunk分配到small 和 large里，，然后再在 bin 中分配合适的 chunk
 
 
 
@@ -125,7 +156,7 @@ top chunk 不够，在main_arena中会用brk扩张top chunk，non_main_arena中�
 
 
 
-
+### 参考文献
 
 [Heap Exploitation](https://heap-exploitation.dhavalkapil.com/)
 
