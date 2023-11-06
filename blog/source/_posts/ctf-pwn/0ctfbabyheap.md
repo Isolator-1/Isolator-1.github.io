@@ -6,8 +6,6 @@ categories: [ctf-pwn]
 excerpt: 一道通过unsorted bin的fd泄露libc基址，然后用fastbin double free getshell的例题
 ---
 
-实验2（做题）
-
 首先查看保护，发现全开
 
 ![](/img/0ctfbabyheap/media/2e4d9896a3691192ef608f635d67cde1.png)

@@ -154,6 +154,21 @@ NBINS是126，包括1个unsorted bin，62个small bin，63个large bin。
 
 
 
+### tcache相关知识
+
+以下全是64位机器来说
+
+tcache同fastbin，先进后出，不动inuse
+
+tcache出现后，每次产生堆都会先产生一个0x250大小的堆块，位于堆的开头。这0x250中（header占16字节），前0x40字节，对应64条tcache的链表，描述每个链表中的个数（每个链表最多7个chunk），然后0x200字节对应每个链表的开头地址。
+
+tcache的64个链表从0x20开始，到0x410结束，公差16字节
+
+tcache的链表指针指向的是chunk的content，而不是开头
+
+> 在2.27没有doublefree检查
+
+
 
 
 ### 参考文献

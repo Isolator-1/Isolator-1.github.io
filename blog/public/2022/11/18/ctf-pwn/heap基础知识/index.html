@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/heapexploitation/1.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/heapexploitation/2.jpg">
 <meta property="article:published_time" content="2022-11-18T04:19:00.000Z">
-<meta property="article:modified_time" content="2023-10-30T04:30:13.442Z">
+<meta property="article:modified_time" content="2023-11-06T04:12:51.762Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k words
+          2.6k words
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          20 mins
+          22 mins
         
       </span>
     
@@ -363,6 +363,14 @@
 <p>分配时，如果在unsorted bin里没找到合适的chunk，则把unsorted bin里的chunk分配到small 和 large里，，然后再在 bin 中分配合适的 chunk</p>
 <h3 id="内存分配流程"><a href="#内存分配流程" class="headerlink" title="内存分配流程"></a>内存分配流程</h3><p> <img src="/img/heapexploitation/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <h3 id="内存释放流程"><a href="#内存释放流程" class="headerlink" title="内存释放流程"></a>内存释放流程</h3><p> <img src="/img/heapexploitation/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="tcache相关知识"><a href="#tcache相关知识" class="headerlink" title="tcache相关知识"></a>tcache相关知识</h3><p>以下全是64位机器来说</p>
+<p>tcache同fastbin，先进后出，不动inuse</p>
+<p>tcache出现后，每次产生堆都会先产生一个0x250大小的堆块，位于堆的开头。这0x250中（header占16字节），前0x40字节，对应64条tcache的链表，描述每个链表中的个数（每个链表最多7个chunk），然后0x200字节对应每个链表的开头地址。</p>
+<p>tcache的64个链表从0x20开始，到0x410结束，公差16字节</p>
+<p>tcache的链表指针指向的是chunk的content，而不是开头</p>
+<blockquote>
+<p>在2.27没有doublefree检查</p>
+</blockquote>
 <h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://heap-exploitation.dhavalkapil.com/">Heap Exploitation</a></p>
 <p><a target="_blank" rel="noopener" href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">Understanding glibc malloc</a></p>
 <p><a target="_blank" rel="noopener" href="https://sploitfun.wordpress.com/2015/02/11/syscalls-used-by-malloc/">Syscalls used by malloc</a></p>
