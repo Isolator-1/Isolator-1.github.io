@@ -1,9 +1,9 @@
 ---
-title: 0ctfbabyheap 
+title: malloc hook
 tags: [ctf-pwn,exp]
 date: 2023-11-04 10:42:00
 categories: [ctf-pwn]
-excerpt: 一道通过unsorted bin的fd泄露libc基址，然后用fastbin double free getshell的例题
+excerpt: malloc hook 泄露libc
 ---
 
 首先查看保护，发现全开

