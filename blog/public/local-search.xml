@@ -4,6 +4,106 @@
   
   
   <entry>
+    <title>pcap隐写</title>
+    <link href="/2023/11/17/ctf-misc/pcap/"/>
+    <url>/2023/11/17/ctf-misc/pcap/</url>
+    
+    <content type="html"><![CDATA[<h3 id="TCP流追踪"><a href="#TCP流追踪" class="headerlink" title="TCP流追踪"></a>TCP流追踪</h3><p>tcp包可以携带data</p><p>在wireshark -&gt; 分析 -&gt; 追踪流 -&gt; TCP流可以查看所有tcp的data字段拼接到一起的值</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-misc</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-misc</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>png隐写</title>
+    <link href="/2023/11/17/ctf-misc/png%E9%9A%90%E5%86%99/"/>
+    <url>/2023/11/17/ctf-misc/png%E9%9A%90%E5%86%99/</url>
+    
+    <content type="html"><![CDATA[<p><a href="https://buuoj.cn/challenges#%E5%A4%A7%E7%99%BD">https://buuoj.cn/challenges#%E5%A4%A7%E7%99%BD</a></p><p><img src="/img/pngmisc/1.jpg"></p><p>010 editor 第二行前两个字段是图片的宽和高</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-misc</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-misc</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>fcrackzip</title>
+    <link href="/2023/11/17/ctf-misc/%E5%8E%8B%E7%BC%A9%E5%8C%85%E7%A0%B4%E8%A7%A3/"/>
+    <url>/2023/11/17/ctf-misc/%E5%8E%8B%E7%BC%A9%E5%8C%85%E7%A0%B4%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<h3 id="ZIP"><a href="#ZIP" class="headerlink" title="ZIP"></a>ZIP</h3><p><img src="/img/fcrackzip/1.jpg"></p><p>-b 暴力破解</p><p>-c 指定字符集 1 代表数字</p><p>-l 长度区间</p><p>-u 不显示错误密码</p><h3 id="RAR"><a href="#RAR" class="headerlink" title="RAR"></a>RAR</h3><p>rarcrack：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">rarcrack ./基础破解.rar --type rar --threads 100<br></code></pre></td></tr></table></figure><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">rarcrack</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">abc</span>&gt;</span>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<span class="hljs-tag">&lt;/<span class="hljs-name">abc</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">current</span>&gt;</span>023q<span class="hljs-tag">&lt;/<span class="hljs-name">current</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">good_password</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">rarcrack</span>&gt;</span><br></code></pre></td></tr></table></figure><p>可以在xml里改current改变破解位置</p><p>但是破解起来巨慢。。。因为不能选择密码字符类型</p><p>从吾爱破解下载的ARCHPR：</p><p><img src="/img/fcrackzip/2.jpg"></p><h3 id="ZIP伪加密"><a href="#ZIP伪加密" class="headerlink" title="ZIP伪加密"></a>ZIP伪加密</h3><p><img src="/img/fcrackzip/3.jpg"></p><p>这两个字节改为00 00。虽然这只改了压缩文件数据区，但还是能够解压出来（7zip会报个头部错误）</p><p>理论上还应该改压缩文件目录区的是否加密的标志</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-misc</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-misc</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>sqlmap</title>
+    <link href="/2023/11/15/ctf-web/sqlmap/"/>
+    <url>/2023/11/15/ctf-web/sqlmap/</url>
+    
+    <content type="html"><![CDATA[<p>判断能否注入</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sqlmap -u http://.../index.php?id=1<br></code></pre></td></tr></table></figure><p>查看数据库</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sqlmap -u http://.../index.php?id=1 --dbs<br></code></pre></td></tr></table></figure><p>查看指定数据库的表</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sqlmap -u http://.../index.php?id=1 --dbs -D &lt;dbname&gt; -tables<br></code></pre></td></tr></table></figure><p>查看指定表的列</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sqlmap -u http://.../index.php?id=1 --dbs -D &lt;dbname&gt; -T &lt;tablename&gt; -columns<br></code></pre></td></tr></table></figure><p>查看列内容</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sqlmap -u http://.../index.php?id=1 --dbs -D &lt;dbname&gt; -T &lt;tablename&gt; -C &lt;colname&gt; -dump<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-web</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-web</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>realloc hook</title>
     <link href="/2023/11/14/ctf-pwn/reallochook/"/>
     <url>/2023/11/14/ctf-pwn/reallochook/</url>
