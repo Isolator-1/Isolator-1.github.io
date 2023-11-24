@@ -16,21 +16,32 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Archives">
-<meta property="og:url" content="https://isolator-1.github.io/archives/2023/11/index.html">
+    <meta name="description" content="ai基础知识补习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Attention">
+<meta property="og:url" content="https://isolator-1.github.io/2023/11/22/ai/attention/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="ai基础知识补习">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-22T11:31:00.000Z">
+<meta property="article:modified_time" content="2023-11-22T12:23:58.686Z">
 <meta property="article:author" content="Isolator">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Archives - Isolator&#39;s Blog</title>
+  <title>Attention - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
 
@@ -80,7 +91,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 60vh;">
+<div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -185,9 +196,49 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Archives"></span>
+            <span id="subtitle" data-typed-text="Attention"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-22 19:31" pubdate>
+          November 22, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          366 words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          4 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
 
         
       </div>
@@ -203,100 +254,186 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">43 posts in total</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2023</p>
-    
-    <a href="/2023/11/22/ai/attention/" class="list-group-item list-group-item-action">
-      <time>11-22</time>
-      <div class="list-group-item-title">Attention</div>
-    </a>
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Attention</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="Nadaraya-Watson核回归"><a href="#Nadaraya-Watson核回归" class="headerlink" title="Nadaraya-Watson核回归"></a>Nadaraya-Watson核回归</h3><p>$$<br>f(x)=\sum_{i=1}^{n} \frac{K(x-x_{i})}{\sum_{j=1}^{n}K(x-x_{j})} y_{i}<br>$$</p>
+<p>如果核函数 $ K(x-x_{i}) $ 越大，则对应的 $y_i$ 的权重越大</p>
+<p>核函数为 $ K(x-x_{i}) $为高斯核函数时<br>$$<br>K(u)=\frac{1}{\sqrt{2\pi} } \exp{(-\frac{u^{2}}{2})}<br>$$<br>代入会得到<br>$$<br>f(x)=\sum_{i=1}^{n} softmax(-\frac{1}{2}(x-x_i)^2)y_i<br>$$<br>而高斯核函数x与$x_i$越接近，核函数的值越大，根据前文，$y_i$的权重越大</p>
+<p>Nadaraya-Watson核回归是一个非参模型</p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>预测 $y_i = 2sin(x_i)+x_i^{0.8} +\epsilon $ 函数</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
   
     
-    <a href="/2023/11/21/ai/ResNet/" class="list-group-item list-group-item-action">
-      <time>11-21</time>
-      <div class="list-group-item-title">ResNet</div>
-    </a>
+      <span class="category-chain">
+        
+  <a href="/categories/pytorch/" class="category-chain-item">pytorch</a>
   
-    
-    <a href="/2023/11/20/ai/AlexNet/" class="list-group-item list-group-item-action">
-      <time>11-20</time>
-      <div class="list-group-item-title">AlexNet</div>
-    </a>
   
+
+      </span>
     
-    <a href="/2023/11/19/ai/linear%20regression/" class="list-group-item list-group-item-action">
-      <time>11-19</time>
-      <div class="list-group-item-title">linear regression</div>
-    </a>
   
-    
-    <a href="/2023/11/19/ai/linear%20regression%202/" class="list-group-item list-group-item-action">
-      <time>11-19</time>
-      <div class="list-group-item-title">linear regression 2</div>
-    </a>
+</span>
+
+    </div>
   
-    
-    <a href="/2023/11/19/ai/softmax%20image%20classification%202/" class="list-group-item list-group-item-action">
-      <time>11-19</time>
-      <div class="list-group-item-title">softmax image classfication 2</div>
-    </a>
   
-    
-    <a href="/2023/11/19/ai/softmax%20image%20classification/" class="list-group-item list-group-item-action">
-      <time>11-19</time>
-      <div class="list-group-item-title">softmax image classfication</div>
-    </a>
-  
-    
-    <a href="/2023/11/19/ai/multilayer%20perceptrons/" class="list-group-item list-group-item-action">
-      <time>11-19</time>
-      <div class="list-group-item-title">multilayer perceptrons</div>
-    </a>
-  
-    
-    <a href="/2023/11/17/ctf-misc/pcap/" class="list-group-item list-group-item-action">
-      <time>11-17</time>
-      <div class="list-group-item-title">pcap隐写</div>
-    </a>
-  
-    
-    <a href="/2023/11/17/ctf-misc/png%E9%9A%90%E5%86%99/" class="list-group-item list-group-item-action">
-      <time>11-17</time>
-      <div class="list-group-item-title">png隐写</div>
-    </a>
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/pytorch/">#pytorch</a>
+      
+    </div>
   
 </div>
 
 
-  <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2023/11/page/2/#board">2</a><a class="extend next" rel="next" href="/archives/2023/11/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
-    </span>
-  </nav>
+              
+  
 
-
-
-
-              </div>
-            </div>
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Attention</div>
+      <div>https://isolator-1.github.io/2023/11/22/ai/attention/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 22, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
           </div>
         </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/21/ai/ResNet/" title="ResNet">
+                        <span class="hidden-mobile">ResNet</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
       </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
     
 
     
@@ -390,6 +527,99 @@
 
 
 
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script  src="/js/local-search.js" ></script>
 
