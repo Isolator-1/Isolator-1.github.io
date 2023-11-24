@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 var targetElement = document.getElementById('board'); 
 var pseudoElement = document.createElement('div');
 pseudoElement.style.backgroundImage = "url('/img/chtholly4.jpg')";
-pseudoElement.style.opacity = 0.5;
+pseudoElement.style.opacity = 0.3;
 pseudoElement.style.position = 'absolute';
 pseudoElement.style.top = '50%';
 pseudoElement.style.left = '50%';
@@ -35,4 +35,22 @@ pseudoElement.style.backgroundSize = 'cover'; // 图片永远不进行复制填�
 pseudoElement.style.backgroundPosition = 'center'; // 图片的中心保持在board的中心
 pseudoElement.style.transform = 'translate(-50%, -50%)'; // 图片的中心保持在board的中心
 pseudoElement.style.zIndex = -1;
+targetElement.appendChild(pseudoElement);
+
+
+
+var targetElement = document.getElementById('main');
+var pseudoElement = document.createElement('div');
+pseudoElement.style.backgroundImage = "url('/img/chtholly5.jpg')";
+pseudoElement.style.opacity = 0.3;
+pseudoElement.style.position = 'fixed'; // Change position to fixed
+pseudoElement.style.top = '0';
+pseudoElement.style.left = '0';
+pseudoElement.style.width = '100%';
+pseudoElement.style.height = '100%';
+pseudoElement.style.backgroundSize = 'cover';
+pseudoElement.style.backgroundPosition = 'center';
+pseudoElement.style.transform = 'translate(-50%, -50%)';
+pseudoElement.style.zIndex = -1;
+pseudoElement.style.backgroundAttachment = 'fixed'; // Add this line
 targetElement.appendChild(pseudoElement);
