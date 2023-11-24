@@ -45,8 +45,7 @@ h6:hover > .anchorjs-link {
   position: relative;
   margin-top: -2rem;
   padding: 3rem 0;
-  /* background-color: var(--board-bg-color); */
-  background-color: #1589e9; 
+  background-color: var(--board-bg-color);
   transition: background-color 0.2s ease-in-out;
   border-radius: 0.5rem;
   z-index: 3;
