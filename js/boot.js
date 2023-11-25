@@ -39,18 +39,18 @@ targetElement.appendChild(pseudoElement);
 
 
 
-var targetElement = document.getElementById('main');
-var pseudoElement = document.createElement('div');
-pseudoElement.style.backgroundImage = "url('/img/chtholly5.jpg')";
-pseudoElement.style.opacity = 0.3;
-pseudoElement.style.position = 'fixed'; // Change position to fixed
-pseudoElement.style.top = '0';
-pseudoElement.style.left = '0';
-pseudoElement.style.width = '100%';
-pseudoElement.style.height = '100%';
-pseudoElement.style.backgroundSize = 'cover';
-pseudoElement.style.backgroundPosition = 'center';
-pseudoElement.style.transform = 'translate(-50%, -50%)';
-pseudoElement.style.zIndex = -1;
-pseudoElement.style.backgroundAttachment = 'fixed'; // Add this line
-targetElement.appendChild(pseudoElement);
+// var targetElement = document.querySelector('main');
+// var pseudoElement = document.createElement('div');
+// pseudoElement.style.backgroundImage = "url('/img/chtholly5.jpg')";
+// pseudoElement.style.opacity = 0.3;
+// pseudoElement.style.position = 'absolute'; // Change position to fixed
+// pseudoElement.style.top = '0';
+// pseudoElement.style.left = '0';
+// pseudoElement.style.width = '100%';
+// pseudoElement.style.height = '100%';
+// pseudoElement.style.backgroundSize = 'cover';
+// pseudoElement.style.backgroundPosition = 'center';
+// pseudoElement.style.transform = 'translate(-50%, -50%)';
+// pseudoElement.style.zIndex = -1;
+// pseudoElement.style.backgroundAttachment = 'fixed'; // Add this line
+// targetElement.appendChild(pseudoElement);
