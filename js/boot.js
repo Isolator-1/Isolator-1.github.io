@@ -37,19 +37,3 @@ pseudoElement.style.transform = 'translate(-50%, -50%)'; // 图片的中心保�
 pseudoElement.style.zIndex = -1;
 targetElement.appendChild(pseudoElement);
 
-
-
-var targetElement = document.getElementById('maain'); 
-var pseudoElement = document.createElement('div');
-pseudoElement.style.backgroundImage = "url('/img/chtholly5.jpg')";
-pseudoElement.style.opacity = 0.3;
-pseudoElement.style.position = 'absolute';
-pseudoElement.style.top = '50%';
-pseudoElement.style.left = '50%';
-pseudoElement.style.width = '100%';
-pseudoElement.style.height = '100%';
-pseudoElement.style.backgroundSize = 'cover'; // 图片永远不进行复制填充，并且通过放大填满整个board
-pseudoElement.style.backgroundPosition = 'center'; // 图片的中心保持在board的中心
-pseudoElement.style.transform = 'translate(-50%, -50%)'; // 图片的中心保持在board的中心
-pseudoElement.style.zIndex = -1;
-targetElement.appendChild(pseudoElement);
