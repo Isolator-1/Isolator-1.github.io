@@ -2,6 +2,7 @@
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
 
+
 Fluid.utils = {
 
   listenScroll: function(callback) {

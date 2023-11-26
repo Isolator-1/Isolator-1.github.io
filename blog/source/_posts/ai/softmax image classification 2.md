@@ -6,7 +6,7 @@ categories: [pytorch]
 excerpt: ai基础知识补习
 ---
 
-
+**softmax函数能够将未规范化的预测变换为非负数并且总和为1，同时让模型保持可导的性质**
 
 ```python
 import torch

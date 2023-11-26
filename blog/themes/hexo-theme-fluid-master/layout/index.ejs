@@ -5,19 +5,28 @@ if (theme.index.slogan.enable) {
 page.banner_img = theme.index.banner_img
 page.banner_img_height = theme.index.banner_img_height
 page.banner_mask_alpha = theme.index.banner_mask_alpha
+page.background_img = theme.index.chtholly1_img
 %>
 
-<% page.posts.each(function (post) { %>
-  <div class="row mx-auto index-card">
+<!--
+<div style="background-image: url('/img/chtholly1.jpg');
+background-repeat: no-repeat; 
+background-attachment: fixed;
+background-size:contain;"> 
+</div>
+-->
+
+<% page.posts.each(function (post) { %> <!-- 每一个blog item -->
+  <div class="row mx-auto index-card" opacity:0.5;> 
     <% var post_url = url_for(post.path), index_img = post.index_img || theme.post.default_index_img %>
     <% if (index_img) { %>
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="<%= post_url %>" target="<%- theme.index.post_url_target %>">
-          <img src="<%= url_for(index_img) %>" alt="<%= post.title %>">
+          <img src="<%= url_for(index_img) %>" alt="<%= post.title %>"> <!-- 每个博客item前面的图片 -->
         </a>
       </div>
     <% } %>
-    <article class="col-12 col-md-<%= index_img ? '8' : '12' %> mx-auto index-info">
+    <article class="col-12 col-md-<%= index_img ? '8' : '12' %> mx-auto index-info"> 
       <h1 class="index-header">
         <% if (theme.index.post_sticky && theme.index.post_sticky.enable && post.sticky > 0) { %>
           <i class="index-pin <%= theme.index.post_sticky && theme.index.post_sticky.icon %>" title="Pin on top"></i>
@@ -61,5 +70,8 @@ page.banner_mask_alpha = theme.index.banner_mask_alpha
     </article>
   </div>
 <% }) %>
+
+
+
 
 <%- partial('_partials/paginator') %>

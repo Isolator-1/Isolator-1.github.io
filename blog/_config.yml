@@ -98,6 +98,7 @@ ignore:
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 theme: hexo-theme-fluid-master
+# theme: reimu
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -131,3 +132,9 @@ markdown:
     case: 0
     separator: ''
 
+math:
+  engine: 'mathjax'
+  mathjax:
+    src: custom_mathjax_source
+    config:
+      # MathJax config

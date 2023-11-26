@@ -7,12 +7,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/basic/7.png">
-  <link rel="icon" href="/img/basic/7.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
-  <meta name="theme-color" content="#2f4154">
+  <meta name="theme-color" content="#4c81b9">
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
@@ -24,11 +24,13 @@
 <meta property="og:description" content="ai基础知识补习">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-11-18T17:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-21T12:26:26.065Z">
+<meta property="article:modified_time" content="2023-11-22T11:16:29.699Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary_large_image">
   
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
   
   
   <title>softmax image classfication 2 - Isolator&#39;s Blog</title>
@@ -82,7 +84,9 @@
 
 
   
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -95,7 +99,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>_φ_(．．) 写作业</strong>
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -168,6 +172,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
@@ -190,7 +206,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -273,7 +289,8 @@
             
               <div class="markdown-body">
                 
-                <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><span class="hljs-keyword">from</span> torch.utils <span class="hljs-keyword">import</span> data<br><span class="hljs-keyword">import</span> torchvision<br><span class="hljs-keyword">from</span> torchvision <span class="hljs-keyword">import</span> transforms<br></code></pre></td></tr></table></figure>
+                <p><strong>softmax函数能够将未规范化的预测变换为非负数并且总和为1，同时让模型保持可导的性质</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><span class="hljs-keyword">from</span> torch.utils <span class="hljs-keyword">import</span> data<br><span class="hljs-keyword">import</span> torchvision<br><span class="hljs-keyword">from</span> torchvision <span class="hljs-keyword">import</span> transforms<br></code></pre></td></tr></table></figure>
 
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python">batch_size = <span class="hljs-number">256</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_dataloader_workers</span>():  <span class="hljs-comment">#@save</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">4</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">load_data_fashion_mnist</span>(<span class="hljs-params">batch_size, resize=<span class="hljs-literal">None</span></span>): <br>    trans = [transforms.ToTensor()]<br>    <span class="hljs-keyword">if</span> resize:<br>        trans.insert(<span class="hljs-number">0</span>, transforms.Resize(resize))<br>    trans = transforms.Compose(trans)<br>    mnist_train = torchvision.datasets.FashionMNIST(<br>        root=<span class="hljs-string">&quot;./data&quot;</span>, train=<span class="hljs-literal">True</span>, transform=trans, download=<span class="hljs-literal">True</span>)<br>    mnist_test = torchvision.datasets.FashionMNIST(<br>        root=<span class="hljs-string">&quot;./data&quot;</span>, train=<span class="hljs-literal">False</span>, transform=trans, download=<span class="hljs-literal">True</span>)<br>    <span class="hljs-keyword">return</span> (<br>            data.DataLoader(mnist_train, batch_size, shuffle=<span class="hljs-literal">True</span>, num_workers=get_dataloader_workers()),<br>            data.DataLoader(mnist_test, batch_size, shuffle=<span class="hljs-literal">False</span>, num_workers=get_dataloader_workers())<br>           )<br>train_iter, test_iter = load_data_fashion_mnist(<span class="hljs-number">256</span>)<br></code></pre></td></tr></table></figure>
@@ -471,6 +488,12 @@ epoch 10, loss 0.447432, acc 0.847467
   
 
 
+  
+  
+
+
+
+
 
 
 
@@ -518,6 +541,30 @@ epoch 10, loss 0.447432, acc 0.847467
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
   
   
   
@@ -663,7 +710,52 @@ epoch 10, loss 0.447432, acc 0.847467
 
   <script>Fluid.plugins.imageCaption();</script>
 
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
   <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
