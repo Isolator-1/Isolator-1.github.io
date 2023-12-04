@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/heapexploitation/1.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/heapexploitation/2.jpg">
 <meta property="article:published_time" content="2022-11-18T04:19:00.000Z">
-<meta property="article:modified_time" content="2023-12-04T07:00:14.393Z">
+<meta property="article:modified_time" content="2023-12-04T07:01:09.126Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="heap">
@@ -327,7 +327,7 @@
 #### fast bin
 
 <p>在free一个chunk到fast bin时，它下一个chunk的P位（PREV_INUSE)是不会变的，还是为1，为了加快free的效率。<strong>因此地址连续的两个chunk 被free到fast bin，他们不会被合并</strong>。</p>
-<p><strong>content的大小范围：32位：8~80，64位：16~160</strong>，都是10个bin，但是实际上fastbin的大小范围并不包含最大的两个bin</p>
+<p><strong>content的大小范围：32位：8~80，64位：16~160</strong>，都是10个bin，但是实际上fastbin的大小范围并不包含最大的两个bin (64bit 0x80就已经不进fastbin了)</p>
 <p>新的chunk加入bin时，<strong>fd</strong>指向原来的栈顶，先进后出（LIFO）</p>
 <h4 id="small-bin"><a href="#small-bin" class="headerlink" title="small bin"></a>small bin</h4><p>大小范围</p>
 <p>32位，最小为16字节，公差为8，最大为504字节，所以是62个small bin</p>
