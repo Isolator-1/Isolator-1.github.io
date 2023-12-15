@@ -1,6 +1,6 @@
 ---
 title: Fastbin Attack
-tags: [ctf-pwn,exp]
+tags: [ctf-pwn,heap]
 date: 2023-10-24 10:58:00
 categories: [ctf-pwn]
 excerpt: fastbin的几种攻击方法

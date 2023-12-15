@@ -1,6 +1,6 @@
 ---
 title: Off-By-One
-tags: [ctf-pwn,exp]
+tags: [ctf-pwn,heap]
 date: 2022-11-27 19:00:00
 categories: [ctf-pwn]
 excerpt: 堆中的 off-by-one 漏洞, hitcon_heapcreator exp

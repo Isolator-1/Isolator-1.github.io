@@ -1,6 +1,6 @@
 ---
 title: Stack Migration
-tags: [ctf-pwn]
+tags: [ctf-pwn,stack]
 date: 2023-10-11 14:10:00
 categories: [ctf-pwn]
 excerpt: 栈迁移/栈劫持

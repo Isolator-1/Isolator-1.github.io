@@ -1,6 +1,6 @@
 ---
 title: FormatString 
-tags: [ctf-pwn]
+tags: [ctf-pwn,fmt]
 date: 2023-10-23 13:48:00
 categories: [ctf-pwn]
 excerpt: xctf-pwn string

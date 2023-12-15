@@ -1,6 +1,6 @@
 ---
 title: UAF
-tags: [ctf-pwn,exp]
+tags: [ctf-pwn,heap]
 date: 2022-11-22 20:37:00
 categories: [ctf-pwn]
 excerpt: User After Free in Heap Exploitation
@@ -64,7 +64,6 @@ show(0)
 
 <div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; modified=\&quot;2022-11-22T16:47:04.851Z\&quot; agent=\&quot;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36\&quot; etag=\&quot;xMjKslWb0NtHo6yfLEq6\&quot; version=\&quot;20.5.3\&quot; type=\&quot;device\&quot;&gt;&lt;diagram id=\&quot;wU8d93oxY3eO_jrvUp61\&quot; name=\&quot;第 1 页\&quot;&gt;7VlZj9sgEP4tfbDUPqRyfOR43CTbXamt1GrVdts3YmMbBYOLydVfXzDgM8c2qyZZaV9imBkG+Ga+ATuWO003dwxkyWcaQmw5drix3JnlOP3h2BYPKdkqycjVgpihUBtVggf0B2qhMVuiEOYNQ04p5ihrCgNKCAx4QwYYo+umWURxc9YMxLAjeAgA7kp/oJAnehfOsJLfQxQnZub+YKw0KTDGeid5AkK6roncW8udMkq5aqWbKcQSPIOLGvdhj7ZcGIOEP2XA6uun4bfsz+BxDqPo4+Ps1/dl2hsoLyuAl3rD1tSxJkP96wxAmlnuhMxz+bDkFNcoqq/56b+XX/du0Wm7ORGDIjX51uQ7o0sSQpkytljNOkEcPmQgkNq1YLiQJTzFotcXzYgSrinrjIrFt1NSZ+kKMg43NZFO0TtIU8jZVpgYraGLrheur/vrin2+qSFJjXkDLQOa8HHpuuKEaGha/ANFhl2KOAMsZp3kGSAN9Aa/l5LNk4Biyiz3RihZPH8rViamts3jnQqzBK8XgRThrTK9h3gFOQpATZ8X6EqtM8o2dYWaVGoIZSnANd0KMATEE6MY8CWT5fOgXQCyfSZrjbBUeratNBhyDllPbD9AJO6OpCxLANEuHSUT4ec9IFZElDgQKQJZTYdE2hE9k222Wmg4E84i4d/MRKDSipQo6nttmjVlYXNhpS+xl/kCCXfSZ84ZXcCeTqqG3RwEi7igQa8VR8cbqRA63lg3fBPNwmsIA8oAR5T0eIKCBYG5Xh4iiCODT9u2FsuDdrXlNOwiTAFvgxOiPMNga8wxEgrHfoPSjDIOJNKTKmFFK5bPCORcQoBE9HSSC86oPFcWnYIhF3neSnGgMvS9c1aG0Y7KcG3l1D9eTsuSexbQxtcPmju4NtDMbfgQapCEN/LCK3oBBnmOgiZQTVTbsMEN4o9S997XvZ96nGzPNnpY0dnqzl6oc7pkATzOHBg2Lt/dgNQP/R14GxmDWFTIVfPKvisIeoYvFBFexdv3mvH2/FYc1X70qPoVu+WofGsxjoYtRxywGPKOoyInym0/I02cTpoEyZIshGhq6vmcmVJub0bdcn5p7rULVgnh5bjnvSjuXQmn2lQo7+zP5ZQ/PjOn/L2cunmhnCohvByndnx3eOXUMU55rXdjr38ipzqOzn1Odd+pDadmuzjl2NdHqvYl8QoOqie8j7yS6hgXTj6oOo7OfVB136wMqSYvlVT/86QS3erjuwpC9ReGe/sX&lt;/diagram&gt;&lt;/mxfile&gt;&quot;,&quot;toolbar&quot;:&quot;pages zoom layers lightbox&quot;,&quot;page&quot;:0}"></div>
 <script type="text/javascript" src="https://app.diagrams.net/js/viewer-static.min.js"></script>
-
 chunk A是申请的`note[0]`结构体的空间，chunk B是`note[0]->content`的空间
 
 chunk C、D是`note[1]`的空间

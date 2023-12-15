@@ -6,6 +6,9 @@ categories: [pytorch]
 excerpt: ai基础知识补习
 ---
 
+用的是fashion mnist
+
+
 ```python
 import torch
 from torch import nn
@@ -152,36 +155,36 @@ train_ch6(net, train_iter, test_iter, num_epochs, lr, 'cuda:0')
 ​    
 ​    59it [02:48,  2.86s/it]
 ​    
-    loss 1.832, train acc 0.430,test acc 0.549
-    230051.2 examples/sec on cuda:0
+​    loss 1.832, train acc 0.430,test acc 0.549
+​    230051.2 examples/sec on cuda:0
 
 
 ​    
 ​    59it [02:52,  2.92s/it]
 ​    
-    loss 1.085, train acc 0.596,test acc 0.598
-    233088.3 examples/sec on cuda:0
+​    loss 1.085, train acc 0.596,test acc 0.598
+​    233088.3 examples/sec on cuda:0
 
 
 ​    
 ​    59it [02:44,  2.79s/it]
 ​    
-    loss 0.885, train acc 0.666,test acc 0.701
-    221954.7 examples/sec on cuda:0
+​    loss 0.885, train acc 0.666,test acc 0.701
+​    221954.7 examples/sec on cuda:0
 
 
 ​    
 ​    59it [02:41,  2.74s/it]
 ​    
-    loss 0.787, train acc 0.703,test acc 0.743
-    226613.6 examples/sec on cuda:0
+​    loss 0.787, train acc 0.703,test acc 0.743
+​    226613.6 examples/sec on cuda:0
 
 
 ​    
 ​    59it [02:46,  2.82s/it]
 ​    
-    loss 0.712, train acc 0.730,test acc 0.738
-    214793.3 examples/sec on cuda:0
+​    loss 0.712, train acc 0.730,test acc 0.738
+​    214793.3 examples/sec on cuda:0
 
 
 ​    59it [02:50,  2.90s/it]

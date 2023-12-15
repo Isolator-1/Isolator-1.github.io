@@ -1,6 +1,6 @@
 ---
 title: Heap 基础知识
-tags: [ctf-pwn]
+tags: [ctf-pwn,heap]
 date: 2022-11-18 12:19:00
 categories: [ctf-pwn]
 excerpt: basic knowledge in heap exploitation
@@ -17,7 +17,9 @@ size = 0时，返回系统允许的最小内存块
 
 32位系统下malloc(0)分配8Bytes，64位分配16Bytes
 
+### calloc
 
+会清空chunk，并且不从tcache种拿chunk，但是free时还是会放到tcache bin
 
 ### brk
 
@@ -101,7 +103,7 @@ NBINS是126，包括1个unsorted bin，62个small bin，63个large bin。
 
 在free一个chunk到fast bin时，它下一个chunk的P位（PREV_INUSE)是不会变的，还是为1，为了加快free的效率。**因此地址连续的两个chunk 被free到fast bin，他们不会被合并**。
 
-**content的大小范围：32位：8~80，64位：16~160**，都是10个bin，但是实际上fastbin的大小范围并不包含最大的两个bin
+**content的大小范围：32位：8\~80，64位：16\~160**，都是10个bin，但是实际上fastbin的大小范围并不包含最大的两个bin (64bit 0x80就已经不进fastbin了)
 
 新的chunk加入bin时，**fd**指向原来的栈顶，先进后出（LIFO）
 
@@ -158,7 +160,7 @@ NBINS是126，包括1个unsorted bin，62个small bin，63个large bin。
 
 以下全是64位机器来说
 
-tcache同fastbin，先进后出，不动inuse
+tcache从2.26开始才有，tcache同fastbin，先进后出，不动inuse
 
 tcache出现后，每次产生堆都会先产生一个0x250大小的堆块，位于堆的开头。这0x250中（header占16字节），前0x40字节，对应64条tcache的链表，描述每个链表中的个数（每个链表最多7个chunk），然后0x200字节对应每个链表的开头地址。
 
@@ -166,7 +168,7 @@ tcache的64个链表从0x20开始，到0x410结束，公差16字节
 
 tcache的链表指针指向的是chunk的content，而不是开头
 
-> 在2.27没有doublefree检查
+> 在老的2.27中没有doublefree检查
 
 
 

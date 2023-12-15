@@ -1,6 +1,6 @@
 ---
 title: canary
-tags: [ctf-pwn]
+tags: [ctf-pwn,stack]
 date: 2023-10-11 11:15:00
 categories: [ctf-pwn]
 excerpt: canary格式化字符串漏洞

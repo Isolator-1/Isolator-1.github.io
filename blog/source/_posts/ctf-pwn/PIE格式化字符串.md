@@ -1,12 +1,14 @@
 ---
 title: PIE Format String
-tags: [ctf-pwn]
+tags: [ctf-pwn,fmt]
 date: 2023-11-26 12:08:00
 categories: [ctf-pwn]
 excerpt: 开PIE的格式化字符串
 ---
 
 ### NewStar2023 Secret Number
+
+<https://buuoj.cn/match/matches/190/challenges>
 
 ```C
 int __cdecl main(int argc, const char **argv, const char **envp)

