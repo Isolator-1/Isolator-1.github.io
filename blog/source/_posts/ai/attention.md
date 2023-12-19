@@ -29,3 +29,4 @@ Nadaraya-Watson核回归是一个非参模型
 #### 测试
 
 预测 $y_i = 2sin(x_i)+x_i^{0.8} +\epsilon $ 函数
+

@@ -3,7 +3,7 @@ title: OS
 tags: [操作系统]
 date: 2023-12-13 18:38:00
 categories: [学习笔记]
-excerpt: 操作系统补习
+excerpt: 操作系统补习 (for kernel pwn)
 ---
 
 ## 控制流转移
