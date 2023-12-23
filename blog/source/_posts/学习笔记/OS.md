@@ -6,6 +6,14 @@ categories: [学习笔记]
 excerpt: 操作系统补习 (for kernel pwn)
 ---
 
+### 内核态与用户态
+
+CPU指令集：一部分是内核态指令（可以直接控制硬件），一部分是用户态指令
+
+栈：每个进程都有内核栈和用户栈两个栈
+
+内存：每个进程前3G虚拟内存都是自己的，而所有进程的后1G内存都是一样的，都是kernel的内存空间
+
 ## 控制流转移
 
 ### 用户态到内核态
@@ -150,7 +158,7 @@ copy过来的，但不是很理解（
 
 kernel/cred.c中
 
-```cred* prepare_kernel_cred(struct task_struct* daemon)```可以拷贝一个进程的cred进程的结构体，返回一个新的结构体
+```cred* prepare_kernel_cred(str uct task_struct* daemon)```可以拷贝一个进程的cred进程的结构体，返回一个新的结构体
 
 ```int commit_creds(struct cred *new)```将一个新的cred结构体应用到进程
 
