@@ -16,26 +16,25 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="🐤">
+    <meta name="description" content="angr &amp; pwn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="IDA 换主题">
-<meta property="og:url" content="https://isolator-1.github.io/2023/12/20/%E6%9D%82%E9%A1%B9/IDA%20%E6%8D%A2%E4%B8%BB%E9%A2%98/index.html">
+<meta property="og:title" content="angr">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/23/ctf-pwn/angr/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="🐤">
+<meta property="og:description" content="angr &amp; pwn">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/basic/10.jpg">
-<meta property="article:published_time" content="2023-12-20T12:52:00.000Z">
-<meta property="article:modified_time" content="2023-12-20T12:55:40.658Z">
+<meta property="article:published_time" content="2023-12-23T06:01:00.000Z">
+<meta property="article:modified_time" content="2023-12-23T12:25:36.581Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="Others">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="angr">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/basic/10.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>IDA 换主题 - Isolator&#39;s Blog</title>
+  <title>angr - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="IDA 换主题"></span>
+            <span id="subtitle" data-typed-text="angr"></span>
           
         </div>
 
@@ -225,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-20 20:52" pubdate>
-          December 20, 2023 pm
+        <time datetime="2023-12-23 14:01" pubdate>
+          December 23, 2023 pm
         </time>
       </span>
     
@@ -237,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          73 words
+          2.9k words
         
       </span>
     
@@ -248,7 +247,7 @@
         
         
         
-          1 mins
+          25 mins
         
       </span>
     
@@ -286,15 +285,60 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">IDA 换主题</h1>
+            <h1 style="display: none">angr</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在这里下的主题 <a target="_blank" rel="noopener" href="https://github.com/Reverier-Xu/IDA-Skins">https://github.com/Reverier-Xu/IDA-Skins</a></p>
-<p>在options-&gt;color里换</p>
-<p>（￣︶￣）↗　</p>
-<p><img src="/img/basic/10.jpg" srcset="/img/loading.gif" lazyload></p>
+                <p>今天也是看大佬博客学习的一天（😶‍🌫️😶‍🌫️😶‍🌫️</p>
+<h3 id="angr的安装"><a href="#angr的安装" class="headerlink" title="angr的安装"></a>angr的安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install gcc-multilib<br>pip install angr<br></code></pre></td></tr></table></figure>
+
+<p>安装之后import进来报错找不到pycparser.ply，查了半天没搞懂</p>
+<p>果断从kali换成ubuntu20.04，好了（😥</p>
+<h3 id="angr-ctf"><a href="#angr-ctf" class="headerlink" title="angr-ctf"></a>angr-ctf</h3><p>教你如何打ctf的时候用angr偷🐤</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/jakespringer/</span>angr_ctf.git<br></code></pre></td></tr></table></figure>
+
+<h3 id="00-搜索可达路径"><a href="#00-搜索可达路径" class="headerlink" title="00 搜索可达路径"></a>00 搜索可达路径</h3><p><del>让你不用再逆向加密程序（</del></p>
+<p>打开00_angr_find</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./generate.py 114514 00_angr_find<br></code></pre></td></tr></table></figure>
+
+<p>查看生成的程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> __cdecl <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **argv, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **envp)</span><br>&#123;<br>  <span class="hljs-type">int</span> i; <span class="hljs-comment">// [esp+1Ch] [ebp-1Ch]</span><br>  <span class="hljs-type">char</span> s1[<span class="hljs-number">9</span>]; <span class="hljs-comment">// [esp+23h] [ebp-15h] BYREF</span><br>  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v6; <span class="hljs-comment">// [esp+2Ch] [ebp-Ch]</span><br><br>  v6 = __readgsdword(<span class="hljs-number">0x14</span>u);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Enter the password: &quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%8s&quot;</span>, s1);<br>  <span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">7</span>; ++i )<br>    s1[i] = complex_function(s1[i], i);<br>  <span class="hljs-keyword">if</span> ( !<span class="hljs-built_in">strcmp</span>(s1, <span class="hljs-string">&quot;XFQUUEQF&quot;</span>) )<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Good Job.&quot;</span>);<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Try again.&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>目的是让s1和那个字符串相等，输出Good Job。开始用angr符号执行</p>
+<p>首先选择输出Good Job的代码地址，0x080492F3，让angr自动帮我们探索到达这个地方的路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solver</span>():<br>    bin_path = <span class="hljs-string">&#x27;./00_angr_find&#x27;</span><br>    proj = angr.Project(bin_path) <span class="hljs-comment"># load the binary file</span><br>    init_state = proj.factory.entry_state() <span class="hljs-comment"># create an empty context</span><br>    simgr = proj.factory.simgr(init_state) <span class="hljs-comment"># create a simulator_manager</span><br>    obj_path_addr = <span class="hljs-number">0x80492F3</span> <span class="hljs-comment"># the path we&#x27;d like to explore</span><br>    simgr.explore(find = obj_path_addr) <span class="hljs-comment"># start to explore</span><br><br>    <span class="hljs-keyword">if</span> simgr.found :<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-comment"># print the input that solve the constraint</span><br>        <span class="hljs-built_in">print</span>(solution_state.posix.dumps(sys.stdin.fileno()).decode())<br>    <span class="hljs-keyword">else</span> :<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution&#x27;</span>)<br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    solver()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">ubuntu@ubuntu:~/Desktop/angr_ctf/00_angr_find$ python exp.py <br>......（一堆warning）<br>XCKLIPYK<br>ubuntu@ubuntu:~/Desktop/angr_ctf/00_angr_find$ vim exp.py <br>ubuntu@ubuntu:~/Desktop/angr_ctf/00_angr_find$ ./00_angr_find <br>Enter the password: XCKLIPYK<br>Good Job.<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="01-避免路径爆炸"><a href="#01-避免路径爆炸" class="headerlink" title="01 避免路径爆炸"></a>01 避免路径爆炸</h3><p>main函数太大ida搞不出来图模式和c代码（第一次见🐖</p>
+<p>直接找到提示输入的字符串，然后往下看，发现好多叫avoid me的函数，以及一个may be good 函数，may be good 函数里是一个分支，一边succ，一边try again。</p>
+<p>成功的条件是should_succeed非0，然后s1===s2，而avoid me把should_succeed置零了</p>
+<p>按上一题的方法试了一下，半天跑不出来，路径爆炸了</p>
+<p>因此需要在explore时添加避开的路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">avoid_path_addr = <span class="hljs-number">0x80492BB</span><br>simgr.explore(find = obj_path_addr, avoid = avoid_path_addr) <br></code></pre></td></tr></table></figure>
+
+<h3 id="02-伪路径"><a href="#02-伪路径" class="headerlink" title="02 伪路径"></a>02 伪路径</h3><p>搜字符串good job会发现有好多代码块，无法确定搜索到达哪一个</p>
+<blockquote>
+<p><strong>find 和 avoid 的参数不一定时某个地址，也可以是以状态为参数的一个函数</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">find_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Good Job.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">avoid_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Try again.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solve</span>():<br>    bin_path = <span class="hljs-string">&#x27;./02_angr_find_condition&#x27;</span><br>    proj = angr.Project(bin_path)<br>    init_state = proj.factory.entry_state()<br>    simgr = proj.factory.simgr(init_state)<br>    simgr.explore(find = find_path, avoid = avoid_path)<br>    <span class="hljs-keyword">if</span> simgr.found:<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-built_in">print</span>(solution_state.posix.dumps(sys.stdin.fileno()).decode())<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution&#x27;</span>)<br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    solve()<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="03-Claripy-求解"><a href="#03-Claripy-求解" class="headerlink" title="03 Claripy 求解"></a>03 Claripy 求解</h3><p>通过claripy创建变量的常见用法</p>
+<p>创建</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 具体值的变量</span><br>bvv = claripy.BVV(int_value, size_in_bits)<br>bvv = claripy.BVV(string_value)<br><span class="hljs-comment"># 符号变量</span><br>bvs = claripy.BVS(<span class="hljs-string">&quot;x&quot;</span>, <span class="hljs-number">64</span>)<br></code></pre></td></tr></table></figure>
+
+<p>零扩展</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">bvv = bvv.zero_extend(<span class="hljs-number">32</span>)<br></code></pre></td></tr></table></figure>
+
+<p>运算</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">bvs3 = (bvs * bvs2 + bvv) / bvs<br>.op 可以查看运算类型，.args可以查看运算的参数（应该都是最上层的那个运算）<br></code></pre></td></tr></table></figure>
+
+<p>由于bit数是固定的，需要注意overflow</p>
 
                 
               </div>
@@ -313,7 +357,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E9%A1%B9/" class="category-chain-item">杂项</a>
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
   
   
 
@@ -328,7 +372,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Others/">#Others</a>
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/angr/">#angr</a>
       
     </div>
   
@@ -340,8 +386,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>IDA 换主题</div>
-      <div>https://isolator-1.github.io/2023/12/20/杂项/IDA 换主题/</div>
+      <div>angr</div>
+      <div>https://isolator-1.github.io/2023/12/23/ctf-pwn/angr/</div>
     </div>
     <div class="license-meta">
       
@@ -353,7 +399,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>December 20, 2023</div>
+          <div>December 23, 2023</div>
         </div>
       
       
@@ -385,18 +431,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/23/ctf-pwn/angr/" title="angr">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">angr</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/19/ctf-pwn/kernel%20pwn/" title="kernel pwn">
-                        <span class="hidden-mobile">kernel pwn</span>
+                      <a href="/2023/12/20/%E6%9D%82%E9%A1%B9/IDA%20%E6%8D%A2%E4%B8%BB%E9%A2%98/" title="IDA 换主题">
+                        <span class="hidden-mobile">IDA 换主题</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
