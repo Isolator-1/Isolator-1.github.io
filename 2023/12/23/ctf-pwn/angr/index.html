@@ -16,18 +16,18 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="angr &amp; pwn">
+    <meta name="description" content="angr &amp; re trick">
 <meta property="og:type" content="article">
 <meta property="og:title" content="angr">
 <meta property="og:url" content="https://isolator-1.github.io/2023/12/23/ctf-pwn/angr/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="angr &amp; pwn">
+<meta property="og:description" content="angr &amp; re trick">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-12-23T06:01:00.000Z">
-<meta property="article:modified_time" content="2023-12-23T12:25:36.581Z">
+<meta property="article:modified_time" content="2023-12-26T12:23:29.218Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="angr">
+<meta property="article:tag" content="ctf-re">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k words
+          6.2k words
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          25 mins
+          52 mins
         
       </span>
     
@@ -290,7 +290,7 @@
             
               <div class="markdown-body">
                 
-                <p>今天也是看大佬博客学习的一天（😶‍🌫️😶‍🌫️😶‍🌫️</p>
+                <p>今天也是看大佬<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/11/24/ANGR-0X00-ANGR_CTF/">博客</a>的一天（😶‍🌫️😶‍🌫️😶‍🌫️</p>
 <h3 id="angr的安装"><a href="#angr的安装" class="headerlink" title="angr的安装"></a>angr的安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install gcc-multilib<br>pip install angr<br></code></pre></td></tr></table></figure>
 
 <p>安装之后import进来报错找不到pycparser.ply，查了半天没搞懂</p>
@@ -328,7 +328,7 @@
 
 
 
-<h3 id="03-Claripy-求解"><a href="#03-Claripy-求解" class="headerlink" title="03 Claripy 求解"></a>03 Claripy 求解</h3><p>通过claripy创建变量的常见用法</p>
+<h3 id="03-Claripy-求解"><a href="#03-Claripy-求解" class="headerlink" title="03 Claripy 求解"></a>03 Claripy 求解</h3><h4 id="1-符号化寄存器"><a href="#1-符号化寄存器" class="headerlink" title="1 符号化寄存器"></a>1 符号化寄存器</h4><p>通过claripy创建变量的常见用法</p>
 <p>创建</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 具体值的变量</span><br>bvv = claripy.BVV(int_value, size_in_bits)<br>bvv = claripy.BVV(string_value)<br><span class="hljs-comment"># 符号变量</span><br>bvs = claripy.BVS(<span class="hljs-string">&quot;x&quot;</span>, <span class="hljs-number">64</span>)<br></code></pre></td></tr></table></figure>
 
@@ -339,6 +339,19 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">bvs3 = (bvs * bvs2 + bvv) / bvs<br>.op 可以查看运算类型，.args可以查看运算的参数（应该都是最上层的那个运算）<br></code></pre></td></tr></table></figure>
 
 <p>由于bit数是固定的，需要注意overflow</p>
+<p>在这道题里，<code>get_input()</code>读了三个数到eax，ebx，edx里，用它们执行了<code>complex_function_1,2,3</code></p>
+<p>可以直接在<code>get_input()</code>之后创建一个空白状态<code>blank_state</code>，设置三个变量代表这三个寄存器</p>
+<p><del>直接粘代码吧，反正以后肯定也是直接照板子抄（</del></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> claripy<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">find_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Good Job.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">avoid_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Try again.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solver</span>():<br>    bin_path = <span class="hljs-string">&#x27;./03&#x27;</span><br>    proj = angr.Project(bin_path)<br>    <span class="hljs-comment"># blank_state() means creating an empty state and set the current PC to specific addr</span><br>    start_addr = <span class="hljs-number">0x8049502</span><br>    init_state = proj.factory.blank_state(addr = start_addr)<br>    <br>    <span class="hljs-comment"># create  symbolic variables with claripy.BVS(name, size), size is counted by bits</span><br>    password_0 = claripy.BVS(<span class="hljs-string">&#x27;password_0&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit registers</span><br>    password_1 = claripy.BVS(<span class="hljs-string">&#x27;password_1&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit registers</span><br>    password_2 = claripy.BVS(<span class="hljs-string">&#x27;password_2&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit registers</span><br>    <br>    <span class="hljs-comment"># set the init_state&#x27;s register to corresponding symbolic variables</span><br>    init_state.regs.eax = password_0<br>    init_state.regs.ebx = password_1<br>    init_state.regs.edx = password_2<br>    <br>    <span class="hljs-comment"># now solve it!</span><br>    simgr = proj.factory.simgr(init_state)<br>    simgr.explore(find = find_path, avoid = avoid_path)<br>    <br>    <span class="hljs-keyword">if</span> simgr.found:<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-comment"># we use state.solver.eval(BVS) to get the answer value there</span><br>        solution_0 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_0)<br>        solution_1 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_1)<br>        solution_2 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_2)<br>        <br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_0: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">hex</span>(solution_0)))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_1: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">hex</span>(solution_1)))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_2: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">hex</span>(solution_2)))<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution!&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    solver()<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">password_0: 0x1426e459<br>password_1: 0x864b10e7<br>password_2: 0x3ea9ca89<br>ubuntu@ubuntu:~/Desktop/angr_ctf/03_angr_symbolic_registers$ python exp.py ^C<br>ubuntu@ubuntu:~/Desktop/angr_ctf/03_angr_symbolic_registers$ ./03<br>Enter the password: 0x1426e459 0x864b10e7 0x3ea9ca89<br>Good Job.<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-符号化栈"><a href="#2-符号化栈" class="headerlink" title="2 符号化栈"></a>2 符号化栈</h4><p>和上一道题的本质差别在于读的2个数没经过寄存器，直接存到栈上，还是在input之后模拟一个空白状态</p>
+<p>直接上代码吧（</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> claripy<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solver</span>():<br>    bin_path = <span class="hljs-string">&#x27;./04&#x27;</span><br>    proj = angr.Project(bin_path)<br>    start_addr = <span class="hljs-number">0x80493EF</span> <span class="hljs-comment"># first insn after `call scanf`</span><br>    init_state = proj.factory.blank_state(addr = start_addr)<br>    <br>    <span class="hljs-comment"># create symbolic variables</span><br>    password_0 = claripy.BVS(<span class="hljs-string">&#x27;password_0&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit integer</span><br>    password_1 = claripy.BVS(<span class="hljs-string">&#x27;password_1&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit integer</span><br>    <br>    <span class="hljs-comment"># set the context</span><br>    init_state.regs.ebp = init_state.regs.esp<br>    <span class="hljs-comment">## first val is on [ebp - 0xC], so we need to `sub esp` so that we can push properly</span><br>    init_state.regs.esp -= <span class="hljs-number">0x8</span><br>    <span class="hljs-comment">## these two variables are continuous on the stack</span><br>    init_state.stack_push(password_0)<br>    init_state.stack_push(password_1)<br>    <span class="hljs-comment">## the relative position of esp when return from scanf()</span><br>    <span class="hljs-comment">## seems that it&#x27;s okay to not do it?</span><br>    init_state.regs.esp -= <span class="hljs-number">12</span><br>    <br>    <span class="hljs-comment"># now to solve!</span><br>    simgr = proj.factory.simgr(init_state)<br>    simgr.explore(find = <span class="hljs-number">0x804943C</span>, avoid = <span class="hljs-number">0x804942A</span>)<br>    <br>    <span class="hljs-keyword">if</span> simgr.found:<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        solution_0 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_0)<br>        solution_1 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_1)<br>        <br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_0: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(solution_0))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_1: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(solution_1))<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution!&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    solver()<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -357,7 +370,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
+  <a href="/categories/ctf-re/" class="category-chain-item">ctf-re</a>
   
   
 
@@ -372,9 +385,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
-      
         <a href="/tags/angr/">#angr</a>
+      
+        <a href="/tags/ctf-re/">#ctf-re</a>
       
     </div>
   
