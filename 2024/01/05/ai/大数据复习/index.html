@@ -24,7 +24,7 @@
 <meta property="og:description" content="线代+概率论+分类+聚类+回归+降维+...">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-05T12:26:00.000Z">
-<meta property="article:modified_time" content="2024-01-06T06:12:59.353Z">
+<meta property="article:modified_time" content="2024-01-06T12:08:34.070Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="machine-learning">
 <meta name="twitter:card" content="summary_large_image">
@@ -235,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k words
+          3.1k words
         
       </span>
     
@@ -246,7 +246,7 @@
         
         
         
-          17 mins
+          27 mins
         
       </span>
     
@@ -328,7 +328,45 @@
 <p>最小化这个损失函数，得到$\hat{\beta}$，带入就得到了预测值</p>
 <p>$P(y=1|x)=\frac{e^{\hat{\beta}x}}{1+e^{\hat{\beta}x}}$ ， $P(y=0|x)=\frac{1}{1+e^{\hat{\beta}x}}$</p>
 <p>上述就是二项logistic回归的全过程</p>
-<h4 id="多专家组合-AdaBoost"><a href="#多专家组合-AdaBoost" class="headerlink" title="多专家组合 AdaBoost"></a>多专家组合 AdaBoost</h4><p>把几个弱分类器组合起来</p>
+<h4 id="AdaBoost"><a href="#AdaBoost" class="headerlink" title="AdaBoost"></a>AdaBoost</h4><p>假设T个弱分类器$h_{t}(x)$，每个弱分类器的权重都是$\alpha$，目的就是通过这个式子获取强分类器的预测结果</p>
+<p>$$H(x)=sign(\sum^{T}<em>{t=1}\alpha</em>{t}h_{t}(x))$$</p>
+<p><strong>训练过程</strong></p>
+<p>每个样本都有个权重$w_{i}$，初始都是$\frac{1}{N}$，那么初始样本的权重分布就是$D_{1}=(\frac{1}{N},…,\frac{1}{N})$</p>
+<p>重复以下过程T次</p>
+<ol>
+<li>每个弱分类器的误差的计算</li>
+</ol>
+<p>$$e_{t}=\sum_{i=1}^{n}w_{ti}(H_{t}(x_{i})\ne y_{i})$$</p>
+<ol start="2">
+<li>计算弱分类器在最终分类其中所占的权重</li>
+</ol>
+<p>$$\alpha_{t}=\frac{1}{2}\ln (\frac{1-e_{t}}{e_{t}})$$</p>
+<ol start="3">
+<li>更新样本权值分布</li>
+</ol>
+<p>$$D_{t+1}[i]=\frac{D_{t}[i]}{Z_{t{}}}e^{-\alpha_{t}y_{i}H_{t}(x_{i})}$$</p>
+<blockquote>
+<p>Z是归一化常数，好像可以是不同的？</p>
+</blockquote>
+<p>算完每个$\alpha$，就得到了开头的那个公式</p>
+<h4 id="SVM"><a href="#SVM" class="headerlink" title="SVM"></a>SVM</h4><p>画一条线（或者一个超平面）把不同类别的点分开，但是点都是离散的，能画出来无数条线把它们分开</p>
+<p><strong>硬间隔SVM</strong></p>
+<p>这个最佳超平面离最近的正类别和负类别的样本点的距离最远，这些最近的样本点被称为支持向量。</p>
+<p>假设一个超平面$w^{T}x+b=0$，某个样本到这个超平面的距离是$\frac{|w^{T}x+b|}{||w||}$</p>
+<p>再假设这个二分类的标签是+1和-1，那两类样本点分别要满足$w^{T}x+b\ge1,w^{T}x+b\le-1$，那这个边界平面的距离就是$\frac{2}{||w||}$，目的就是最大化这个距离</p>
+<p>（其实标签不是+1和-1也没关系，最终距离只会改变分子，不影响取最值的条件）</p>
+<p>由于$||w||$求的时候要开根号，所以把这个问题改为求他的平方，最小化$\frac{||w||^{2}}{2}$</p>
+<p>但是很难直接求解，因为有个约束条件$y_{i}(wx_{i}+b)\ge1$，乘y是为了把$\le-1$那部分合并到一个式子里</p>
+<p>然后为了求解这种条件约束，引入拉格朗日算子（原因这里先不管了，引入之后就不需要考虑约束条件了）</p>
+<p>$$L=\frac{1}{2}||w||^{2}+\sum^{l}<em>{i=1}\alpha</em>{i}(1-y_{i}(wx_{i}+b))$$</p>
+<p><strong>软间隔SVM</strong></p>
+<p>找不到一条线，让两类点都分布在两侧，那么就允许有部分点在线的另一边，但是不能太远，这个远近是由一个叫松弛变量$\xi$控制的</p>
+<p>和硬间隔类似，只不过把优化问题转变成</p>
+<p>$$y_{i}(wx_{i}+b)\ge1-\xi$$</p>
+<p>优化</p>
+<p>$\frac{1}{2}||w||^{2}+C(\sum\xi)$</p>
+<p><strong>升维</strong></p>
+<p>软间隔也找不到，就把样本转化到更高维度的空间中，再找超平面</p>
 
                 
               </div>
