@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/2.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/3.jpg">
 <meta property="article:published_time" content="2023-12-13T10:38:00.000Z">
-<meta property="article:modified_time" content="2023-12-19T09:52:58.436Z">
+<meta property="article:modified_time" content="2023-12-22T10:11:54.302Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary_large_image">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k words
+          3.6k words
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          29 mins
+          30 mins
         
       </span>
     
@@ -293,7 +293,10 @@
             
               <div class="markdown-body">
                 
-                <h2 id="控制流转移"><a href="#控制流转移" class="headerlink" title="控制流转移"></a>控制流转移</h2><h3 id="用户态到内核态"><a href="#用户态到内核态" class="headerlink" title="用户态到内核态"></a>用户态到内核态</h3><ol>
+                <h3 id="内核态与用户态"><a href="#内核态与用户态" class="headerlink" title="内核态与用户态"></a>内核态与用户态</h3><p>CPU指令集：一部分是内核态指令（可以直接控制硬件），一部分是用户态指令</p>
+<p>栈：每个进程都有内核栈和用户栈两个栈</p>
+<p>内存：每个进程前3G虚拟内存都是自己的，而所有进程的后1G内存都是一样的，都是kernel的内存空间</p>
+<h2 id="控制流转移"><a href="#控制流转移" class="headerlink" title="控制流转移"></a>控制流转移</h2><h3 id="用户态到内核态"><a href="#用户态到内核态" class="headerlink" title="用户态到内核态"></a>用户态到内核态</h3><ol>
 <li><p>切换GS段寄存器</p>
 <p>swapgs指令，把GS段寄存器和某个特定位置的值进行交换，保存GS值，同时交换过来的值作为内核态的GS</p>
 </li>
@@ -345,7 +348,7 @@
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs objectivec">一个cred结构体中记载了一个进程四种不同的用户ID：<br><br>真实用户ID（real <span class="hljs-built_in">UID</span>）：标识一个进程启动时的用户ID<br>保存用户ID（saved <span class="hljs-built_in">UID</span>）：标识一个进程最初的有效用户ID<br>有效用户ID（effective <span class="hljs-built_in">UID</span>）：标识一个进程正在运行时所属的用户ID，一个进程在运行途中是可以改变自己所属用户的，因而权限机制也是通过有效用户ID进行认证的，内核通过 euid 来进行特权判断；为了防止用户一直使用高权限，当任务完成之后，euid 会与 suid 进行交换，恢复进程的有效权限<br>文件系统用户ID（<span class="hljs-built_in">UID</span> <span class="hljs-keyword">for</span> VFS ops）：标识一个进程创建文件时进行标识的用户ID<br>在通常情况下这几个ID应当都是相同的<br><br>用户组ID同样分为四个：真实组ID、保存组ID、有效组ID、文件系统组ID<br></code></pre></td></tr></table></figure>
 
 <h3 id="进程权限改变"><a href="#进程权限改变" class="headerlink" title="进程权限改变"></a>进程权限改变</h3><p>kernel/cred.c中</p>
-<p><code>cred* prepare_kernel_cred(struct task_struct* daemon)</code>可以拷贝一个进程的cred进程的结构体，返回一个新的结构体</p>
+<p><code>cred* prepare_kernel_cred(str uct task_struct* daemon)</code>可以拷贝一个进程的cred进程的结构体，返回一个新的结构体</p>
 <p><code>int commit_creds(struct cred *new)</code>将一个新的cred结构体应用到进程</p>
 <h2 id="LKMs"><a href="#LKMs" class="headerlink" title="LKMs"></a>LKMs</h2><p>Loadable Kernel Modules</p>
 <p>lsmod查看所有的LKMs</p>
@@ -450,8 +453,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E4%B9%B1%E4%B8%83%E5%85%AB%E7%B3%9F%E7%9A%84%E7%9F%A5%E8%AF%86/" title="乱七八糟的知识">
-                        <span class="hidden-mobile">乱七八糟的知识</span>
+                      <a href="/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858Lab1/" title="mit6858 Lab1">
+                        <span class="hidden-mobile">mit6858 Lab1</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -1,12 +1,12 @@
 ---
 title: angr
-tags: [ctf-pwn,angr]
+tags: [ctf-re,angr]
 date: 2023-12-23 14:01:00
-categories: [ctf-pwn]
-excerpt: angr & pwn
+categories: [ctf-re]
+excerpt: angr & re trick
 ---
 
-今天也是看大佬博客学习的一天（😶‍🌫️😶‍🌫️😶‍🌫️
+今天也是看大佬[博客](https://arttnba3.cn/2022/11/24/ANGR-0X00-ANGR_CTF/)的一天（😶‍🌫️😶‍🌫️😶‍🌫️
 
 ### angr的安装
 
@@ -145,6 +145,8 @@ if __name__ == '__main__':
 
 ### 03 Claripy 求解
 
+#### 1 符号化寄存器
+
 通过claripy创建变量的常见用法
 
 创建
@@ -171,4 +173,122 @@ bvs3 = (bvs * bvs2 + bvv) / bvs
 ```
 
 由于bit数是固定的，需要注意overflow
+
+在这道题里，`get_input()`读了三个数到eax，ebx，edx里，用它们执行了`complex_function_1,2,3`
+
+可以直接在`get_input()`之后创建一个空白状态`blank_state`，设置三个变量代表这三个寄存器
+
+~~直接粘代码吧，反正以后肯定也是直接照板子抄（~~
+
+```python
+import angr
+import sys
+import claripy
+
+def find_path(state):
+    return b'Good Job.' in state.posix.dumps(sys.stdout.fileno())
+
+def avoid_path(state):
+    return b'Try again.' in state.posix.dumps(sys.stdout.fileno())
+
+def solver():
+    bin_path = './03'
+    proj = angr.Project(bin_path)
+    # blank_state() means creating an empty state and set the current PC to specific addr
+    start_addr = 0x8049502
+    init_state = proj.factory.blank_state(addr = start_addr)
+    
+    # create  symbolic variables with claripy.BVS(name, size), size is counted by bits
+    password_0 = claripy.BVS('password_0', 32) # 32-bit registers
+    password_1 = claripy.BVS('password_1', 32) # 32-bit registers
+    password_2 = claripy.BVS('password_2', 32) # 32-bit registers
+    
+    # set the init_state's register to corresponding symbolic variables
+    init_state.regs.eax = password_0
+    init_state.regs.ebx = password_1
+    init_state.regs.edx = password_2
+    
+    # now solve it!
+    simgr = proj.factory.simgr(init_state)
+    simgr.explore(find = find_path, avoid = avoid_path)
+    
+    if simgr.found:
+        solution_state = simgr.found[0]
+        # we use state.solver.eval(BVS) to get the answer value there
+        solution_0 = solution_state.solver.eval(password_0)
+        solution_1 = solution_state.solver.eval(password_1)
+        solution_2 = solution_state.solver.eval(password_2)
+        
+        print('password_0: {}'.format(hex(solution_0)))
+        print('password_1: {}'.format(hex(solution_1)))
+        print('password_2: {}'.format(hex(solution_2)))
+    else:
+        raise Exception('Could not find the solution!')
+
+if __name__ == "__main__":
+    solver()
+
+```
+
+```bash
+password_0: 0x1426e459
+password_1: 0x864b10e7
+password_2: 0x3ea9ca89
+ubuntu@ubuntu:~/Desktop/angr_ctf/03_angr_symbolic_registers$ python exp.py ^C
+ubuntu@ubuntu:~/Desktop/angr_ctf/03_angr_symbolic_registers$ ./03
+Enter the password: 0x1426e459 0x864b10e7 0x3ea9ca89
+Good Job.
+```
+
+
+
+#### 2 符号化栈
+
+和上一道题的本质差别在于读的2个数没经过寄存器，直接存到栈上，还是在input之后模拟一个空白状态
+
+直接上代码吧（
+
+```python
+import angr
+import sys
+import claripy
+
+def solver():
+    bin_path = './04'
+    proj = angr.Project(bin_path)
+    start_addr = 0x80493EF # first insn after `call scanf`
+    init_state = proj.factory.blank_state(addr = start_addr)
+    
+    # create symbolic variables
+    password_0 = claripy.BVS('password_0', 32) # 32-bit integer
+    password_1 = claripy.BVS('password_1', 32) # 32-bit integer
+    
+    # set the context
+    init_state.regs.ebp = init_state.regs.esp
+    ## first val is on [ebp - 0xC], so we need to `sub esp` so that we can push properly
+    init_state.regs.esp -= 0x8
+    ## these two variables are continuous on the stack
+    init_state.stack_push(password_0)
+    init_state.stack_push(password_1)
+    ## the relative position of esp when return from scanf()
+    ## seems that it's okay to not do it?
+    init_state.regs.esp -= 12
+    
+    # now to solve!
+    simgr = proj.factory.simgr(init_state)
+    simgr.explore(find = 0x804943C, avoid = 0x804942A)
+    
+    if simgr.found:
+        solution_state = simgr.found[0]
+        solution_0 = solution_state.solver.eval(password_0)
+        solution_1 = solution_state.solver.eval(password_1)
+        
+        print('password_0: {}'.format(solution_0))
+        print('password_1: {}'.format(solution_1))
+    else:
+        raise Exception('Could not find the solution!')
+
+if __name__ == "__main__":
+    solver()
+```
 

@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="angr &amp; re trick">
+<meta property="og:type" content="article">
+<meta property="og:title" content="angr">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/23/ctf-pwn/angr/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="angr &amp; re trick">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-12-23T06:01:00.000Z">
+<meta property="article:modified_time" content="2023-12-26T12:23:29.218Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="angr">
+<meta property="article:tag" content="ctf-re">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>angr - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="angr"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-23 14:01" pubdate>
+          December 23, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          52 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">angr</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>今天也是看大佬<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/11/24/ANGR-0X00-ANGR_CTF/">博客</a>的一天（😶‍🌫️😶‍🌫️😶‍🌫️</p>
+<h3 id="angr的安装"><a href="#angr的安装" class="headerlink" title="angr的安装"></a>angr的安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt-get install gcc-multilib<br>pip install angr<br></code></pre></td></tr></table></figure>
+
+<p>安装之后import进来报错找不到pycparser.ply，查了半天没搞懂</p>
+<p>果断从kali换成ubuntu20.04，好了（😥</p>
+<h3 id="angr-ctf"><a href="#angr-ctf" class="headerlink" title="angr-ctf"></a>angr-ctf</h3><p>教你如何打ctf的时候用angr偷🐤</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/jakespringer/</span>angr_ctf.git<br></code></pre></td></tr></table></figure>
+
+<h3 id="00-搜索可达路径"><a href="#00-搜索可达路径" class="headerlink" title="00 搜索可达路径"></a>00 搜索可达路径</h3><p><del>让你不用再逆向加密程序（</del></p>
+<p>打开00_angr_find</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./generate.py 114514 00_angr_find<br></code></pre></td></tr></table></figure>
+
+<p>查看生成的程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> __cdecl <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **argv, <span class="hljs-type">const</span> <span class="hljs-type">char</span> **envp)</span><br>&#123;<br>  <span class="hljs-type">int</span> i; <span class="hljs-comment">// [esp+1Ch] [ebp-1Ch]</span><br>  <span class="hljs-type">char</span> s1[<span class="hljs-number">9</span>]; <span class="hljs-comment">// [esp+23h] [ebp-15h] BYREF</span><br>  <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v6; <span class="hljs-comment">// [esp+2Ch] [ebp-Ch]</span><br><br>  v6 = __readgsdword(<span class="hljs-number">0x14</span>u);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Enter the password: &quot;</span>);<br>  __isoc99_scanf(<span class="hljs-string">&quot;%8s&quot;</span>, s1);<br>  <span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">7</span>; ++i )<br>    s1[i] = complex_function(s1[i], i);<br>  <span class="hljs-keyword">if</span> ( !<span class="hljs-built_in">strcmp</span>(s1, <span class="hljs-string">&quot;XFQUUEQF&quot;</span>) )<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Good Job.&quot;</span>);<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Try again.&quot;</span>);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>目的是让s1和那个字符串相等，输出Good Job。开始用angr符号执行</p>
+<p>首先选择输出Good Job的代码地址，0x080492F3，让angr自动帮我们探索到达这个地方的路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solver</span>():<br>    bin_path = <span class="hljs-string">&#x27;./00_angr_find&#x27;</span><br>    proj = angr.Project(bin_path) <span class="hljs-comment"># load the binary file</span><br>    init_state = proj.factory.entry_state() <span class="hljs-comment"># create an empty context</span><br>    simgr = proj.factory.simgr(init_state) <span class="hljs-comment"># create a simulator_manager</span><br>    obj_path_addr = <span class="hljs-number">0x80492F3</span> <span class="hljs-comment"># the path we&#x27;d like to explore</span><br>    simgr.explore(find = obj_path_addr) <span class="hljs-comment"># start to explore</span><br><br>    <span class="hljs-keyword">if</span> simgr.found :<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-comment"># print the input that solve the constraint</span><br>        <span class="hljs-built_in">print</span>(solution_state.posix.dumps(sys.stdin.fileno()).decode())<br>    <span class="hljs-keyword">else</span> :<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution&#x27;</span>)<br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    solver()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">ubuntu@ubuntu:~/Desktop/angr_ctf/00_angr_find$ python exp.py <br>......（一堆warning）<br>XCKLIPYK<br>ubuntu@ubuntu:~/Desktop/angr_ctf/00_angr_find$ vim exp.py <br>ubuntu@ubuntu:~/Desktop/angr_ctf/00_angr_find$ ./00_angr_find <br>Enter the password: XCKLIPYK<br>Good Job.<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="01-避免路径爆炸"><a href="#01-避免路径爆炸" class="headerlink" title="01 避免路径爆炸"></a>01 避免路径爆炸</h3><p>main函数太大ida搞不出来图模式和c代码（第一次见🐖</p>
+<p>直接找到提示输入的字符串，然后往下看，发现好多叫avoid me的函数，以及一个may be good 函数，may be good 函数里是一个分支，一边succ，一边try again。</p>
+<p>成功的条件是should_succeed非0，然后s1===s2，而avoid me把should_succeed置零了</p>
+<p>按上一题的方法试了一下，半天跑不出来，路径爆炸了</p>
+<p>因此需要在explore时添加避开的路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">avoid_path_addr = <span class="hljs-number">0x80492BB</span><br>simgr.explore(find = obj_path_addr, avoid = avoid_path_addr) <br></code></pre></td></tr></table></figure>
+
+<h3 id="02-伪路径"><a href="#02-伪路径" class="headerlink" title="02 伪路径"></a>02 伪路径</h3><p>搜字符串good job会发现有好多代码块，无法确定搜索到达哪一个</p>
+<blockquote>
+<p><strong>find 和 avoid 的参数不一定时某个地址，也可以是以状态为参数的一个函数</strong></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">find_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Good Job.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">avoid_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Try again.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solve</span>():<br>    bin_path = <span class="hljs-string">&#x27;./02_angr_find_condition&#x27;</span><br>    proj = angr.Project(bin_path)<br>    init_state = proj.factory.entry_state()<br>    simgr = proj.factory.simgr(init_state)<br>    simgr.explore(find = find_path, avoid = avoid_path)<br>    <span class="hljs-keyword">if</span> simgr.found:<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-built_in">print</span>(solution_state.posix.dumps(sys.stdin.fileno()).decode())<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution&#x27;</span>)<br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    solve()<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="03-Claripy-求解"><a href="#03-Claripy-求解" class="headerlink" title="03 Claripy 求解"></a>03 Claripy 求解</h3><h4 id="1-符号化寄存器"><a href="#1-符号化寄存器" class="headerlink" title="1 符号化寄存器"></a>1 符号化寄存器</h4><p>通过claripy创建变量的常见用法</p>
+<p>创建</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 具体值的变量</span><br>bvv = claripy.BVV(int_value, size_in_bits)<br>bvv = claripy.BVV(string_value)<br><span class="hljs-comment"># 符号变量</span><br>bvs = claripy.BVS(<span class="hljs-string">&quot;x&quot;</span>, <span class="hljs-number">64</span>)<br></code></pre></td></tr></table></figure>
+
+<p>零扩展</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">bvv = bvv.zero_extend(<span class="hljs-number">32</span>)<br></code></pre></td></tr></table></figure>
+
+<p>运算</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">bvs3 = (bvs * bvs2 + bvv) / bvs<br>.op 可以查看运算类型，.args可以查看运算的参数（应该都是最上层的那个运算）<br></code></pre></td></tr></table></figure>
+
+<p>由于bit数是固定的，需要注意overflow</p>
+<p>在这道题里，<code>get_input()</code>读了三个数到eax，ebx，edx里，用它们执行了<code>complex_function_1,2,3</code></p>
+<p>可以直接在<code>get_input()</code>之后创建一个空白状态<code>blank_state</code>，设置三个变量代表这三个寄存器</p>
+<p><del>直接粘代码吧，反正以后肯定也是直接照板子抄（</del></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> claripy<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">find_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Good Job.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">avoid_path</span>(<span class="hljs-params">state</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">b&#x27;Try again.&#x27;</span> <span class="hljs-keyword">in</span> state.posix.dumps(sys.stdout.fileno())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solver</span>():<br>    bin_path = <span class="hljs-string">&#x27;./03&#x27;</span><br>    proj = angr.Project(bin_path)<br>    <span class="hljs-comment"># blank_state() means creating an empty state and set the current PC to specific addr</span><br>    start_addr = <span class="hljs-number">0x8049502</span><br>    init_state = proj.factory.blank_state(addr = start_addr)<br>    <br>    <span class="hljs-comment"># create  symbolic variables with claripy.BVS(name, size), size is counted by bits</span><br>    password_0 = claripy.BVS(<span class="hljs-string">&#x27;password_0&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit registers</span><br>    password_1 = claripy.BVS(<span class="hljs-string">&#x27;password_1&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit registers</span><br>    password_2 = claripy.BVS(<span class="hljs-string">&#x27;password_2&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit registers</span><br>    <br>    <span class="hljs-comment"># set the init_state&#x27;s register to corresponding symbolic variables</span><br>    init_state.regs.eax = password_0<br>    init_state.regs.ebx = password_1<br>    init_state.regs.edx = password_2<br>    <br>    <span class="hljs-comment"># now solve it!</span><br>    simgr = proj.factory.simgr(init_state)<br>    simgr.explore(find = find_path, avoid = avoid_path)<br>    <br>    <span class="hljs-keyword">if</span> simgr.found:<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        <span class="hljs-comment"># we use state.solver.eval(BVS) to get the answer value there</span><br>        solution_0 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_0)<br>        solution_1 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_1)<br>        solution_2 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_2)<br>        <br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_0: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">hex</span>(solution_0)))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_1: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">hex</span>(solution_1)))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_2: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">hex</span>(solution_2)))<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution!&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    solver()<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">password_0: 0x1426e459<br>password_1: 0x864b10e7<br>password_2: 0x3ea9ca89<br>ubuntu@ubuntu:~/Desktop/angr_ctf/03_angr_symbolic_registers$ python exp.py ^C<br>ubuntu@ubuntu:~/Desktop/angr_ctf/03_angr_symbolic_registers$ ./03<br>Enter the password: 0x1426e459 0x864b10e7 0x3ea9ca89<br>Good Job.<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-符号化栈"><a href="#2-符号化栈" class="headerlink" title="2 符号化栈"></a>2 符号化栈</h4><p>和上一道题的本质差别在于读的2个数没经过寄存器，直接存到栈上，还是在input之后模拟一个空白状态</p>
+<p>直接上代码吧（</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> claripy<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">solver</span>():<br>    bin_path = <span class="hljs-string">&#x27;./04&#x27;</span><br>    proj = angr.Project(bin_path)<br>    start_addr = <span class="hljs-number">0x80493EF</span> <span class="hljs-comment"># first insn after `call scanf`</span><br>    init_state = proj.factory.blank_state(addr = start_addr)<br>    <br>    <span class="hljs-comment"># create symbolic variables</span><br>    password_0 = claripy.BVS(<span class="hljs-string">&#x27;password_0&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit integer</span><br>    password_1 = claripy.BVS(<span class="hljs-string">&#x27;password_1&#x27;</span>, <span class="hljs-number">32</span>) <span class="hljs-comment"># 32-bit integer</span><br>    <br>    <span class="hljs-comment"># set the context</span><br>    init_state.regs.ebp = init_state.regs.esp<br>    <span class="hljs-comment">## first val is on [ebp - 0xC], so we need to `sub esp` so that we can push properly</span><br>    init_state.regs.esp -= <span class="hljs-number">0x8</span><br>    <span class="hljs-comment">## these two variables are continuous on the stack</span><br>    init_state.stack_push(password_0)<br>    init_state.stack_push(password_1)<br>    <span class="hljs-comment">## the relative position of esp when return from scanf()</span><br>    <span class="hljs-comment">## seems that it&#x27;s okay to not do it?</span><br>    init_state.regs.esp -= <span class="hljs-number">12</span><br>    <br>    <span class="hljs-comment"># now to solve!</span><br>    simgr = proj.factory.simgr(init_state)<br>    simgr.explore(find = <span class="hljs-number">0x804943C</span>, avoid = <span class="hljs-number">0x804942A</span>)<br>    <br>    <span class="hljs-keyword">if</span> simgr.found:<br>        solution_state = simgr.found[<span class="hljs-number">0</span>]<br>        solution_0 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_0)<br>        solution_1 = solution_state.solver.<span class="hljs-built_in">eval</span>(password_1)<br>        <br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_0: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(solution_0))<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;password_1: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(solution_1))<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&#x27;Could not find the solution!&#x27;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    solver()<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf-re/" class="category-chain-item">ctf-re</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/angr/">#angr</a>
+      
+        <a href="/tags/ctf-re/">#ctf-re</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>angr</div>
+      <div>https://isolator-1.github.io/2023/12/23/ctf-pwn/angr/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 23, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/05/windows/dll%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" title="dll线程注入">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">dll线程注入</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/12/20/%E6%9D%82%E9%A1%B9/IDA%20%E6%8D%A2%E4%B8%BB%E9%A2%98/" title="IDA 换主题">
+                        <span class="hidden-mobile">IDA 换主题</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
