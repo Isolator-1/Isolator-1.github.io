@@ -16,24 +16,23 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="learning notes">
+    <meta name="description" content="title:Searchable Encryptiontags:[crypto]date:2024-04-01 13:04:00categories:[crypto]excerpt:可搜索加密  Searchable Encryption1. Practical Techniques for Searches on Encrypted DataDawn Xiaodong Song, David">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络与系统安全复习">
-<meta property="og:url" content="https://isolator-1.github.io/2024/01/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%BD%91%E7%BB%9C%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:title" content="Isolator&#39;s Blog">
+<meta property="og:url" content="https://isolator-1.github.io/2024/04/01/crypto/Searchable%20Encryption/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="learning notes">
+<meta property="og:description" content="title:Searchable Encryptiontags:[crypto]date:2024-04-01 13:04:00categories:[crypto]excerpt:可搜索加密  Searchable Encryption1. Practical Techniques for Searches on Encrypted DataDawn Xiaodong Song, David">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-01-13T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-01-19T10:16:14.209Z">
+<meta property="article:published_time" content="2024-04-01T05:04:10.926Z">
+<meta property="article:modified_time" content="2024-04-10T03:57:48.689Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="Others">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>网络与系统安全复习 - Isolator&#39;s Blog</title>
+  <title>Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -212,7 +211,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="网络与系统安全复习"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -223,8 +222,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-01-13 15:17" pubdate>
-          January 13, 2024 pm
+        <time datetime="2024-04-01 13:04" pubdate>
+          April 1, 2024 pm
         </time>
       </span>
     
@@ -235,7 +234,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.8k words
+          4.2k words
         
       </span>
     
@@ -246,7 +245,7 @@
         
         
         
-          32 mins
+          36 mins
         
       </span>
     
@@ -284,136 +283,101 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">网络与系统安全复习</h1>
+            <h1 style="display: none"></h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h2><p><strong>信息安全的需求 CIA</strong></p>
-<p>机密性Confidentiality，完整性Integrity，可用性Availability</p>
-<p><strong>信息安全管理</strong></p>
-<p>PDCA模型，plan do check act</p>
-<h2 id="访问控制系统"><a href="#访问控制系统" class="headerlink" title="访问控制系统"></a>访问控制系统</h2><p><strong>访问控制的三要素</strong></p>
-<p>SOA（Subject主体，Object客体，Authorize授权）</p>
-<h4 id="自主访问控制"><a href="#自主访问控制" class="headerlink" title="自主访问控制"></a><strong>自主访问控制</strong></h4><p>每一个主体有一个Owner，它具有分配客体权限的能力，权限可以从Owner传递到其他主体，Linux的UGO和ACL用的就是自主访问控制</p>
-<h4 id="强制访问控制"><a href="#强制访问控制" class="headerlink" title="强制访问控制"></a><strong>强制访问控制</strong></h4><p>访问的允许完全根据主体和客体的安全级别决定，主体的安全级别由管理员赋予用户，客体的安全级别由系统根据创建他们的用户安全级别决定。Biba，BLP。</p>
-<h4 id="Linux-UGO"><a href="#Linux-UGO" class="headerlink" title="Linux UGO"></a><strong>Linux UGO</strong></h4><p>为每一个文件附上一段有关访问控制信息的二进制位，描述UGO（User、Group、Other的缩写）分别拥有RWX中哪几项权限</p>
-<h4 id="Linux-ACL"><a href="#Linux-ACL" class="headerlink" title="Linux ACL"></a><strong>Linux ACL</strong></h4><p>UGO授权管理粒度太粗，只能对文件的User、Group进行权限管理，对其余指定的用户授权要创建新的组。ACL可以通过<code> setfacl -m user:用户名:rwx file</code>为指定的用户设置文件的ACL信息。ACL在UGO检查之后，通过UGO才进行ACL检查。</p>
-<h4 id="BLP模型"><a href="#BLP模型" class="headerlink" title="BLP模型"></a><strong>BLP模型</strong></h4><p>BLP只关注机密性，不关注完整/可用性</p>
-<p>不能read up，不能write down</p>
-<p>BLP不能支持策略制定</p>
-<h4 id="Biba模型"><a href="#Biba模型" class="headerlink" title="Biba模型"></a><strong>Biba模型</strong></h4><p>只关注信息的完整性</p>
-<p>不能write up，不能read down，一个主体只能调用完整性低的主体</p>
-<p>Clark-Wilson模型也关注信息的完整性，多边安全模型</p>
-<p>Chinese-Wall模型同时关注机密性和完整性</p>
-<h4 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h4><p>属于强制访问控制，所有访问必须明确授权，默认不允许任何访问，没有root用户，通过allow规则授予访问权限</p>
-<p>allow规则四部分：</p>
-<p>源类型 尝试进行访问控制的域类型</p>
-<p>目标类型 被进程访问的客体类型</p>
-<p>客体类别 允许访问的客体的种类名称</p>
-<p>许可 目标类型允许原类型访问的种类<br>ex ：Allow user_t bin_t: file{read execute}</p>
-<h4 id="基于属性的访问控制-ABAC"><a href="#基于属性的访问控制-ABAC" class="headerlink" title="基于属性的访问控制 ABAC"></a>基于属性的访问控制 ABAC</h4><p>attribute based access control</p>
-<ol>
-<li>细粒度访问控制 2. 管理的灵活性</li>
-</ol>
-<h2 id="网络边界和防护"><a href="#网络边界和防护" class="headerlink" title="网络边界和防护"></a>网络边界和防护</h2><p><strong>IPSec</strong></p>
-<p>AH协议不提供机密性，ESP可以，即ESP配置的时候要选择加密算法和鉴别算法，AH只有一个鉴别算法</p>
-<p>两个协议都可以实现数据源身份鉴别，数据源完整性验证</p>
-<p>IPSec密钥交换协议用的是IKE</p>
-<p>AH：IP头+AH+保护内容，算的哈希是IP头加上保护内容</p>
-<p>ESP：IP头+ESP头+保护内容+ESP尾，没有保证IP头的完整性，但是多了一个加密功能，可以加密IP载荷部分，也可以加密整个IP包，重新打包进行传输，分别对应传输模式（Transport Modes）和隧道模式（Tunnel Modes）</p>
-<p><strong>VPN</strong></p>
-<p>用IPSec做VPN不能随便更换设备，因为IP会变，用SSL做VPN可以不同设备用</p>
-<p><strong>DNSSEC</strong></p>
-<p>对DNS响应进行数字签名</p>
-<p><strong>防火墙</strong></p>
-<p>功能：访问控制、集中管理、日志记录、流量控制、NAT/IPSec平台</p>
-<p>包过滤防火墙：只检查报头，在IP层</p>
-<p>状态检测防火墙：检查报头，建立链接状态表</p>
-<p>应用级网关防火墙：检查报头，检查数据</p>
-<h2 id="网络权限管理"><a href="#网络权限管理" class="headerlink" title="网络权限管理"></a>网络权限管理</h2><p><strong>证书策略</strong></p>
-<p>用来区分不同证书安全等级Certificate Policy（CP），以OID的形式</p>
-<p>CP在CA的证书中出现：表示CA可以签发包含这几种CP的订户证书</p>
-<p>CP在订户证书中出现：说明被授权者的安全等级和可使用的范围，订户证书也可以有不同等级的CP</p>
-<p><strong>PKI和PMI</strong></p>
-<p>PMI：权限管理基础设施，资源拥有者成为SOA（Source of Authority），被授权的实体叫Privilege Holder，SOA对应PKI里根证书的签发机构</p>
-<p>PKI中，CA签发证书，PMI中，AA（Attribute Authority）签发</p>
-<p><strong>为什么要设置PMI</strong></p>
-<p>公钥证书的颁发者和权限的授予者可能不是同一个</p>
-<p>公钥证书和权限的有效期并不是一致的</p>
-<h2 id="可信计算"><a href="#可信计算" class="headerlink" title="可信计算"></a>可信计算</h2><p>TPM</p>
-<p><strong>目标</strong></p>
-<p>保证私钥的安全（TPM产生公私钥对、签名验证加解密时，采用硬件方式在TPM内部操作，私钥的拥有者也无法取得密钥）</p>
-<p>检测恶意代码（通过验证PCR度量值的变化，检测不受签名认证的恶意代码，并且可以用TPM私钥签名PCR的所有软件度量列表，向远端整明软件的安全）</p>
-<p>所以TPM的三项基本功能是（安全的）存储、启动、网上认证</p>
-<p><strong>安全启动、可信启动</strong></p>
-<p>（利用只有拥有合法签名的系统镜像可以被引导等方式），将机器启动到一个可信状态——安全启动</p>
-<p>记录启动序列，用于证明系统状态——可信启动</p>
-<p>系统从一个信任根CRTM启动，信任根是系统中第一个获得控制权的模块，信任根启动BIOS，BIOS启动引导程序，引导程序加载系统内核，系统内核启动系统的应用层程序</p>
-<p>TPM用平台配置寄存器PCT记录系统的启动序列，采用计算Hash的方式，为了将系统的不同镜像的度量值存入PCR，采用扩展的方式：将新的输入值连接在当前PCR值后面，然后链接的结果再次Hash，作为新的PCR值</p>
-<p><strong>动态可信度量根DRTM</strong></p>
-<p>旨在实现信任根的随时随地启动，以及可信启动过程的可重复</p>
-<h2 id="入侵检测"><a href="#入侵检测" class="headerlink" title="入侵检测"></a>入侵检测</h2><p><strong>PDR模型</strong></p>
-<p>保护Protection 检测Detection 响应Response</p>
-<p><strong>PDRR模型</strong></p>
-<p>多了一个 Recovery 恢复</p>
-<h4 id="误用入侵检测系统"><a href="#误用入侵检测系统" class="headerlink" title="误用入侵检测系统"></a><strong>误用入侵检测系统</strong></h4><p>对检测过程中得到的审计事件数据进行过滤，与误用模式库进行逐一比较，检查是否包含入侵行为的标识（特征signature）</p>
+                <hr>
+<p>title:Searchable Encryption<br>tags:[crypto]<br>date:2024-04-01 13:04:00<br>categories:[crypto]<br>excerpt:可搜索加密</p>
+<hr>
+<h3 id="Searchable-Encryption"><a href="#Searchable-Encryption" class="headerlink" title="Searchable Encryption"></a>Searchable Encryption</h3><h4 id="1-Practical-Techniques-for-Searches-on-Encrypted-Data"><a href="#1-Practical-Techniques-for-Searches-on-Encrypted-Data" class="headerlink" title="1. Practical Techniques for Searches on Encrypted Data"></a>1. Practical Techniques for Searches on Encrypted Data</h4><p>Dawn Xiaodong Song, David Wagner, Adrian Perrig</p>
+<p>University of California, Berkeley</p>
+<p>2000年S&amp;P</p>
+<p><strong>对称可搜索加密（Symmetric Searchable Encryption，SSE）</strong></p>
+<p>第一篇可搜索加密的论文，总结概括下来就是摘要里的这几句话：</p>
+<p>“untrusted server cannot learn anything about the plaintext when only given the ciphertext”</p>
+<p>”untrusted server cannot learn anything more about the plaintext than the search result“</p>
+<p>“untrusted server cannot search for an arbitrary word without the user’s authorization”</p>
+<p>“user may ask the untrusted server to search for a secret word without revealing the word to the server”</p>
+<p>论文从一个basic scheme开始，逐步改进，最终提出自己的方法</p>
+<p><strong>(1) Basic Scheme</strong></p>
+<p>Alice将一个文档分割（可以按照段落分、按照句子分、按照单词分、按照任意长度bit分），这些单元叫做${W_{1},W_{2}…W_{l}}$，对分割出来的每个单元进行加密</p>
+<p>加密的方法是用一个G（伪随机生成器）生成的随机数据流$S_{1},S_{2}…S_{l}$，再用一个F（伪随机生成函数），对每一个$S_{i}$用$k_{i}$加密成$T_{i}=&lt;S_{i},F_{k_{i}}(S_{i})&gt;$，密文 $C_{i} = T_{i} \oplus W_{i}$   把密文发送给服务器</p>
 <blockquote>
-<p>所有入侵行为和手段都能够表达为一种模式或特征</p>
-<p>所有已知的入侵过程都可以用匹配的方法发现</p>
-<p>区分计算机病毒与普通计算机程序代码不是一个可判定问题</p>
+<p>这里的$k_{i}$是用户自己挑选的，可以全是一样的，也可以不一样</p>
 </blockquote>
-<p>优点：无需训练实时性好，缺点：只能检测已有的攻击类型</p>
-<p>包括规则匹配（snort、Bro）、专家系统、状态转移分析、数据挖掘</p>
+<p>这时Alice想查询W，要告诉服务器W和<strong>W可能出现在哪里</strong>（也就是一堆$k_{i} $），服务器全都异或一遍，观察是否满足$&lt;S_{i},F_{k_{i}}(S_{i})&gt;$的形式，判断解密是否成功</p>
+<p><strong>缺点</strong>：这并不是全文搜索，而是从Alice给出的一个小范围内进行搜索，如果给的范围大了就会泄露更多的信息。</p>
+<p><strong>(2) Controlled Searching</strong></p>
+<p>上面这个只能在一个小范围内进行搜索的原因是，服务器没法知道查询的这个W的密文长什么样，不得不给他一个解密的范围</p>
+<p>用一个新的伪随机生成函数$f$，一个新的用户自定义的密钥$k’$，$f_{k’}(W)$作为$k_{i}$，进行加密，查询时改为发送$k_{i}$和W</p>
+<p>这样的好处是服务器可以根据W算出来T，（用户也就知道每个明文的密钥是谁，不再像前面那个密钥和明文对不上）因此可以对明文为W的密文进行解密，明文不是W时这个密钥也不好使</p>
+<p><strong>缺点</strong>：还是一个明文搜索，需要传过去明文W</p>
+<p><strong>(3) Hidden Searching</strong></p>
+<p>首先对明文进行加密，使用ECB模式的分组密码，把每一个单元都加密从${W_{1},W_{2}…W_{l}}$变成${X_{1},X_{2}…X_{l}}$</p>
+<p>$T_{i}=&lt;S_{i},F_{k_{i}}(X_{i})&gt;$，$C_{i}=X_{i}\oplus T_{i}$，搜索时发送$k=f_{k’}(X)$和$X$，除了把W换成X和上一个都一样</p>
+<p><strong>(4) Final Scheme</strong></p>
+<p>3中的问题在于，服务器搜索出来一堆$C_{i}$返回给Alice，但是她不知道这些C都如何解密（因为他不知道是哪个X加密过来的，也就不知道k，也就无法计算T，也就无法从C得到X）</p>
+<p>加密时把X分为左右两部分（左半部分和S相同长度）</p>
+<p>$X=&lt;L,R&gt;$，$k_{i}=f_{k’}(L_{i})$，$C_{i}=X_{i}\oplus T_{i}=&lt;L_{i},R_{i}&gt;\oplus &lt;S_{i},F_{k_{i}}(S_{i})&gt;$</p>
+<p>这时查询返回来一个$C_{j}$，虽然我不知道$k_{j}$是多少，但我只计算前$len(S_{j})$个长度的异或，就能得到$L_{j}$</p>
+<p>然后用得到的$L_{j}$去计算$k_{j}$，这样就能解密右边了</p>
+<h4 id="2-Public-Key-Encryption-with-Keyword-Search"><a href="#2-Public-Key-Encryption-with-Keyword-Search" class="headerlink" title="2. Public Key Encryption with Keyword Search"></a>2. Public Key Encryption with Keyword Search</h4><p>Dan Boneh，Giovanni Di Crescenzo，Rafail Ostrovsky，Giuseppe Persiano</p>
+<p>Stanford University</p>
+<p>2004年欧密 International Conference on the Theory and Applications of Cryptographic Techniques</p>
+<p><strong>非对称可搜索加密（asymmetric searchable encryption，ASE）</strong></p>
+<p>场景假设：Bob用Alice的公钥加密了一个邮件，在这段密文之后拼接了几个加密的关键词：$[E_{A_{pub}}[msg], PEKS(A_{pub},W_{1}),…,PEKS(A_{pub},W_{k})]$</p>
+<p>这个邮件存在服务器上，Alice可以通过发送一个$T_{W}$的密文来在服务器上查询每个邮件是否包含$W$关键词</p>
+<p><strong>$T_{W}$是如何生成的</strong></p>
+<p>$Trapdoor(A_{priv},W)=T_{W}$，选择两个循环群$G_{1}$和$G_{2}$，以及一个双线性映射$e:G_{1}\times G_{2}$，选择$G_{1}$的生成元$g$，计算公钥$A_{pub}=g^{A_{priv}}$，计算关键词$W$的哈希值$H_{1}(W)$，这将是$G_{1}$的一个群元。计算$T_{W}=H_{1}(W)^{A_{priv}}$。</p>
+<p><strong>服务器是如何检验的</strong></p>
 <blockquote>
-<p><strong>专家系统</strong></p>
-<p>使用类似于if-then的规则格式输入知识，攻击的条件排列在规则的左边（if部分），条件满足时，系统采取规则右边（then部分）给出的动作</p>
-<p><strong>状态转移分析</strong></p>
-<p>把攻击特征表示为系统状态的转移</p>
-</blockquote>
-<h4 id="异常入侵检测"><a href="#异常入侵检测" class="headerlink" title="异常入侵检测"></a><strong>异常入侵检测</strong></h4><p>误用入侵检测是匹配特定的入侵行为，异常入侵检测是学习正常的行为模式</p>
-<p>优点：可以发现未知的攻击，漏报率低。缺点：模式的定义、模式的完备性和监控频率、系统资源的消耗</p>
-<p>异常入侵检测的模式库特征通常在IDS的运行中更新</p>
-<h2 id="入侵响应"><a href="#入侵响应" class="headerlink" title="入侵响应"></a>入侵响应</h2><p><strong>阻断攻击</strong></p>
-<p>阻断TCP连接（TCP RESET）、ICMP Destination Unreachable、消息重定向，然后联络攻击者所在区域管理员/向攻击者发起反击</p>
-<p>收集攻击信息：把攻击者引导到蜜罐，收集对方信息</p>
-<p>入侵追踪</p>
-<p><strong>入侵检测发展</strong></p>
-<p>分布式入侵检测方案SnortNet、基于代理的检测AAFID、APT攻击</p>
-<p><strong>PPM</strong></p>
-<p>追踪包路径，操作为每经过一个路由器，就把IP加上去，不足：经过太多负担过大</p>
-<h2 id="入侵容忍"><a href="#入侵容忍" class="headerlink" title="入侵容忍"></a>入侵容忍</h2><h4 id="拜占庭将军问题-BGP"><a href="#拜占庭将军问题-BGP" class="headerlink" title="拜占庭将军问题 BGP"></a><strong>拜占庭将军问题 BGP</strong></h4><p>A. 所有忠诚的将军必须基于相同的行动计划做出决策。忠诚的将军按算法的要求行动，而叛徒则按他们自己的意志行动。</p>
-<p>B．少数叛徒不能使忠诚的将军做出错误的计划。</p>
-<p>在实际计算机中，问题表述为计算机的失效部件发送自相矛盾的信息给不同系统组成部分，在存在失效部件的情况下，系统仍能达成正确的协定<strong>（不是找出叛徒是谁）</strong></p>
-<p><strong>A 口信解决方案</strong></p>
-<p>问题简化：</p>
-<p>IC1：所有忠诚的下属都服从相同的命令</p>
-<p>IC2：如果上级忠诚，每个忠实的下级都服从它发出的命令</p>
-<p>原始问题可以看作每个将军都用上述方式发送其值v(i)，其他将军看作下属</p>
-<p>上级给下属全都发送消息（没收到消息默认是撤退），下属互相交换接收到的的结果，以多数人接收到的命令为准，这样所有忠臣就都知道了这轮的上级发送的是什么命令，排除了这一轮中叛徒下级的干扰，然后为了排除上级是叛徒的干扰，通过重复m+1轮次找到正确的指令</p>
-<p>（即口解决方案不需要考虑发起的先后顺序）</p>
-<p><strong>如果将军数少于3m+1，没有解决方法，应对m个叛徒</strong></p>
-<p><strong>B 签名消息解决方案</strong></p>
-<p>忠将可以签名消息，使得别人不能篡改她的消息</p>
-<p>然后大家可以直接签名“谁说了什么”把自己收到的消息再公布出去</p>
-<p>这样所有人都可以从上帝视角看，是谁向别人分别发送不同的消息</p>
-<h4 id="拜占庭容错系统-BQS"><a href="#拜占庭容错系统-BQS" class="headerlink" title="拜占庭容错系统 BQS"></a><strong>拜占庭容错系统 BQS</strong></h4><p>假设B发送消息M，A肯定收到，A收到的消息肯定不是假冒的（签名），目的是容忍 f 台服务器失效，client还能读出正确数据</p>
-<p>复制/冗余：复制到大于f台服务器上，client就有可能读出数据</p>
-<p>写/读：同时读写多台服务器</p>
-<p><strong>n台服务器，同时操作q台服务器，容忍f台服务器</strong>，就是BQS的核心内容</p>
+<p>双线性映射（Bilinear Map）是一种特殊的函数，它在两个循环群的元素之间定义，并且满足以下性质：</p>
 <ol>
-<li>$n-f\ge q$，即使f台坏服务器都回复假消息，也能有足够的q台服务器回复正确的</li>
-<li>$q-(n-q)\ge f+1+f$，至少f+1台服务器正确</li>
+<li><strong>可计算性</strong>：给定两个群元，可以有效地计算它们的双线性映射。</li>
+<li><strong>双线性</strong>：对于所有群元g1,g2∈G1和所有整数x,y，有$e(g_{1}^{x},g_{2}^{y})=e(g_{1},g_{2})^{xy}$。</li>
+<li><strong>非退化性</strong>：如果g是G1的生成元，则e*(*g,g)是G2的生成元。</li>
 </ol>
-<p>即n=4f+1，q=3f+1，</p>
-<h4 id="门限密码"><a href="#门限密码" class="headerlink" title="门限密码"></a>门限密码</h4><p>秘密S拆分成n个$S_{i}$，通过t个或更多的份额可以计算出t，少于t不能获取S的任何信息，(t,n)就是秘密分成n份，至少t个人。</p>
-<p>构造曲线$F(x)=\sum <em>{i=i}^{t-1}a</em>{i}x^{i}+a_{0}$，每个秘密共享者拥有一个坐标，秘密S就是$a_{0}$</p>
-<p><strong>联合秘密分享</strong></p>
-<p>没有秘密分发者</p>
-<p>约定一个大素数q，秘密为$S=\sum s_{i}modq$，每个人都有秘密$s_{i}$，构造多项式$F_{i}(x)$，$F_{i}(0)=s_{i}$。第i个参与者计算$F_{i}(j)$发给第j个参与者。每个人都收到了n-1个$F_{j}(i)$加上自己的，这n个数求和作为自己的份额</p>
-<p><strong>Proactive Recovery</strong></p>
-<p>在周期T内，攻击者不能攻陷超过f台服务器，不能突破门限，T之后恢复所有服务器</p>
-<p>要保证每一次的拆分与之前的无关，不能互相推导</p>
+</blockquote>
+<p>服务器接收一个加密的关键词$S$，和一个$T_{W}$，服务器检验S是否和服务器中的每个W是否匹配。</p>
+<p>计算$e(T_{W},S_{1})$其中$S_{1}$是$S$的一个群元。从S中提取另一个群元$S_{2}$，计算$H_{2}(e(T_{W},S_{1}))$，$H_{2}$是一个将群$G_{2}$映射到一个固定长度比特串的哈希函数，如果和$S_{2}$相等，就是匹配成功。</p>
+<p>依赖的难题是计算性Diffie-Hellman问题（Computational Diffie-Hellman Problem，简称CDH）：给定循环群G1中的生成元g和$g^{a},g^{b}∈G1$，计算$g^{ab}$是困难的。</p>
+<h4 id="3-Highly-Scalable-Searchable-Symmetric-Encryption-with-Support-for-Boolean-Queries"><a href="#3-Highly-Scalable-Searchable-Symmetric-Encryption-with-Support-for-Boolean-Queries" class="headerlink" title="3. Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries"></a>3. Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries</h4><p>David Cash 等，Rutgers University</p>
+<p>2013年，International Cryptology Conference</p>
+<p><strong>也是对称可搜索加密，但是支持连接搜索和一般的布尔查询</strong></p>
+<p>场景描述：一个数据库（比如一个邮件服务器）$DB=(ind_{i},W_{i})_{i=1}^{d}$，表示各个邮件的编号$ind$和关键词$W$的pairs。$\Psi (\bar w)$代表满足一群关键词$W$的布尔表达式。</p>
+<p><strong>EDBSetup</strong></p>
+<p>初始化：$K_{S}$：用于加密ind的密钥。$K_{X}$和$K_{I}$：用于生成 xtrap 和 xind 值的密钥。$K_{Z}$：用于生成盲化因子的密钥。$K_{T}$用于生成w的标签的密钥。两个空的$T$数组和$XSet$数组。$F$和$F_{P}$都是为随机函数。</p>
+<p>$xtrap=F(K_{X},w)$生成与每个关键词$w$相关的trap</p>
+<p>对于每个$w$</p>
+<ol>
+<li> $K_{e}=Enc(K_{S},w)$ 对关键词进行了加密</li>
+<li>对于$w$相关的所有ind<ol>
+<li>$xind=F_{P}(K_{I},ind)$作为$ind$的伪随机表示，$z=F_{P}(K_{Z},w||c)$，c是与w相关的文档计数器，z是生成的盲化因子</li>
+<li>$e=Enc(K_{e},ind)$，把$(e,xind*z^{-1})$加到$T$中</li>
+<li>$xtag=g^{F_{P}(K_{X},w)*xind}$，加到$XSet$中</li>
+</ol>
+</li>
+</ol>
+<p>$(TSet,K_{T})=TSetSetup(T)$ <em>文中没看到这个TSetSetup怎么实现的，只描述了它的功能是生成$TSet$和$K_{T}$</em></p>
+<p>输出$K_{S}$$K_{X}$$K_{I}$$K_{T}$$K_{Z}$和$EDB=(TSet,XSet)$</p>
+<blockquote>
+<p>EDB就是给服务器存储的一种加密之后的DB，存储与关键词相关联的数据元组，XSet存的辅助后面搜索的信息</p>
+</blockquote>
+<p><strong>Search</strong></p>
+<p>客户端有一个$w$的布尔表达式$\bar{w}$，计算</p>
+<ol>
+<li><p>$stag=TSetGetTag(K_{T},w_{1})$</p>
+</li>
+<li><p>$xtoken[c,i]=g^{F_{P}(K_{Z},w_{1}||c)*F_{P}(K_{X},{w_{i})}}$</p>
+</li>
+<li><p>$xtoken[c]=xtoken[c,2],…,xtoken[c,n]$</p>
+</li>
+</ol>
+<p>把e(stag, xtoken[1], xtoken[2],…) 发送给服务器</p>
+<p>服务器计算$t=TSetRetrieve(TSet,stag) $，在t中检索每个项目$(e,y)$，如果$xoken[c,i]^{y}\in XSet$，把e返回给客户</p>
+<p>客户端计算$K_{e}=F(K_{S}，w_{1})$，对每个收到的e，计算$ind=Dec(K_{e},e)$得到结果</p>
 
                 
               </div>
@@ -422,34 +386,6 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/Others/">#Others</a>
-      
-    </div>
   
 </div>
 
@@ -459,8 +395,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>网络与系统安全复习</div>
-      <div>https://isolator-1.github.io/2024/01/13/学习笔记/网络与系统安全复习/</div>
+      <div></div>
+      <div>https://isolator-1.github.io/2024/04/01/crypto/Searchable Encryption/</div>
     </div>
     <div class="license-meta">
       
@@ -472,7 +408,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>January 13, 2024</div>
+          <div>April 1, 2024</div>
         </div>
       
       
@@ -504,9 +440,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/03/18/crypto/CP-ABE/" title="">
+                      <a href="/2024/04/10/ctf-pwn/BraekerCTF%202024/" title="shellcode题目">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
+                        <span class="hidden-mobile">shellcode题目</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -514,8 +450,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/01/05/ai/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%A4%8D%E4%B9%A0/" title="大数据复习">
-                        <span class="hidden-mobile">大数据复习</span>
+                      <a href="/2024/03/18/crypto/CP-ABE/" title="">
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
