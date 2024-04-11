@@ -24,7 +24,7 @@
 <meta property="og:description" content="可搜索加密">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-04-01T05:04:00.000Z">
-<meta property="article:modified_time" content="2024-04-10T04:02:01.727Z">
+<meta property="article:modified_time" content="2024-04-10T06:17:27.739Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="crypto">
 <meta name="twitter:card" content="summary_large_image">
@@ -235,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.1k words
+          6.5k words
         
       </span>
     
@@ -246,7 +246,7 @@
         
         
         
-          35 mins
+          55 mins
         
       </span>
     
@@ -289,7 +289,7 @@
             
               <div class="markdown-body">
                 
-                <h3 id="Searchable-Encryption"><a href="#Searchable-Encryption" class="headerlink" title="Searchable Encryption"></a>Searchable Encryption</h3><h4 id="1-Practical-Techniques-for-Searches-on-Encrypted-Data"><a href="#1-Practical-Techniques-for-Searches-on-Encrypted-Data" class="headerlink" title="1. Practical Techniques for Searches on Encrypted Data"></a>1. Practical Techniques for Searches on Encrypted Data</h4><p>Dawn Xiaodong Song, David Wagner, Adrian Perrig</p>
+                <h2 id="Searchable-Encryption"><a href="#Searchable-Encryption" class="headerlink" title="Searchable Encryption"></a>Searchable Encryption</h2><h3 id="对称可搜索加密-SSE"><a href="#对称可搜索加密-SSE" class="headerlink" title="对称可搜索加密 SSE"></a>对称可搜索加密 SSE</h3><h4 id="1-Practical-Techniques-for-Searches-on-Encrypted-Data"><a href="#1-Practical-Techniques-for-Searches-on-Encrypted-Data" class="headerlink" title="1. Practical Techniques for Searches on Encrypted Data"></a>1. Practical Techniques for Searches on Encrypted Data</h4><p>Dawn Xiaodong Song, David Wagner, Adrian Perrig</p>
 <p>University of California, Berkeley</p>
 <p>2000年S&amp;P</p>
 <p><strong>对称可搜索加密（Symmetric Searchable Encryption，SSE）</strong></p>
@@ -321,10 +321,57 @@
 <p>$X=&lt;L,R&gt;$，$k_{i}=f_{k’}(L_{i})$，$C_{i}=X_{i}\oplus T_{i}=&lt;L_{i},R_{i}&gt;\oplus &lt;S_{i},F_{k_{i}}(S_{i})&gt;$</p>
 <p>这时查询返回来一个$C_{j}$，虽然我不知道$k_{j}$是多少，但我只计算前$len(S_{j})$个长度的异或，就能得到$L_{j}$</p>
 <p>然后用得到的$L_{j}$去计算$k_{j}$，这样就能解密右边了</p>
-<h4 id="2-Public-Key-Encryption-with-Keyword-Search"><a href="#2-Public-Key-Encryption-with-Keyword-Search" class="headerlink" title="2. Public Key Encryption with Keyword Search"></a>2. Public Key Encryption with Keyword Search</h4><p>Dan Boneh，Giovanni Di Crescenzo，Rafail Ostrovsky，Giuseppe Persiano</p>
+<h4 id="2-Secure-Indexes"><a href="#2-Secure-Indexes" class="headerlink" title="2. Secure Indexes"></a>2. Secure Indexes</h4><p>2003年，作者Eu-Jin Goh，斯坦福大学</p>
+<p><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2003/216.pdf">https://eprint.iacr.org/2003/216.pdf</a></p>
+<p>和第1篇Song的文章一样，也是一个SSE，主要思想在于提出了一个基于索引的可搜索加密，在Song的文章中没有涉及关于“服务器如何查找”这方面的内容。</p>
+<p>他们提出了Z-IDX，是一种基于Bloom过滤器的安全索引机制，它允许用户在不泄露文件内容的情况下，对加密的文件执行关键词搜索。</p>
+<ol>
+<li><p><strong>初始化Bloom过滤器</strong>：对于每个文件，初始化一个m位的二进制向量（Mem），所有位初始设为0。这个向量将用于构建Bloom过滤器，用于跟踪文件中的关键词。</p>
+</li>
+<li><p><strong>选择哈希函数族</strong>：定义一个哈希函数族${h_{1}(·), h_{2}(·), …, h_{r}(·)}$，其中每个$h_{i}$函数将输入映射到{1, 2, …, m}的整数范围内。这些函数用于将关键词映射到Bloom过滤器的位上。</p>
+</li>
+<li><p><strong>构建索引</strong>：</p>
+</li>
+</ol>
+<ul>
+<li>对于文件中的每个关键词$W_{i}$，首先使用伪随机函数族${f_{1}(·, K_{1}), f_{2}(·, K_{2}), …, f_{r}(·, K_{r})}$生成一个代码字（codeword）。这里的$K_{1}, K_{2}, …, K_{r}$是主密钥$K_{pirv}$的子密钥。</li>
+<li>然后，对于每个生成的$x_{i}$（伪随机函数输出结果），使用另一个伪随机函数${f(·, id)}$，其中id是文件的唯一标识符，生成最终的码字${y_{i1}, y_{i2}, …, y_{ir}}$。</li>
+<li>将码字的每个位$y_{i}$映射到Bloom过滤器的相应位置，如果位置为0，则将其置为1。</li>
+<li>为了增加安全性，还会向Bloom过滤器中随机插入若干个1，这样即使攻击者知道某些关键词的存在，也无法准确判断出文件中确切的关键词数量。</li>
+</ul>
+<blockquote>
+<p>构建索引的过程就是：关键词通过两次伪随机函数作用形成codeword存储于索引中</p>
+<p>第1次伪随机函数以关键词$W_{i}$为输入,分别在子密钥$K_{1},K_{2},…,K_{r}$<em>作用下生成</em>$x_{i1},x_{i2},…,x_{ir}$;</p>
+<p>第2次伪随机函数分别以$x_{i1},x_{i2},…,x_{ir}$为输入,在当前文件标识符<em>id</em>作用下生成码字$y_{i1},y_{i2},…,y_{ir}$确保了相同关键词在不同文件中形成不同码字.</p>
+</blockquote>
+<p>当用户想要搜索文件$D_{id}$中是否包含关键词$W_{i}$时，首先使用主密钥$K_{priv}=(K_{1},K_{2},…,K_{r})$生成$W_{i}$的陷门$T_{i}=(x_{i1},x_{i2},…,x_{ir})$。</p>
+<p>服务器基于$T_{i}$生成$W_{i}$的codeword $y_{i1},y_{i2},…,y_{ir}$</p>
+<p>服务器判断$D_{id}$的索引Memid的$y_{i1},y_{i2},…,y_{ir}$位是否全为1，若是,则成功匹配。</p>
+<p><strong>缺点</strong></p>
+<p>空间代价上,服务器除存储密文文件本身外,还需记录文件索引,当文件较短时,其索引可能是文件长度的数倍,空间利用率较低；时间代价上,服务器检索需逐个文件地计算和判断,整个关键词查询操作时间消耗为<em>O</em>(<em>n</em>)(<em>n</em>为服务器上存储文件数目)</p>
+<h4 id="3-Searchable-Symmetric-Encryption-Improved-Definitions-and-Efficient-Constructions"><a href="#3-Searchable-Symmetric-Encryption-Improved-Definitions-and-Efficient-Constructions" class="headerlink" title="3. Searchable Symmetric Encryption: Improved Definitions and Efficient Constructions"></a>3. Searchable Symmetric Encryption: Improved Definitions and Efficient Constructions</h4><p>作者：<em>Reza Curtmola, Juan Garay, Seny Kamara, and Rafail Ostrovsky</em></p>
+<p>发表在CCS 2006上</p>
+<p><a target="_blank" rel="noopener" href="https://eprint.iacr.org/2006/210.pdf">https://eprint.iacr.org/2006/210.pdf</a></p>
+<p>这篇文章和第2个类似，都是在服务器上构建索引来查找</p>
+<p><strong>索引构建</strong></p>
+<p>首先扫描全部文档$D$，生成$D(W_{i})$（表示每个关键词都有哪些文件标识符与之对应），$id(D_{ij})$表示对于关键词$W_{i}$，$D(W_{i})$中第$j$个文档标识符。</p>
+<p>创建一个链表，每个节点都代表$D(W_{i})$的一个文档，选取一系列的密钥$K_{ij}$，指向下一个节点的指针$\Psi ()$。</p>
+<p>节点的表示为：$N_{ij}=id(D_{ij})||K_{ij}||\Psi (K_{1},ctr+1)$</p>
+<p>目的是用$K_{i0}$加密$N_{i1}$，然后$N_{i1}$中存放下一个节点的加密密钥$K_{i1}$，以此类推……</p>
+<p>这一个链表的每一项的加密结果存在一个数组里，叫做数组A。</p>
+<p>即$A[\Psi (K_{1},ctr)]=SKE.Encrypt(K_{i(j-1)},N_{ij})$</p>
+<p>构建一个速查表$T$，用来加密存储关键词俩鸟$L_{W_{i}}$的首节点的位置以及密钥</p>
+<p>$T$用一个伪随机置换$p(K_{3},W_{i})$来索引，$K_{3}$是一个子密钥</p>
+<p>$T$的条目值时链表首节点的地址和密钥的加密形式，它存储了首节点$N_{i1}$的地址$addrA(N_{i1})$和用于揭秘该节点的密钥$K_{i0}$，这两个拼接起来与伪随机函数$f(K_{2},W_{i})$做异或，结果就是$T$的项值。</p>
+<p>即$T[\pi(K_{3},W_{i})]=(addrA(N_{i1)}||K_{i0})\oplus f(K_{2},W_{i})$</p>
+<p><strong>查询</strong></p>
+<p>用户查询包含$W$的文档时，发送$T_{w}=(\pi_{K_{3}}(W||1),f_{K_{2}}(W))$，服务器找到W相关链表首节点的地址$T[\pi_{K3}(W)]$，异或$f_{K_{2}}(W)$，得到$L_{W}$首节点在A的地址，以及首节点加密使用的密钥，这时就可以遍历整个链表寻找关键词</p>
+<p>这个方法避免了查询关键词时需要便利每个文件进行检索的缺陷</p>
+<h3 id="非对称可搜索加密-ASE"><a href="#非对称可搜索加密-ASE" class="headerlink" title="非对称可搜索加密 ASE"></a>非对称可搜索加密 ASE</h3><h4 id="1-Public-Key-Encryption-with-Keyword-Search"><a href="#1-Public-Key-Encryption-with-Keyword-Search" class="headerlink" title="1. Public Key Encryption with Keyword Search"></a>1. Public Key Encryption with Keyword Search</h4><p>Dan Boneh，Giovanni Di Crescenzo，Rafail Ostrovsky，Giuseppe Persiano</p>
 <p>Stanford University</p>
 <p>2004年欧密 International Conference on the Theory and Applications of Cryptographic Techniques</p>
 <p><strong>非对称可搜索加密（asymmetric searchable encryption，ASE）</strong></p>
+<p>处理多个用户使用同一个服务器的情况时比较方便</p>
 <p>场景假设：Bob用Alice的公钥加密了一个邮件，在这段密文之后拼接了几个加密的关键词：$[E_{A_{pub}}[msg], PEKS(A_{pub},W_{1}),…,PEKS(A_{pub},W_{k})]$</p>
 <p>这个邮件存在服务器上，Alice可以通过发送一个$T_{W}$的密文来在服务器上查询每个邮件是否包含$W$关键词</p>
 <p><strong>$T_{W}$是如何生成的</strong></p>
@@ -341,7 +388,7 @@
 <p>服务器接收一个加密的关键词$S$，和一个$T_{W}$，服务器检验S是否和服务器中的每个W是否匹配。</p>
 <p>计算$e(T_{W},S_{1})$其中$S_{1}$是$S$的一个群元。从S中提取另一个群元$S_{2}$，计算$H_{2}(e(T_{W},S_{1}))$，$H_{2}$是一个将群$G_{2}$映射到一个固定长度比特串的哈希函数，如果和$S_{2}$相等，就是匹配成功。</p>
 <p>依赖的难题是计算性Diffie-Hellman问题（Computational Diffie-Hellman Problem，简称CDH）：给定循环群G1中的生成元g和$g^{a},g^{b}∈G1$，计算$g^{ab}$是困难的。</p>
-<h4 id="3-Highly-Scalable-Searchable-Symmetric-Encryption-with-Support-for-Boolean-Queries"><a href="#3-Highly-Scalable-Searchable-Symmetric-Encryption-with-Support-for-Boolean-Queries" class="headerlink" title="3. Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries"></a>3. Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries</h4><p>David Cash 等，Rutgers University</p>
+<h3 id="关键词的布尔表达式检索"><a href="#关键词的布尔表达式检索" class="headerlink" title="关键词的布尔表达式检索"></a>关键词的布尔表达式检索</h3><h4 id="Highly-Scalable-Searchable-Symmetric-Encryption-with-Support-for-Boolean-Queries"><a href="#Highly-Scalable-Searchable-Symmetric-Encryption-with-Support-for-Boolean-Queries" class="headerlink" title="Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries"></a>Highly-Scalable Searchable Symmetric Encryption with Support for Boolean Queries</h4><p>David Cash 等，Rutgers University</p>
 <p>2013年，International Cryptology Conference</p>
 <p><strong>也是对称可搜索加密，但是支持连接搜索和一般的布尔查询</strong></p>
 <p>场景描述：一个数据库（比如一个邮件服务器）$DB=(ind_{i},W_{i})_{i=1}^{d}$，表示各个邮件的编号$ind$和关键词$W$的pairs。$\Psi (\bar w)$代表满足一群关键词$W$的布尔表达式。</p>
