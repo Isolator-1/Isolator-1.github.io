@@ -8,7 +8,7 @@ excerpt: mit 计算机系统安全实验
 
 ## mit 系统安全实验Lab1
 
-参考自[arttnba3大佬的博客](https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/)🐤
+参考自[大佬的博客](https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/)🐤
 
 地址 https://css.csail.mit.edu/6.858/2022/labs/lab1.html（Lab1用的2022年的实验）
 
@@ -31,7 +31,7 @@ student@6858-v22:~$ ip addr | grep 192.168
 
 按照说明，首先make一下，然后运行`./clean-env.sh ./zookd 8080`
 
-> 这里有个很玄学的问题是，我在物理机上clone下来lab，再用vscode传虚拟机，不光程序运行起来访问不到网页，make的时候也有警告。在虚拟机里clone下来的就什么问题都没有😶‍🌫️
+> 这里有个很玄学的问题是，我在物理机上clone下来lab，再用vscode传虚拟机，不光程序运行起来访问不到网页，make的时候也有警告。在虚拟机里clone下来的就什么问题都没有😶‍🌫️没能理解是为什么
 
 然后可以访问到网页，是一个登陆界面
 

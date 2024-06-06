@@ -141,57 +141,28 @@ def train_ch6(net, trian_iter, test_iter, num_epochs, lr, device):
 ```python
 lr, num_epochs = 0.01, 10
 train_ch6(net, train_iter, test_iter, num_epochs, lr, 'cuda:0')
-```
 
-    training on cuda:0
-
-
+training on cuda:0
     59it [02:46,  2.83s/it]
-    
     loss 2.283, train acc 0.256,test acc 0.328
     211869.9 examples/sec on cuda:0
-
-
-​    
-​    59it [02:48,  2.86s/it]
-​    
-​    loss 1.832, train acc 0.430,test acc 0.549
-​    230051.2 examples/sec on cuda:0
-
-
-​    
-​    59it [02:52,  2.92s/it]
-​    
-​    loss 1.085, train acc 0.596,test acc 0.598
-​    233088.3 examples/sec on cuda:0
-
-
-​    
-​    59it [02:44,  2.79s/it]
-​    
-​    loss 0.885, train acc 0.666,test acc 0.701
-​    221954.7 examples/sec on cuda:0
-
-
-​    
-​    59it [02:41,  2.74s/it]
-​    
-​    loss 0.787, train acc 0.703,test acc 0.743
-​    226613.6 examples/sec on cuda:0
-
-
-​    
-​    59it [02:46,  2.82s/it]
-​    
-​    loss 0.712, train acc 0.730,test acc 0.738
-​    214793.3 examples/sec on cuda:0
-
-
-​    59it [02:50,  2.90s/it]
-​    
-
+    59it [02:48,  2.86s/it]
+    loss 1.832, train acc 0.430,test acc 0.549
+    230051.2 examples/sec on cuda:0   
+    59it [02:52,  2.92s/it] 
+    loss 1.085, train acc 0.596,test acc 0.598
+    233088.3 examples/sec on cuda:0
+    59it [02:44,  2.79s/it]
+    loss 0.885, train acc 0.666,test acc 0.701
+    221954.7 examples/sec on cuda:0
+    59it [02:41,  2.74s/it]
+    loss 0.787, train acc 0.703,test acc 0.743
+    226613.6 examples/sec on cuda:0
+    59it [02:46,  2.82s/it]
+    loss 0.712, train acc 0.730,test acc 0.738
+    214793.3 examples/sec on cuda:0
+    59it [02:50,  2.90s/it]
     loss 0.668, train acc 0.751,test acc 0.727
     228293.3 examples/sec on cuda:0
-
-
-​    53it [02:28,  2.83s/it]
+    53it [02:28,  2.83s/it]
+```

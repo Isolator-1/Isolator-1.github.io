@@ -25,7 +25,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/mit6858/1.jpg">
 <meta property="article:published_time" content="2023-12-06T02:30:00.000Z">
-<meta property="article:modified_time" content="2023-12-07T07:41:03.497Z">
+<meta property="article:modified_time" content="2024-05-23T10:21:46.558Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
@@ -291,7 +291,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="mit-系统安全实验Lab1"><a href="#mit-系统安全实验Lab1" class="headerlink" title="mit 系统安全实验Lab1"></a>mit 系统安全实验Lab1</h2><p>参考自<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/">arttnba3大佬的博客</a>🐤</p>
+                <h2 id="mit-系统安全实验Lab1"><a href="#mit-系统安全实验Lab1" class="headerlink" title="mit 系统安全实验Lab1"></a>mit 系统安全实验Lab1</h2><p>参考自<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/">大佬的博客</a>🐤</p>
 <p>地址 <a target="_blank" rel="noopener" href="https://css.csail.mit.edu/6.858/2022/labs/lab1.html%EF%BC%88Lab1%E7%94%A8%E7%9A%842022%E5%B9%B4%E7%9A%84%E5%AE%9E%E9%AA%8C%EF%BC%89">https://css.csail.mit.edu/6.858/2022/labs/lab1.html（Lab1用的2022年的实验）</a></p>
 <p>给了一个虚拟机<a target="_blank" rel="noopener" href="https://web.mit.edu/6.858/2022/6.858-x86_64-v22.zip">ubuntu 21.10</a>的vmdk，安装完之后是一个tty，发现没有net-tools，也不能从虚拟机外复制进来内容，去学习了一下发现<code>ip addr</code>也可以查看ip，不过这个输出有点多，这个虚拟机终端也没法往上滚动，加了一个grep 192.168就好了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~$ ip addr | grep 192.168<br>    inet 192.168.71.138/24 brd 192.168.71.255 scope global dynamic eth0<br></code></pre></td></tr></table></figure>
@@ -301,7 +301,7 @@
 <p>实验的内容在<code>git clone https://web.mit.edu/6858/2022/lab.git </code></p>
 <h3 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h3><p>按照说明，首先make一下，然后运行<code>./clean-env.sh ./zookd 8080</code></p>
 <blockquote>
-<p>这里有个很玄学的问题是，我在物理机上clone下来lab，再用vscode传虚拟机，不光程序运行起来访问不到网页，make的时候也有警告。在虚拟机里clone下来的就什么问题都没有😶‍🌫️</p>
+<p>这里有个很玄学的问题是，我在物理机上clone下来lab，再用vscode传虚拟机，不光程序运行起来访问不到网页，make的时候也有警告。在虚拟机里clone下来的就什么问题都没有😶‍🌫️没能理解是为什么</p>
 </blockquote>
 <p>然后可以访问到网页，是一个登陆界面</p>
 <h4 id="lab1-exercise-1-2"><a href="#lab1-exercise-1-2" class="headerlink" title="lab1 exercise 1 + 2"></a>lab1 exercise 1 + 2</h4><p>exercise1 让在<code>zookd.c</code>和<code>http.c</code>找漏洞</p>
