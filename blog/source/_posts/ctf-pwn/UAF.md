@@ -126,11 +126,11 @@ r.interactive()
 
 查看三次notelist的内容，
 
-![](/img/UAF/1.jpg)
+![](/img/ctf-pwn/UAF/1.jpg)
 
-![](/img/UAF/2.jpg)
+![](/img/ctf-pwn/UAF/2.jpg)
 
-![](/img/UAF/3.jpg)
+![](/img/ctf-pwn/UAF/3.jpg)
 
 可以看到，`0x92f31a0`上的地址为print_note函数的地址，在free之前，`0x92f31a4`上的内容指向下一行开头，即`aaaa`字符串，所以这里就是note[0]。
 

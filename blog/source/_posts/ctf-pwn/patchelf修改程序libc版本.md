@@ -31,5 +31,5 @@ patchelf --replace-needed libc.so.6 ./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/
 
 #### 效果图
 
-![](/img/patchelf/1.png)
+![](/img/ctf-pwn/patchelf/1.png)
 

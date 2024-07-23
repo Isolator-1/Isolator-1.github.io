@@ -6,7 +6,7 @@ categories: [学习笔记]
 excerpt: 操作系统补习 (for kernel pwn)
 ---
 
-### 内核态与用户态
+## 内核态与用户态
 
 CPU指令集：一部分是内核态指令（可以直接控制硬件），一部分是用户态指令
 
@@ -164,10 +164,3 @@ kernel/cred.c中
 
 
 
-## LKMs
-
-Loadable Kernel Modules
-
-lsmod查看所有的LKMs
-
-insmod/remod 装载/溢出LKM

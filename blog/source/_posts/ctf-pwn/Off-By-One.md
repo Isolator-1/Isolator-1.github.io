@@ -41,7 +41,7 @@ excerpt: 堆中的 off-by-one 漏洞, hitcon_heapcreator exp
 
 ##### 1. create
 
-![](/img/off_by_one/1.png)
+![](/img/ctf-pwn/off_by_one/1.png)
 
 从上述结构可以推断出heaparray是如下结构
 
@@ -76,19 +76,19 @@ if ( *(&heaparray + v1) )
 
 1. 申请三个堆块，大小为0x18,0x10,0x10，加上三次size申请的0x10，一共6个chunk
 
-    ![](/img/off_by_one/2.jpg)
+    ![](/img/ctf-pwn/off_by_one/2.jpg)
 
 2. 修改0号块，写入`/bin/sh`，然后再溢出`0x81`到下一个chunk的size
 
-   ![](/img/off_by_one/3.jpg)
+   ![](/img/ctf-pwn/off_by_one/3.jpg)
 
 3. 这时delete chunk 1，会合并到前一个chunk（也就是1的size所在chunk）中
 
-    ![](/img/off_by_one/4.jpg)
+    ![](/img/ctf-pwn/off_by_one/4.jpg)
 
     观察bins，发现这个chunk被free到fastbin的0x80节点上（0x20上也有一个chunk是因为delete也会将size释放掉）
 
-    ![](/img/off_by_one/5.jpg)
+    ![](/img/ctf-pwn/off_by_one/5.jpg)
 
 4. 申请一个新的chunk，将0x80这个块申请出来，因此malloc的大小需要为0x70
 
@@ -96,7 +96,7 @@ if ( *(&heaparray + v1) )
 
     这时调用show(2)会泄露free的地址
 
-    ![](/img/off_by_one/6.jpg)
+    ![](/img/ctf-pwn/off_by_one/6.jpg)
 
 5. 泄露libc基址找到system地址
 

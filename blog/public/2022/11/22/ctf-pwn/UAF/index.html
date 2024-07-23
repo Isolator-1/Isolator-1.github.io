@@ -23,16 +23,16 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="User After Free in Heap Exploitation">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/UAF/1.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/UAF/2.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/UAF/3.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/UAF/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/UAF/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/UAF/3.jpg">
 <meta property="article:published_time" content="2022-11-22T12:37:00.000Z">
-<meta property="article:modified_time" content="2023-12-04T06:43:16.618Z">
+<meta property="article:modified_time" content="2024-07-23T06:17:11.834Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="heap">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/UAF/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/UAF/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -323,9 +323,9 @@ chunk A是申请的`note[0]`结构体的空间，chunk B是`note[0]->content`的
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.bss:0804A070 ; void *notelist<br>.bss:0804A070 notelist        dd ?                    ; DATA XREF: add_note+40↑r<br>.bss:0804A070                                         ; add_note+61↑w ...<br>.bss:0804A074                 db    ? ;<br></code></pre></td></tr></table></figure>
 
 <p>查看三次notelist的内容，</p>
-<p><img src="/img/UAF/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/img/UAF/2.jpg" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/img/UAF/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/UAF/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/UAF/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/UAF/3.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>可以看到，<code>0x92f31a0</code>上的地址为print_note函数的地址，在free之前，<code>0x92f31a4</code>上的内容指向下一行开头，即<code>aaaa</code>字符串，所以这里就是note[0]。</p>
 <p>在第三次add之后改变了note[0]原本在print_note上的函数指针，因此show(0)时会执行magic</p>
 

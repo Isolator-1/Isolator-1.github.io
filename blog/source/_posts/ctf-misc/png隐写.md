@@ -8,7 +8,7 @@ excerpt: png misc
 
 <https://buuoj.cn/challenges#%E5%A4%A7%E7%99%BD>
 
-![](/img/pngmisc/1.jpg)
+![](/img/ctf-misc/pngmisc/1.jpg)
 
 010 editor 第二行前两个字段是图片的宽和高
 

@@ -37,7 +37,7 @@ unlink漏洞同时向两个地址进行了写入，所以在保证targe taddr -1
 
 #### 上面这些都没用
 
-![](/img/unlink/1.jpg)
+![](/img/ctf-pwn/unlink/1.jpg)
 
 #### 加入检查机制之后
 
@@ -185,17 +185,17 @@ checksec发现没有开启PIE，heaparray的地址可以直接使用
    edit(0,0x100,fake_chunk)
    ```
 
-   ![](/img/[ZJCTF2019]EasyHeap/1.jpg)
+   ![](/img/ctf-pwn/[ZJCTF2019]EasyHeap/1.jpg)
 
    对于chunk 0，`fd = heaparray - 0x18` `bk = heaparray - 0x10`，unlink chunk 0 时会将heaparray[0]指向`heaparray - 0x18`
 
 3. 这时delete(1)，会将chunk 1 和 fakechunk 合并起来放入 unsorted bin
 
-   ![](/img/[ZJCTF2019]EasyHeap/2.jpg)
+   ![](/img/ctf-pwn/[ZJCTF2019]EasyHeap/2.jpg)
 
    查看heaparray地址上的值：
 
-   ![](/img/[ZJCTF2019]EasyHeap/3.jpg)
+   ![](/img/ctf-pwn/[ZJCTF2019]EasyHeap/3.jpg)
 
    说明fakechunk成功完成unlink操作，heaparray[0]指向了0x6020c8
 

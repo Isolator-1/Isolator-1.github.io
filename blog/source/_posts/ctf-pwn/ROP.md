@@ -252,17 +252,17 @@ p.interactive()
 
 <https://buuoj.cn/challenges#ciscn_2019_n_5>
 
-![](/img/ciscn_2019_n_5/1.jpg)
+![](/img/ctf-pwn/ciscn_2019_n_5/1.jpg)
 
 依旧是栈溢出，可以构造rop，也可以直接ret2shellcode（没开NX）
 
 由于rop写习惯了，先列出rop的做法
 
-![](/img/ciscn_2019_n_5/2.jpg)
+![](/img/ctf-pwn/ciscn_2019_n_5/2.jpg)
 
 第一个输入随便写，第二个输入开始溢出
 
-![](/img/ciscn_2019_n_5/3.jpg)
+![](/img/ctf-pwn/ciscn_2019_n_5/3.jpg)
 
 溢出30+2+8 = 40个字节，用puts的got表来泄露libc基址
 
@@ -316,7 +316,7 @@ p.interactive()
 
 **ret2shellcode**
 
-![](/img/ciscn_2019_n_5/4.jpg)
+![](/img/ctf-pwn/ciscn_2019_n_5/4.jpg)
 
 由于题目给了bss段上100个字节的空间，可以用来写shellcode
 

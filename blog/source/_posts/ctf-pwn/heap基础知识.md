@@ -148,11 +148,11 @@ NBINS是126，包括1个unsorted bin，62个small bin，63个large bin。
 
 ### 内存分配流程
 
- ![](/img/heapexploitation/1.jpg)
+ ![](/img/ctf-pwn/heapexploitation/1.jpg)
 
 ### 内存释放流程
 
- ![](/img/heapexploitation/2.jpg)
+ ![](/img/ctf-pwn/heapexploitation/2.jpg)
 
 
 

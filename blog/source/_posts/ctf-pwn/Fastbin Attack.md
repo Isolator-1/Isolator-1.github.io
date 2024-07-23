@@ -16,7 +16,7 @@ excerpt: fastbin的几种攻击方法
 
 经典的网图
 
-![](/img/Fastbin/1.jpg)
+![](/img/ctf-pwn/Fastbin/1.jpg)
 
 原理在于，三次free之后，第一次把chunk1 malloc出来之后，可以对content部分进行编辑，而content对于第三次malloc出来的chunk1是fd，这个fd在第四次malloc时，会从自己写的地址进行malloc，然后这个malloc出来的块的content又是可编辑的。这样就实现了任意地址写。
 

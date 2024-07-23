@@ -10,7 +10,7 @@ excerpt: canary格式化字符串漏洞
 
 NewStarCTF 2023 canary：
 
-![](/img/canary/1.jpg)
+![](/img/ctf-pwn/canary/1.jpg)
 
 `__readfsqword(0x28u)`说明添加了canary，但是第一次输入只能输入32字节，距离把canary一块printf出来差了8字节，因此用格式化字符串漏洞把canary打印出来。
 

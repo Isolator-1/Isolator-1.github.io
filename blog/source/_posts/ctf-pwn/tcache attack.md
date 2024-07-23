@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
 在2.29版本以后，chunk被free到tcache之后，fd字段会指向tcache结构体（就是那个0x290的chunk），在free的时候看到bk=tcache，会检查tcache中是否有这个块
 
-![](/img/tcache attack/1.jpg)
+![](/img/ctf-pwn/tcache attack/1.jpg)
 
 因此double free之前需要把这个字段给改掉，或者用它来泄露堆地址
 

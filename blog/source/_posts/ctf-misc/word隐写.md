@@ -14,7 +14,7 @@ excerpt: word隐写与ppt隐写
 
 用vscode打开xml时可以用`shift alt f`进行格式整理（需要装一个xml formatter）
 
-![](/img/steganography/1.jpg)
+![](/img/ctf-misc/steganography/1.jpg)
 
 例如上图中的题目是在document.xml里放了一段密文
 

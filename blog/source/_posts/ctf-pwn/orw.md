@@ -15,7 +15,7 @@ gem install seccomp-tools
 
 <https://buuoj.cn/challenges#[%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98%202019]Not%20Bad>
 
-![](/img/orw/1.jpg)
+![](/img/ctf-pwn/orw/1.jpg)
 
 
 

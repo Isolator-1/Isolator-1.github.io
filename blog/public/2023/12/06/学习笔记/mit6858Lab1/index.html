@@ -23,13 +23,13 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="mit 计算机系统安全实验">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/mit6858/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/1.jpg">
 <meta property="article:published_time" content="2023-12-06T02:30:00.000Z">
-<meta property="article:modified_time" content="2024-05-23T10:21:46.558Z">
+<meta property="article:modified_time" content="2024-07-23T06:27:19.475Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/mit6858/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -371,7 +371,7 @@
 
 <h4 id="lab1-exercise6"><a href="#lab1-exercise6" class="headerlink" title="lab1 exercise6"></a>lab1 exercise6</h4><p>题目让再找个漏洞，<del>这显然不是我会的</del></p>
 <p>http_serve存在文件目录穿越漏洞。</p>
-<p><img src="/img/mit6858/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <h4 id="lab1-exercise7"><a href="#lab1-exercise7" class="headerlink" title="lab1 exercise7"></a>lab1 exercise7</h4><p>把value，envvar，reqpath数组大小全部改成8192就好了</p>
 <p>make check-fixed之前的exp全部失效</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">./check-crash.sh zookd-exstack ./exploit-2.py<br>./check-crash.sh: line 36:  2730 Killed                  <span class="hljs-variable">$2</span> <span class="hljs-variable">$HOST</span> <span class="hljs-variable">$PORT</span> &gt; /dev/null<br>FAIL ./exploit-2.py<br>./check-attack.sh zookd-exstack ./exploit-4.py<br>FAIL ./exploit-4.py<br>./check-attack.sh zookd-nxstack ./exploit-5.py<br>FAIL ./exploit-5.py<br><span class="hljs-built_in">rm</span> shellcode.o<br></code></pre></td></tr></table></figure>

@@ -8,7 +8,7 @@ excerpt: xctf-pwn string
 
 #### xctf string
 
-![](/img/FormatString/1.png)
+![](/img/ctf-pwn/FormatString/1.png)
 
 简单的格式化字符串
 
@@ -84,7 +84,7 @@ p.interactive()
 
 参考 <https://blog.csdn.net/mcmuyanga/article/details/114643601>
 
-![](/img/FormatString/2.jpg)
+![](/img/ctf-pwn/FormatString/2.jpg)
 
 ```python
 r.recvuntil("> Input your code please:")

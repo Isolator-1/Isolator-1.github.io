@@ -27,7 +27,7 @@ sudo chroot . ./qemu-mipsel-static <path-to-elf>
 
 一个小端序的仿真示例：
 
-![](/img/qemu/1.jpg)
+![](/img/固件仿真/qemu/1.jpg)
 
 > Q1：为什么要加 -static ？
 >

@@ -12,7 +12,7 @@ excerpt: 栈迁移/栈劫持
 
 https://buuoj.cn/challenges#ciscn_2019_es_2
 
-![](/img/stack_migration/1.jpg)
+![](/img/ctf-pwn/stack_migration/1.jpg)
 
 溢出的长度不足以写rop链，劫持rbp到一个足够大的空间里去
 
@@ -22,7 +22,7 @@ https://buuoj.cn/challenges#ciscn_2019_es_2
 gdb.attach(p, "b *0x080485FC") # 在python pwntools里下断点的方法（要放在开头），进去按一下c
 ```
 
-![](/img/stack_migration/2.jpg)
+![](/img/ctf-pwn/stack_migration/2.jpg)
 
 程序输出的rbp为`0xffdb7098`，和图中aaaa的位置相差0x38，一会就要将ebp覆盖为ebp-0x38，从而开辟足够的空间来构造rop
 
@@ -82,7 +82,7 @@ r.interactive()
 
 stack migration
 
-![](/img/stack_migration/3.jpg)
+![](/img/ctf-pwn/stack_migration/3.jpg)
 
 和前面的唯一区别在于需要先泄露libc地址，题目又给了libc
 

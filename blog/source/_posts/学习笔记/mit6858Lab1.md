@@ -298,7 +298,7 @@ def get_malicious_request():
 
 http_serve存在文件目录穿越漏洞。
 
-![](/img/mit6858/1.jpg)
+![](/img/学习笔记/mit6858/1.jpg)
 
 #### lab1 exercise7
 

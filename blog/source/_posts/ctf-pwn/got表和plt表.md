@@ -78,7 +78,7 @@ int main(void)
 
 **首先，在printf函数调用前下一个断点**
 
-![](/img/plt&got/1.png)
+![](/img/ctf-pwn/plt&got/1.png)
 
 ```assembly
 [-------------------------------------code-------------------------------------]
@@ -116,7 +116,7 @@ gdb-peda$ x/x 0x555555558000
 
 **在printf函数后面下断点，重新查看刚才\<puts@got[plt]\>上的内容**
 
-![](/img/plt&got/2.jpg)
+![](/img/ctf-pwn/plt&got/2.jpg)
 
 ```assembly
 gdb-peda$ x/x 0x555555558000
@@ -155,7 +155,7 @@ gdb-peda$ x/10i 0x00007ffff7c75db0
 
 ​	在plt表的第二条汇编指令中，push 0x0为寻址函数提供了一个参数，如果打开一个具有多个plt表项的程序，会发现每一项这个值都是不同的：
 
-![](/img/plt&got/3.jpg)
+![](/img/ctf-pwn/plt&got/3.jpg)
 
 ​	这个push的值唯一标识了寻找的函数，
 
@@ -198,9 +198,9 @@ gdb-peda$ x/10i 0x00007ffff7fdc080
 
 **第一次调用**
 
-![](/img/plt&got/4.jpg)
+![](/img/ctf-pwn/plt&got/4.jpg)
 
 **第二次调用**
 
-![](/img/plt&got/5.jpg)
+![](/img/ctf-pwn/plt&got/5.jpg)
 

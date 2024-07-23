@@ -52,7 +52,7 @@ d2l.plt.scatter(features[:,(1)].detach().numpy(), labels.detach().numpy(), 1)
 
 
 ​    
-![svg](/img/linear%20regression_files/linear%20regression_3_1.svg)
+![svg](/img/AI/linear%20regression_files/linear%20regression_3_1.svg)
 ​    
 
 
