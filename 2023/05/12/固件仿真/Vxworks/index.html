@@ -23,16 +23,16 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="CTF_HUB 某嵌入式设备固件升级包">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/VxWorks/1.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/VxWorks/2.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/VxWorks/3.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/VxWorks/4.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/3.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/4.jpg">
 <meta property="article:published_time" content="2023-05-12T06:01:00.000Z">
-<meta property="article:modified_time" content="2023-09-14T01:44:32.258Z">
+<meta property="article:modified_time" content="2024-07-23T06:26:51.890Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="firmware analysis">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/VxWorks/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -294,14 +294,14 @@
             
               <div class="markdown-body">
                 
-                <h3 id="固件提取"><a href="#固件提取" class="headerlink" title="固件提取"></a>固件提取</h3><p><img src="/img/VxWorks/1.jpg" srcset="/img/loading.gif" lazyload></p>
+                <h3 id="固件提取"><a href="#固件提取" class="headerlink" title="固件提取"></a>固件提取</h3><p><img src="/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>参考文章 <a target="_blank" rel="noopener" href="https://writeup.ctfhub.com/Challenge/2020/%E5%B7%A5%E4%B8%9A%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E6%8A%80%E8%83%BD%E5%A4%A7%E8%B5%9B/%E6%B5%8E%E5%8D%97%E7%AB%99/pka8PC6FDDQC7A8Nk5yYNS.html">CTFHUB-WriteUp</a></p>
 <p>binwalk提取出名为385的固件，确定是VxWorks内核，并且带有符号表</p>
-<p><img src="/img/VxWorks/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/2.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>然后用binwalk -A 确定架构和大小端</p>
-<p><img src="/img/VxWorks/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/3.jpg" srcset="/img/loading.gif" lazyload></p>
 <h3 id="符号表"><a href="#符号表" class="headerlink" title="符号表"></a>符号表</h3><p>从binwalk结果可以看出符号表在<code>0x301E74</code>附近（这不一定是真实值）</p>
-<p><img src="/img/VxWorks/4.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/VxWorks/4.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>VxWorks符号表每一项由4部分组成，0-3字节是4个<code>00</code>，4-7字节是符号字符串所在内存地址，8-11是符号对应的内容所在地址，12-15字节表示这是一个什么类型的符号。</p>
 <p>如上图，这是一个符号地址在<code>0x27655C</code>，内容在<code>0x1FF058</code>，类型为函数（0x500）的一个符号</p>
 <p>函数名字</p>

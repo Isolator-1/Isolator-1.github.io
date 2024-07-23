@@ -23,13 +23,13 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="ai基础知识补习">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/linear%20regression_files/linear%20regression_3_1.svg">
+<meta property="og:image" content="https://isolator-1.github.io/img/AI/linear%20regression_files/linear%20regression_3_1.svg">
 <meta property="article:published_time" content="2023-11-18T17:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-27T07:12:18.999Z">
+<meta property="article:modified_time" content="2024-07-23T06:31:14.738Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/linear%20regression_files/linear%20regression_3_1.svg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/AI/linear%20regression_files/linear%20regression_3_1.svg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -310,7 +310,7 @@ torch.Size([1000, 2]) torch.Size([1000, 1])
 
 <pre><code class="hljs">&lt;matplotlib.collections.PathCollection at 0x253ff824790&gt;
 </code></pre>
-<p>​<br><img src="/img/linear%20regression_files/linear%20regression_3_1.svg" srcset="/img/loading.gif" lazyload alt="svg"><br>​    </p>
+<p>​<br><img src="/img/AI/linear%20regression_files/linear%20regression_3_1.svg" srcset="/img/loading.gif" lazyload alt="svg"><br>​    </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">data_iter</span>(<span class="hljs-params">batch_size, features, labels</span>): <br>    num_examples = <span class="hljs-built_in">len</span>(features) <span class="hljs-comment"># 1000</span><br>    indices = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">range</span>(num_examples)) <br>    random.shuffle(indices)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, num_examples, batch_size):<br>        batch_indices = torch.tensor(indices[i: <span class="hljs-built_in">min</span>(i+batch_size, num_examples)])<br>        <span class="hljs-keyword">yield</span> features[batch_indices], labels[batch_indices]<br>batch_size = <span class="hljs-number">10</span><br><span class="hljs-keyword">for</span> X,y <span class="hljs-keyword">in</span> data_iter(batch_size, features, labels):<br>    <span class="hljs-built_in">print</span>(X, <span class="hljs-string">&#x27;\n&#x27;</span>, y)<br>    <span class="hljs-keyword">break</span><br></code></pre></td></tr></table></figure>
 
 <pre><code class="hljs">tensor([[ 0.4883, -0.0929],

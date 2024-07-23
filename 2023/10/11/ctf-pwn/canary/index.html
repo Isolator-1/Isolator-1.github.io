@@ -23,14 +23,14 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="canary格式化字符串漏洞">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/canary/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/canary/1.jpg">
 <meta property="article:published_time" content="2023-10-11T03:15:00.000Z">
-<meta property="article:modified_time" content="2023-12-04T06:45:38.606Z">
+<meta property="article:modified_time" content="2024-07-23T06:07:15.687Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="stack">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/canary/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/canary/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -293,7 +293,7 @@
               <div class="markdown-body">
                 
                 <h3 id="canary泄露"><a href="#canary泄露" class="headerlink" title="canary泄露"></a>canary泄露</h3><p>NewStarCTF 2023 canary：</p>
-<p><img src="/img/canary/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/canary/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <p><code>__readfsqword(0x28u)</code>说明添加了canary，但是第一次输入只能输入32字节，距离把canary一块printf出来差了8字节，因此用格式化字符串漏洞把canary打印出来。</p>
 <p><code>printf</code>的参数中，rdi为第一次输入的格式化字符串，然后需要5个%p把rsi，rdx，rcx，r8，r9略过，然后再来6个%p（因为后面的参数在栈上，而canary是栈上第41-48字节，需要第六个%p才能将其打印出来）</p>
 <p>然后第二次输入就是一个最简单的rop链了</p>
