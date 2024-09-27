@@ -1,6 +1,6 @@
 ---
 title: 英语课笔记
-tags: [英语]
+tags: [Others]
 date: 2023-09-15 11:00:00
 categories: [学习笔记]
 excerpt: learning notes
