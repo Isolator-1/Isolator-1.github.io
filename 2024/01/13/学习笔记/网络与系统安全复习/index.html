@@ -1,0 +1,858 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="learning notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络与系统安全复习">
+<meta property="og:url" content="https://isolator-1.github.io/2024/01/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%BD%91%E7%BB%9C%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="learning notes">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-13T07:17:00.000Z">
+<meta property="article:modified_time" content="2024-01-19T10:16:14.209Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="Others">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>网络与系统安全复习 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="网络与系统安全复习"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-01-13 15:17" pubdate>
+          January 13, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">网络与系统安全复习</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h2><p><strong>信息安全的需求 CIA</strong></p>
+<p>机密性Confidentiality，完整性Integrity，可用性Availability</p>
+<p><strong>信息安全管理</strong></p>
+<p>PDCA模型，plan do check act</p>
+<h2 id="访问控制系统"><a href="#访问控制系统" class="headerlink" title="访问控制系统"></a>访问控制系统</h2><p><strong>访问控制的三要素</strong></p>
+<p>SOA（Subject主体，Object客体，Authorize授权）</p>
+<h4 id="自主访问控制"><a href="#自主访问控制" class="headerlink" title="自主访问控制"></a><strong>自主访问控制</strong></h4><p>每一个主体有一个Owner，它具有分配客体权限的能力，权限可以从Owner传递到其他主体，Linux的UGO和ACL用的就是自主访问控制</p>
+<h4 id="强制访问控制"><a href="#强制访问控制" class="headerlink" title="强制访问控制"></a><strong>强制访问控制</strong></h4><p>访问的允许完全根据主体和客体的安全级别决定，主体的安全级别由管理员赋予用户，客体的安全级别由系统根据创建他们的用户安全级别决定。Biba，BLP。</p>
+<h4 id="Linux-UGO"><a href="#Linux-UGO" class="headerlink" title="Linux UGO"></a><strong>Linux UGO</strong></h4><p>为每一个文件附上一段有关访问控制信息的二进制位，描述UGO（User、Group、Other的缩写）分别拥有RWX中哪几项权限</p>
+<h4 id="Linux-ACL"><a href="#Linux-ACL" class="headerlink" title="Linux ACL"></a><strong>Linux ACL</strong></h4><p>UGO授权管理粒度太粗，只能对文件的User、Group进行权限管理，对其余指定的用户授权要创建新的组。ACL可以通过<code> setfacl -m user:用户名:rwx file</code>为指定的用户设置文件的ACL信息。ACL在UGO检查之后，通过UGO才进行ACL检查。</p>
+<h4 id="BLP模型"><a href="#BLP模型" class="headerlink" title="BLP模型"></a><strong>BLP模型</strong></h4><p>BLP只关注机密性，不关注完整/可用性</p>
+<p>不能read up，不能write down</p>
+<p>BLP不能支持策略制定</p>
+<h4 id="Biba模型"><a href="#Biba模型" class="headerlink" title="Biba模型"></a><strong>Biba模型</strong></h4><p>只关注信息的完整性</p>
+<p>不能write up，不能read down，一个主体只能调用完整性低的主体</p>
+<p>Clark-Wilson模型也关注信息的完整性，多边安全模型</p>
+<p>Chinese-Wall模型同时关注机密性和完整性</p>
+<h4 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h4><p>属于强制访问控制，所有访问必须明确授权，默认不允许任何访问，没有root用户，通过allow规则授予访问权限</p>
+<p>allow规则四部分：</p>
+<p>源类型 尝试进行访问控制的域类型</p>
+<p>目标类型 被进程访问的客体类型</p>
+<p>客体类别 允许访问的客体的种类名称</p>
+<p>许可 目标类型允许原类型访问的种类<br>ex ：Allow user_t bin_t: file{read execute}</p>
+<h4 id="基于属性的访问控制-ABAC"><a href="#基于属性的访问控制-ABAC" class="headerlink" title="基于属性的访问控制 ABAC"></a>基于属性的访问控制 ABAC</h4><p>attribute based access control</p>
+<ol>
+<li>细粒度访问控制 2. 管理的灵活性</li>
+</ol>
+<h2 id="网络边界和防护"><a href="#网络边界和防护" class="headerlink" title="网络边界和防护"></a>网络边界和防护</h2><p><strong>IPSec</strong></p>
+<p>AH协议不提供机密性，ESP可以，即ESP配置的时候要选择加密算法和鉴别算法，AH只有一个鉴别算法</p>
+<p>两个协议都可以实现数据源身份鉴别，数据源完整性验证</p>
+<p>IPSec密钥交换协议用的是IKE</p>
+<p>AH：IP头+AH+保护内容，算的哈希是IP头加上保护内容</p>
+<p>ESP：IP头+ESP头+保护内容+ESP尾，没有保证IP头的完整性，但是多了一个加密功能，可以加密IP载荷部分，也可以加密整个IP包，重新打包进行传输，分别对应传输模式（Transport Modes）和隧道模式（Tunnel Modes）</p>
+<p><strong>VPN</strong></p>
+<p>用IPSec做VPN不能随便更换设备，因为IP会变，用SSL做VPN可以不同设备用</p>
+<p><strong>DNSSEC</strong></p>
+<p>对DNS响应进行数字签名</p>
+<p><strong>防火墙</strong></p>
+<p>功能：访问控制、集中管理、日志记录、流量控制、NAT/IPSec平台</p>
+<p>包过滤防火墙：只检查报头，在IP层</p>
+<p>状态检测防火墙：检查报头，建立链接状态表</p>
+<p>应用级网关防火墙：检查报头，检查数据</p>
+<h2 id="网络权限管理"><a href="#网络权限管理" class="headerlink" title="网络权限管理"></a>网络权限管理</h2><p><strong>证书策略</strong></p>
+<p>用来区分不同证书安全等级Certificate Policy（CP），以OID的形式</p>
+<p>CP在CA的证书中出现：表示CA可以签发包含这几种CP的订户证书</p>
+<p>CP在订户证书中出现：说明被授权者的安全等级和可使用的范围，订户证书也可以有不同等级的CP</p>
+<p><strong>PKI和PMI</strong></p>
+<p>PMI：权限管理基础设施，资源拥有者成为SOA（Source of Authority），被授权的实体叫Privilege Holder，SOA对应PKI里根证书的签发机构</p>
+<p>PKI中，CA签发证书，PMI中，AA（Attribute Authority）签发</p>
+<p><strong>为什么要设置PMI</strong></p>
+<p>公钥证书的颁发者和权限的授予者可能不是同一个</p>
+<p>公钥证书和权限的有效期并不是一致的</p>
+<h2 id="可信计算"><a href="#可信计算" class="headerlink" title="可信计算"></a>可信计算</h2><p>TPM</p>
+<p><strong>目标</strong></p>
+<p>保证私钥的安全（TPM产生公私钥对、签名验证加解密时，采用硬件方式在TPM内部操作，私钥的拥有者也无法取得密钥）</p>
+<p>检测恶意代码（通过验证PCR度量值的变化，检测不受签名认证的恶意代码，并且可以用TPM私钥签名PCR的所有软件度量列表，向远端整明软件的安全）</p>
+<p>所以TPM的三项基本功能是（安全的）存储、启动、网上认证</p>
+<p><strong>安全启动、可信启动</strong></p>
+<p>（利用只有拥有合法签名的系统镜像可以被引导等方式），将机器启动到一个可信状态——安全启动</p>
+<p>记录启动序列，用于证明系统状态——可信启动</p>
+<p>系统从一个信任根CRTM启动，信任根是系统中第一个获得控制权的模块，信任根启动BIOS，BIOS启动引导程序，引导程序加载系统内核，系统内核启动系统的应用层程序</p>
+<p>TPM用平台配置寄存器PCT记录系统的启动序列，采用计算Hash的方式，为了将系统的不同镜像的度量值存入PCR，采用扩展的方式：将新的输入值连接在当前PCR值后面，然后链接的结果再次Hash，作为新的PCR值</p>
+<p><strong>动态可信度量根DRTM</strong></p>
+<p>旨在实现信任根的随时随地启动，以及可信启动过程的可重复</p>
+<h2 id="入侵检测"><a href="#入侵检测" class="headerlink" title="入侵检测"></a>入侵检测</h2><p><strong>PDR模型</strong></p>
+<p>保护Protection 检测Detection 响应Response</p>
+<p><strong>PDRR模型</strong></p>
+<p>多了一个 Recovery 恢复</p>
+<h4 id="误用入侵检测系统"><a href="#误用入侵检测系统" class="headerlink" title="误用入侵检测系统"></a><strong>误用入侵检测系统</strong></h4><p>对检测过程中得到的审计事件数据进行过滤，与误用模式库进行逐一比较，检查是否包含入侵行为的标识（特征signature）</p>
+<blockquote>
+<p>所有入侵行为和手段都能够表达为一种模式或特征</p>
+<p>所有已知的入侵过程都可以用匹配的方法发现</p>
+<p>区分计算机病毒与普通计算机程序代码不是一个可判定问题</p>
+</blockquote>
+<p>优点：无需训练实时性好，缺点：只能检测已有的攻击类型</p>
+<p>包括规则匹配（snort、Bro）、专家系统、状态转移分析、数据挖掘</p>
+<blockquote>
+<p><strong>专家系统</strong></p>
+<p>使用类似于if-then的规则格式输入知识，攻击的条件排列在规则的左边（if部分），条件满足时，系统采取规则右边（then部分）给出的动作</p>
+<p><strong>状态转移分析</strong></p>
+<p>把攻击特征表示为系统状态的转移</p>
+</blockquote>
+<h4 id="异常入侵检测"><a href="#异常入侵检测" class="headerlink" title="异常入侵检测"></a><strong>异常入侵检测</strong></h4><p>误用入侵检测是匹配特定的入侵行为，异常入侵检测是学习正常的行为模式</p>
+<p>优点：可以发现未知的攻击，漏报率低。缺点：模式的定义、模式的完备性和监控频率、系统资源的消耗</p>
+<p>异常入侵检测的模式库特征通常在IDS的运行中更新</p>
+<h2 id="入侵响应"><a href="#入侵响应" class="headerlink" title="入侵响应"></a>入侵响应</h2><p><strong>阻断攻击</strong></p>
+<p>阻断TCP连接（TCP RESET）、ICMP Destination Unreachable、消息重定向，然后联络攻击者所在区域管理员/向攻击者发起反击</p>
+<p>收集攻击信息：把攻击者引导到蜜罐，收集对方信息</p>
+<p>入侵追踪</p>
+<p><strong>入侵检测发展</strong></p>
+<p>分布式入侵检测方案SnortNet、基于代理的检测AAFID、APT攻击</p>
+<p><strong>PPM</strong></p>
+<p>追踪包路径，操作为每经过一个路由器，就把IP加上去，不足：经过太多负担过大</p>
+<h2 id="入侵容忍"><a href="#入侵容忍" class="headerlink" title="入侵容忍"></a>入侵容忍</h2><h4 id="拜占庭将军问题-BGP"><a href="#拜占庭将军问题-BGP" class="headerlink" title="拜占庭将军问题 BGP"></a><strong>拜占庭将军问题 BGP</strong></h4><p>A. 所有忠诚的将军必须基于相同的行动计划做出决策。忠诚的将军按算法的要求行动，而叛徒则按他们自己的意志行动。</p>
+<p>B．少数叛徒不能使忠诚的将军做出错误的计划。</p>
+<p>在实际计算机中，问题表述为计算机的失效部件发送自相矛盾的信息给不同系统组成部分，在存在失效部件的情况下，系统仍能达成正确的协定<strong>（不是找出叛徒是谁）</strong></p>
+<p><strong>A 口信解决方案</strong></p>
+<p>问题简化：</p>
+<p>IC1：所有忠诚的下属都服从相同的命令</p>
+<p>IC2：如果上级忠诚，每个忠实的下级都服从它发出的命令</p>
+<p>原始问题可以看作每个将军都用上述方式发送其值v(i)，其他将军看作下属</p>
+<p>上级给下属全都发送消息（没收到消息默认是撤退），下属互相交换接收到的的结果，以多数人接收到的命令为准，这样所有忠臣就都知道了这轮的上级发送的是什么命令，排除了这一轮中叛徒下级的干扰，然后为了排除上级是叛徒的干扰，通过重复m+1轮次找到正确的指令</p>
+<p>（即口解决方案不需要考虑发起的先后顺序）</p>
+<p><strong>如果将军数少于3m+1，没有解决方法，应对m个叛徒</strong></p>
+<p><strong>B 签名消息解决方案</strong></p>
+<p>忠将可以签名消息，使得别人不能篡改她的消息</p>
+<p>然后大家可以直接签名“谁说了什么”把自己收到的消息再公布出去</p>
+<p>这样所有人都可以从上帝视角看，是谁向别人分别发送不同的消息</p>
+<h4 id="拜占庭容错系统-BQS"><a href="#拜占庭容错系统-BQS" class="headerlink" title="拜占庭容错系统 BQS"></a><strong>拜占庭容错系统 BQS</strong></h4><p>假设B发送消息M，A肯定收到，A收到的消息肯定不是假冒的（签名），目的是容忍 f 台服务器失效，client还能读出正确数据</p>
+<p>复制/冗余：复制到大于f台服务器上，client就有可能读出数据</p>
+<p>写/读：同时读写多台服务器</p>
+<p><strong>n台服务器，同时操作q台服务器，容忍f台服务器</strong>，就是BQS的核心内容</p>
+<ol>
+<li>$n-f\ge q$，即使f台坏服务器都回复假消息，也能有足够的q台服务器回复正确的</li>
+<li>$q-(n-q)\ge f+1+f$，至少f+1台服务器正确</li>
+</ol>
+<p>即n=4f+1，q=3f+1，</p>
+<h4 id="门限密码"><a href="#门限密码" class="headerlink" title="门限密码"></a>门限密码</h4><p>秘密S拆分成n个$S_{i}$，通过t个或更多的份额可以计算出t，少于t不能获取S的任何信息，(t,n)就是秘密分成n份，至少t个人。</p>
+<p>构造曲线$F(x)=\sum <em>{i=i}^{t-1}a</em>{i}x^{i}+a_{0}$，每个秘密共享者拥有一个坐标，秘密S就是$a_{0}$</p>
+<p><strong>联合秘密分享</strong></p>
+<p>没有秘密分发者</p>
+<p>约定一个大素数q，秘密为$S=\sum s_{i}modq$，每个人都有秘密$s_{i}$，构造多项式$F_{i}(x)$，$F_{i}(0)=s_{i}$。第i个参与者计算$F_{i}(j)$发给第j个参与者。每个人都收到了n-1个$F_{j}(i)$加上自己的，这n个数求和作为自己的份额</p>
+<p><strong>Proactive Recovery</strong></p>
+<p>在周期T内，攻击者不能攻陷超过f台服务器，不能突破门限，T之后恢复所有服务器</p>
+<p>要保证每一次的拆分与之前的无关，不能互相推导</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Others/">#Others</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>网络与系统安全复习</div>
+      <div>https://isolator-1.github.io/2024/01/13/学习笔记/网络与系统安全复习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 13, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/18/crypto/CP-ABE/" title="基于属性的加密（CP-ABE）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">基于属性的加密（CP-ABE）</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/05/ai/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%A4%8D%E4%B9%A0/" title="大数据复习">
+                        <span class="hidden-mobile">大数据复习</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

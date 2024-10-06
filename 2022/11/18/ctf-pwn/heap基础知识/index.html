@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="basic knowledge in heap exploitation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Heap 基础知识">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/18/ctf-pwn/heap%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="basic knowledge in heap exploitation">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/heapexploitation/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/heapexploitation/2.jpg">
+<meta property="article:published_time" content="2022-11-18T04:19:00.000Z">
+<meta property="article:modified_time" content="2024-07-23T06:09:23.726Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="heap">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/heapexploitation/1.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Heap 基础知识 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Heap 基础知识"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-18 12:19" pubdate>
+          November 18, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Heap 基础知识</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="malloc"><a href="#malloc" class="headerlink" title="malloc"></a>malloc</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> *<span class="hljs-title">malloc</span><span class="hljs-params">(<span class="hljs-type">size_t</span> size)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>size = 0时，返回系统允许的最小内存块</p>
+<p>32位系统下malloc(0)分配8Bytes，64位分配16Bytes</p>
+<h3 id="calloc"><a href="#calloc" class="headerlink" title="calloc"></a>calloc</h3><p>会清空chunk，并且不从tcache种拿chunk，但是free时还是会放到tcache bin</p>
+<h3 id="brk"><a href="#brk" class="headerlink" title="brk"></a>brk</h3><p>堆段的起点和终点标识符：start_brk、brk（program brk)</p>
+<p>不开ASLR，初始时都指向bss段末尾（end_data)</p>
+<p>开启ASLR，会随机向后偏移一段距离</p>
+<p><code>brk()</code>函数作用为抬高brk指针，获取一段heap</p>
+<p>程序开始时heap大小为0，第一次申请堆的时候，通过brk()向系统申请一段内存  <strong>main_arena</strong>，后面malloc都会从main_arena中申请内存</p>
+<h3 id="chunk"><a href="#chunk" class="headerlink" title="chunk"></a>chunk</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>&#123;</span><br>    INTERNAL_SIZE_T mchunk_prev_size; <span class="hljs-comment">/* Size of previous chunk (if free).*/</span><br>    INTERNAL_SIZE_T mchunk_size;      <span class="hljs-comment">/* Size in bytes，including overhead.*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>* <span class="hljs-title">fd</span>;</span>          <span class="hljs-comment">/* double links -- used only if free.*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>* <span class="hljs-title">bk</span>;</span>          <span class="hljs-comment">/* Only used for large blocks: pointer to next larger size. */</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc_chunk</span>* <span class="hljs-title">fd_nextsize</span>;</span> <span class="hljs-comment">/* double links -- used only if free.*/</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc</span> <span class="hljs-title">chunk</span>* <span class="hljs-title">bk_nextsize</span>;</span><br>&#125;<br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">malloc_chunk</span>* <span class="hljs-title">mchunkptr</span>;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="allocated-chunk"><a href="#allocated-chunk" class="headerlink" title="allocated chunk"></a>allocated chunk</h4><p><strong><code>prevsize </code>：</strong>如果前一个chunk是free的<em><strong>（这里指的是内存中的前一个，而不是freelist中的前一个）</strong></em>，它代表前一个chunk的大小；如果不是free的，存储前一个的user data 。32位中是4字节，64位中是8字节</p>
+<p><strong><code>size</code>：</strong>此chunk大小。最低3位用来存储N（chunk 在 non_main_arena里为1）、M（chunk是mmap得到的为1）、P（前一个chunk已被分配为1 对应prevsize），因此size是8字节对齐的</p>
+<p>没有 <strong>fd bk fd_nextsieze bk_nextsize</strong></p>
+<p><strong><code>userdata</code>：</strong>数据</p>
+<p>（下一个chunk的prevsize也会存储userdata）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-keyword">define</span> request2size(req) ...   <span class="hljs-comment">//可以计算申请字节需要实际分配多少字节</span></span><br></code></pre></td></tr></table></figure>
+
+<p>chunk是在prevsize开始，但是malloc返回的指针指向userdata</p>
+<h4 id="free-chunk"><a href="#free-chunk" class="headerlink" title="free chunk"></a>free chunk</h4><p><code>prevsize</code>：上一个chunk的userdata，因为上一个如果也是free，则会被合并（fast bin中可能会例外，后面会提及）</p>
+<p><code>size</code>：同上</p>
+<p><code>fd bk</code>：（在freelist中的）前一个/后一个chunk</p>
+<h4 id="top-chunk"><a href="#top-chunk" class="headerlink" title="top chunk"></a>top chunk</h4><p>位于arena顶部。在所有bin都没有满足需求的chunk时，从top chunk切割</p>
+<p>top chunk 不够，在main_arena中会用brk扩张top chunk，non_main_arena中，用mmap分配新的堆</p>
+<h3 id="Bin"><a href="#Bin" class="headerlink" title="Bin"></a>Bin</h3><p>除了fastbin被存储在一个长度为10的fastbinY的数组里，其余的small large unsorted bin都存储在一个bins数组里</p>
+<p>NBINS是126，包括1个unsorted bin，62个small bin，63个large bin。</p>
+<div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;toolbar&quot;:&quot;zoom layers tags lightbox&quot;,&quot;edit&quot;:&quot;_blank&quot;,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;app.diagrams.net\&quot; modified=\&quot;2022-11-17T04:09:19.532Z\&quot; agent=\&quot;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36\&quot; etag=\&quot;ojfzveORWWdzC3RN6ooc\&quot; version=\&quot;20.5.3\&quot; type=\&quot;device\&quot;&gt;&lt;diagram id=\&quot;FyZdLwTWtfESSsWo7Yml\&quot; name=\&quot;第 1 页\&quot;&gt;7ZlNc5swEIZ/jY/JgASCHOPEaQ7pNDNups0poxoF6GCJCvmrv74rIwyCEieeSUybnMyupEV6tK9YwwhfzNefJM2TzyJi2Qg50XqEL0cIuTg8gx/t2RiPEzilJ5ZpVPoajmn6m1UdjXeRRqwwvtKlhMhUmtvOmeCczZTlo1KKld3tUWSR5chpzKxpaMd0RjPW6fYtjVRSekMU1P5rlsZJdWeXmBXPadXZBC4SGolVw4UnI3whhVDl1Xx9wTJNz+Zy1dO6m5hkXD1nwPVEnE/c5bn/8JD9ouvwhn+5OzFRljRbmAV/FYrqYeOUFyNEMog9/iHhKtZXLiZmNWpTIZJiwSOm7+JAj1WSKjbN6Uy3riArwJeoeQaWC5ePgiuzyy4B29yfScXWvQtzd7gg0ZiYMyU30MUMQBVyk2MnQVjaq3rDXGJ2IWlsVmh81ORIvAtdY4QLQ/IFVHGH6hUtVD9UZ3BMXddCivzgyEi9DtI7XghYYdSPdXBUEQkGhtXvYL2hEk7EPqYEDw6qj52BQSUdqNM5zfoPVYIGBzVonanHhxp0oPaoHg3vCdVO0QAdGeZZB2aHGYugDjImFxx+xnDcJiIWnGY3QuQG10+m1MbwogslbJg2+SZawDVmPDrXNRrYImccPIWictfFK7s0zUIs5IzdMpkCCCb1LqY8htYQGpU+ulRP42whl9uJ6Gmxdaq+60mdIt+Y942my7WZ8NbYVAYH9OUovzLvm231sK1VjSvRap5Ppw/g365uf7lWLnRfAdJNx2a+eSa3JMuoSpf23P6WcCbcrUi5qlMbO61KISR2CLNj5ahmedoK5Hl7ApndbQeCBKKbRrdcdyg6CtlROFw0VZn2flVzoAAqtbkNqUGIwH9abmDsZnU8KQUfUnoFKXX/d74zKf2jD6Dgmarx3kw17drKdfCBqsF2yYvdVqDjqwZ9qEY18v9/E43/ZqJBDrJyvXov8VLNuO33REEr0PE1030X9141ExwkGo80VXPinML5uqfc09YrVm7PlRN5MzkR1HoGVW90Xqongj1bT21hvqKewKw/RpTd6286ePIH&lt;/diagram&gt;&lt;/mxfile&gt;&quot;}"></div>
+<script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+#### fast bin
+
+<p>在free一个chunk到fast bin时，它下一个chunk的P位（PREV_INUSE)是不会变的，还是为1，为了加快free的效率。<strong>因此地址连续的两个chunk 被free到fast bin，他们不会被合并</strong>。</p>
+<p><strong>content的大小范围：32位：8~80，64位：16~160</strong>，都是10个bin，但是实际上fastbin的大小范围并不包含最大的两个bin (64bit 0x80就已经不进fastbin了)</p>
+<p>新的chunk加入bin时，<strong>fd</strong>指向原来的栈顶，先进后出（LIFO）</p>
+<h4 id="small-bin"><a href="#small-bin" class="headerlink" title="small bin"></a>small bin</h4><p>大小范围</p>
+<p>32位，最小为16字节，公差为8，最大为504字节，所以是62个small bin</p>
+<p>64为，最小为32字节，公差为16，最大为1008字节</p>
+<h4 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h4><p>大小范围</p>
+<p>32位（大于等于512字节）64位（大于等于1024字节），每个链表里的chunk不一定一样大，只要是属于某个特定区间就行</p>
+<p>63个bin被分为6组</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">数量</th>
+<th align="center">公差</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">32</td>
+<td align="center">64字节</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">16</td>
+<td align="center">512</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">8</td>
+<td align="center">4096</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">4</td>
+<td align="center">32768</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">2</td>
+<td align="center">262144</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">1</td>
+<td align="center">不限制</td>
+</tr>
+</tbody></table>
+<p>第一组起始大小是512，也就是第一组的第一个bin的范围为[512,512+64) ， 最后一个为[512 + 64*31, 512 + 64*32)</p>
+<p>第二组接着第一组的末尾，第一个bin也就是[2560, 2560+ 512)，以此类推</p>
+<p>每个的具体大小可在第四个参考文献里看</p>
+<h4 id="unsorted-bin"><a href="#unsorted-bin" class="headerlink" title="unsorted bin"></a>unsorted bin</h4><p>释放一个不属于 fast bin 的 chunk，并且该 chunk 不和 top chunk 紧邻时，该 chunk 会被首先放到 unsorted bin 中</p>
+<p>分配时，如果在unsorted bin里没找到合适的chunk，则把unsorted bin里的chunk分配到small 和 large里，，然后再在 bin 中分配合适的 chunk</p>
+<h3 id="内存分配流程"><a href="#内存分配流程" class="headerlink" title="内存分配流程"></a>内存分配流程</h3><p> <img src="/img/ctf-pwn/heapexploitation/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="内存释放流程"><a href="#内存释放流程" class="headerlink" title="内存释放流程"></a>内存释放流程</h3><p> <img src="/img/ctf-pwn/heapexploitation/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="tcache相关知识"><a href="#tcache相关知识" class="headerlink" title="tcache相关知识"></a>tcache相关知识</h3><p>以下全是64位机器来说</p>
+<p>tcache从2.26开始才有，tcache同fastbin，先进后出，不动inuse</p>
+<p>tcache出现后，每次产生堆都会先产生一个0x250大小的堆块，位于堆的开头。这0x250中（header占16字节），前0x40字节，对应64条tcache的链表，描述每个链表中的个数（每个链表最多7个chunk），然后0x200字节对应每个链表的开头地址。</p>
+<p>tcache的64个链表从0x20开始，到0x410结束，公差16字节</p>
+<p>tcache的链表指针指向的是chunk的content，而不是开头</p>
+<blockquote>
+<p>在老的2.27中没有doublefree检查</p>
+</blockquote>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://heap-exploitation.dhavalkapil.com/">Heap Exploitation</a></p>
+<p><a target="_blank" rel="noopener" href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">Understanding glibc malloc</a></p>
+<p><a target="_blank" rel="noopener" href="https://sploitfun.wordpress.com/2015/02/11/syscalls-used-by-malloc/">Syscalls used by malloc</a></p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/papers/Archive/refs/heap/glibc%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86ptmalloc%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.pdf">glibc 内存管理 ptmalloc 源代码分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://sensepost.com/blog/2017/painless-intro-to-the-linux-userland-heap/">Painless intro to the Linux userland heap</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/heap/">#heap</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Heap 基础知识</div>
+      <div>https://isolator-1.github.io/2022/11/18/ctf-pwn/heap基础知识/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 18, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/22/ctf-pwn/UAF/" title="UAF">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">UAF</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/16/ctf-pwn/ROP/" title="ROP">
+                        <span class="hidden-mobile">ROP</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

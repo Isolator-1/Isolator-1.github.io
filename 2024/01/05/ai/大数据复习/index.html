@@ -1,0 +1,984 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="线代+概率论+分类+聚类+回归+降维+...">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大数据复习">
+<meta property="og:url" content="https://isolator-1.github.io/2024/01/05/ai/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="线代+概率论+分类+聚类+回归+降维+...">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-05T12:26:00.000Z">
+<meta property="article:modified_time" content="2024-01-19T07:24:16.800Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="machine-learning">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>大数据复习 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="大数据复习"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-01-05 20:26" pubdate>
+          January 5, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          63 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">大数据复习</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h4 id="朴素贝叶斯-Naive-Bayes"><a href="#朴素贝叶斯-Naive-Bayes" class="headerlink" title="朴素贝叶斯 Naive Bayes"></a>朴素贝叶斯 Naive Bayes</h4><p>假设每一个样本都由$x_{1},x_{2}…x_{n}$个独立事件组合起来，样本的标签有$C_{1},C_{2}…C_{m}$种，有一堆训练集的数据，然后给你一个新的样本X，问它该打哪个标签</p>
+<p>这个问题转化一下，就是求$P(C_{i} |X)$，看一下哪个标签的概率最大，即求$argmax_{C_{i}} P(C_{i} |X)$ 。</p>
+<p>但是X在竖线右边，用不了独立事件概率相乘的公式，只会求</p>
+<p>$$P(X|C_{i})=P(x_{1}|C_{i})P(x_{2}|C_{i})P(x_{3}|C_{i})$$</p>
+<p>那么就要用到贝叶斯公式了</p>
+<p>$$P(A|B) = \frac{P(B|A)P(A)}{P(B)}$$    </p>
+<p>即</p>
+<p>$$argmax_{C_{i}} P(C_{i}|X) = argmax_{C_{i}}\frac{P(X|C_{i})P(C_{i})}{P(X)}$$</p>
+<p>$$=argmax_{C_{i}}\frac{P(x_{1}|C_{i})P(x_{2}|C_{i})P(x_{3}|C_{i})P(C_{i})}{P(X)}$$</p>
+<p>然后又用到MAP (maximum a posteriori，极大后验)  假设，<del>其实就是X是给定的样本，是已知的，P(X)=1​</del>。</p>
+<p>分别求分子哪几项乘一起就得到结果了，看哪个概率最大，就把X分为哪一类。</p>
+<h4 id="KNN-k-nearest-neighbors"><a href="#KNN-k-nearest-neighbors" class="headerlink" title="KNN k-nearest-neighbors"></a>KNN k-nearest-neighbors</h4><p>有一堆点，每个点都有个标签，然后又给了一个点，问这个点属于哪个标签？</p>
+<p>求这个点和已知的所有点的距离，取最近的k个点，这k个点里哪个标签的最多，就归为哪一类</p>
+<p><strong>附上不同距离定义的公式</strong> （假设x和y都是长度为n的向量）</p>
+<blockquote>
+<p>欧氏距离 $L_{2}(X,Y) = (\sum_{i=1}^{n} |x_{i}-y_{i}|^{2}  )^{\frac{1}{2}} $</p>
+<p>曼哈顿距离$L_{1}(X,Y)=\sum_{i=1}^{n} |x_{i}-y_{i}| $</p>
+<p>$L_{p}$距离 $L_{p}(X,Y) = (\sum_{i=1}^{n} |x_{i}-y_{i}|^{p}  )^{\frac{1}{p}} $</p>
+<p>$L\infty$距离 $L_{\infty }(X,Y)=\max|x_{i}-y_{i}|$</p>
+</blockquote>
+<h4 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h4><p>本身是从线性回归中引申出来的，logistic regression用的sigmoid函数$$\sigma(z)=\frac{1}{1+e^{-z}}$$，就是一个光滑化之后的阶跃函数（x小于某个值时，y是一个值，x大于某个值时，y是另一个值）,把线性回归的wx+b添加了非线性因素进去</p>
+<p>前向传播就是$\sigma(wX)=\frac{1}{1+e^{-wx}}$，（这里先不加偏置）关键是损失函数</p>
+<p><strong>最大似然估计</strong></p>
+<blockquote>
+<p>什么是似然Likelihood</p>
+<p>和概率Probobality是相对的，在参数$ \beta$的前提下，x发生的概率是$P(x|\beta)$</p>
+<p>似然就是在x发生了的前提下，什么样的参数 $\beta$，是使这件事发生概率最大的参数，似然函数记为$L(\beta|x)$，和前面那个P是相等的</p>
+</blockquote>
+<p>也就是说，每一个参数都对应一个似然函数的值，当参数变化，似然函数值而在变化，最大似然估计就是说，**找到一个使似然函数最大的参数$\beta$**，在这个参数下，最有可能发生x事件</p>
+<p>在二分类中（y只有0和1两个值），概率函数是这样表示的</p>
+<p>$$P(y|x,\beta)=P(y=1|x)^{y}[1-P(y=1|x,\beta)]^{1-y}$$</p>
+<p>然后训练集的样本有n个，那么概率就是上面这个式子乘n次，带入前向传播的公式，根据最大似然的概念，要做的就是最大化这个概率函数</p>
+<p>$$L(\beta)=\prod_{i=1}^{n}P(y|x,\beta)=\prod_{i=1}^{n}(\frac{1}{1+e^{-x_{i}\beta}})^{y_{i}}(1-\frac{1}{1+e^{-x_{i}\beta}})^{1-y_{i}}$$</p>
+<p>因为直接对这个东西取最大值很难，所以取个对数,连乘就会变成连加</p>
+<p>然后又给他取个相反数，<del>从取最大值就变成了取最小值，然后就可以当作损失函数了</del> logistic regression的损失函数就是这么个东西</p>
+<p>$$J(\beta) = -\log{L(\beta)}= - \sum_{i=1}^{n}[y_{i}(\beta{x_{i}})-\log{(1+e^{\beta x_{i}})}]$$</p>
+<p>最小化这个损失函数，得到$\hat{\beta}$，带入就得到了预测值</p>
+<p>$P(y=1|x)=\frac{e^{\hat{\beta}x}}{1+e^{\hat{\beta}x}}$ ， $P(y=0|x)=\frac{1}{1+e^{\hat{\beta}x}}$</p>
+<p>上述就是二项logistic回归的全过程</p>
+<h4 id="AdaBoost"><a href="#AdaBoost" class="headerlink" title="AdaBoost"></a>AdaBoost</h4><p>假设T个弱分类器$h_{t}(x)$，每个弱分类器的权重都是$\alpha$，目的就是通过这个式子获取强分类器的预测结果</p>
+<p>$$H(x)=sign(\sum_{t=1}^{T}\alpha_{t}h_{t}(x))$$</p>
+<p><strong>训练过程</strong></p>
+<p>每个样本都有个权重$w_{i}$，初始都是$\frac{1}{N}$，那么初始样本的权重分布就是$D_{1}=(\frac{1}{N},…,\frac{1}{N})$</p>
+<p>重复以下过程T次</p>
+<ol>
+<li>每个弱分类器的误差的计算</li>
+</ol>
+<p>$$e_{t}=\sum_{i=1}^{n}w_{ti}(H_{t}(x_{i})\ne y_{i})$$</p>
+<ol start="2">
+<li>计算弱分类器在最终分类其中所占的权重</li>
+</ol>
+<p>$$\alpha_{t}=\frac{1}{2}\ln (\frac{1-e_{t}}{e_{t}})$$</p>
+<ol start="3">
+<li>更新样本权值分布</li>
+</ol>
+<p>$$D_{t+1}[i]=\frac{D_{t}[i]}{Z_{t{}}}e^{-\alpha_{t}y_{i}H_{t}(x_{i})}$$</p>
+<blockquote>
+<p>Z是归一化常数，好像可以是不同的？</p>
+</blockquote>
+<p>算完每个$\alpha$，就得到了开头的那个公式</p>
+<h4 id="SVM"><a href="#SVM" class="headerlink" title="SVM"></a>SVM</h4><p>画一条线（或者一个超平面）把不同类别的点分开，但是点都是离散的，能画出来无数条线把它们分开</p>
+<p><strong>硬间隔SVM</strong></p>
+<p>这个最佳超平面离最近的正类别和负类别的样本点的距离最远，这些最近的样本点被称为支持向量。</p>
+<p>假设一个超平面$w^{T}x+b=0$，某个样本到这个超平面的距离是$\frac{|w^{T}x+b|}{||w||}$</p>
+<p>再假设这个二分类的标签是+1和-1，那两类样本点分别要满足$w^{T}x+b\ge1,w^{T}x+b\le-1$，那这个边界平面的距离就是$\frac{2}{||w||}$，目的就是最大化这个距离</p>
+<p>（其实标签不是+1和-1也没关系，最终距离只会改变分子，不影响取最值的条件）</p>
+<p>由于$||w||$求的时候要开根号，所以把这个问题改为求他的平方，最小化$\frac{||w||^{2}}{2}$</p>
+<p>但是很难直接求解，因为有个约束条件$y_{i}(wx_{i}+b)\ge1$，乘y是为了把$\le-1$那部分合并到一个式子里</p>
+<p>然后为了求解这种条件约束，引入拉格朗日算子（原因这里先不管了，引入之后就不需要考虑约束条件了）</p>
+<p>$$L=\frac{1}{2}||w||^{2}+\sum_{i=1}^{l}\alpha_{i}(1-y_{i}(wx_{i}+b))$$</p>
+<p><strong>软间隔SVM</strong></p>
+<p>找不到一条线，让两类点都分布在两侧，那么就允许有部分点在线的另一边，但是不能太远，这个远近是由一个叫松弛变量$\xi$控制的</p>
+<p>和硬间隔类似，只不过把优化问题转变成</p>
+<p>$$y_{i}(wx_{i}+b)\ge1-\xi$$</p>
+<p>优化</p>
+<p>$\frac{1}{2}||w||^{2}+C(\sum\xi)$</p>
+<p><strong>升维</strong></p>
+<p>软间隔也找不到，就把样本转化到更高维度的空间中，再找超平面</p>
+<h2 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h2><h4 id="顺序聚类"><a href="#顺序聚类" class="headerlink" title="顺序聚类"></a>顺序聚类</h4><p>第一个样本归为第一类，后面每个样本都和已有类计算一下最短距离，小于给定的阈值，就归进去，否则归为新的类</p>
+<h4 id="划分聚类K-means"><a href="#划分聚类K-means" class="headerlink" title="划分聚类K-means"></a>划分聚类K-means</h4><ol>
+<li>随机选k个元素，作为k个簇的中心</li>
+<li>剩下元素到k个簇中心的距离，将他们划分到距离最近的簇</li>
+<li>重新计算k个簇的中心（所有点各个元素的均值）</li>
+<li>全部样本重复2和3再次划分，直到不变</li>
+</ol>
+<p><strong>马氏距离</strong></p>
+<p>$$D_{M}(x,y) = \sqrt{(x-y)^{T}\sum^{-1}(x-y)}$$</p>
+<p>其中$\sum^{-1}$是协方差矩阵的逆矩阵，修正了欧式距离中各个维度尺度不一致且相关的问题</p>
+<h4 id="层次聚类AGNES、DIANA"><a href="#层次聚类AGNES、DIANA" class="headerlink" title="层次聚类AGNES、DIANA"></a>层次聚类AGNES、DIANA</h4><p>AGNES是自下而上的<strong>凝聚</strong>，开始每个点都是一个簇</p>
+<p>根据两个簇中<strong>最近的数据点</strong>找到<strong>最近的两个簇</strong>，合并，直到到达指定的簇的个数</p>
+<blockquote>
+<p>这个寻找最近的两个簇的方法还可以换成最大距离，平均距离，重心法……</p>
+</blockquote>
+<p>DIANA是自上而下的<strong>分裂</strong></p>
+<h4 id="密度聚类DBSCAN"><a href="#密度聚类DBSCAN" class="headerlink" title="密度聚类DBSCAN"></a>密度聚类DBSCAN</h4><p>DBSCAN，OPTICS，DENCLUE</p>
+<p>DBSCAN:不再需要指定簇的个数，前面的k-means和agnes都需要指定</p>
+<p>对于数据集中的每个点，计算其邻域（距离小于$\epsilon$）内的点的个数，如果个数超过阈值（MinPts），认为这个点是核心点</p>
+<p>对于每个核心点，将在邻域内的点归为同一簇（这些点被称为密度可达的），<strong>不属于任何簇的点标记为噪声点</strong></p>
+<h4 id="谱聚类（Spectral-clustering）"><a href="#谱聚类（Spectral-clustering）" class="headerlink" title="谱聚类（Spectral clustering）"></a>谱聚类（Spectral clustering）</h4><h2 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h2><h4 id="一元线性模型"><a href="#一元线性模型" class="headerlink" title="一元线性模型"></a>一元线性模型</h4><p>$Y_{i}=\mu(x_{i})=a+bX_{i}+\epsilon_{i}$，$\epsilon$相互独立，服从$N(0,\sigma^{2})$</p>
+<p><strong>最小二乘法估计</strong></p>
+<p>$$\min\sum_{i=1}^{n}(y_{i}-\hat{y_{i}})^{2}=min\sum_{i=1}^{n}[y_{i}-\hat{\mu}(x_{i})]^{2}$$</p>
+<p>如果目标函数是一元线性模型，把$\mu(x)$带入，分别对a和b求偏导，令偏导得0，会解出</p>
+<p>$$\hat{b}=\frac{\sum(x_{i}-\overline{x})y_{i}}{\sum(x_{i}-\overline{x})^{2}}$$</p>
+<p>$$\hat{a}=\overline{y}-\hat{b}\overline{x}$$</p>
+<h4 id="多元线性回归"><a href="#多元线性回归" class="headerlink" title="多元线性回归"></a>多元线性回归</h4><h4 id="非线性回归"><a href="#非线性回归" class="headerlink" title="非线性回归"></a>非线性回归</h4><h2 id="关联规则"><a href="#关联规则" class="headerlink" title="关联规则"></a>关联规则</h2><h4 id="如何描述关联规则"><a href="#如何描述关联规则" class="headerlink" title="如何描述关联规则"></a>如何描述关联规则</h4><p>集合$I={i_{1},i_{2},i_{3}…i_{m}}$中每一项（叫做项目）代表一个商品，集合$D={t_{1},t_{2}…t_{n}}$中每一项代表一个交易，且是I中元素的组合（t为一个项集，一个事务）</p>
+<p>项集X在D中出现的次数占总事物的百分比叫做项集的<strong>支持度</strong>，给定一个阈值，支持度超过这个阈值就叫做<strong>频繁项集</strong></p>
+<p><strong>关联规则是形如$X=&gt;Y$的蕴含式，其中$X\subseteq I$，$Y\subseteq I$且 $X\cap Y=\oslash $，则X称为规则的条件，Y称为规则的结果。</strong> </p>
+<p><strong>支持度和置信度</strong></p>
+<p>$$support(X=&gt;Y)=(包含X和Y的事物数/事物总数)*100%$$</p>
+<p>$$confidence(X=&gt;Y)=(包含X和Y的事务数/包含X的事物数)*100%$$</p>
+<blockquote>
+<p>例如5次交易分别为（ABC）(ACD)（BCD）（ADE）（BCE）$ABCDE\in I$</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>支持度</th>
+<th>置信度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A=&gt;D</td>
+<td>2/5</td>
+<td>2/3</td>
+</tr>
+<tr>
+<td>C=&gt;A</td>
+<td>2/5</td>
+<td>2/4</td>
+</tr>
+<tr>
+<td>A=&gt;C</td>
+<td>2/5</td>
+<td>2/3</td>
+</tr>
+<tr>
+<td>B&amp;C=&gt;D</td>
+<td>1/5</td>
+<td>1/3</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>由于分母相同，有时只用分子表示支持度，叫做<strong>频度</strong></p>
+<h4 id="Apriori算法"><a href="#Apriori算法" class="headerlink" title="Apriori算法"></a>Apriori算法</h4><p>关联规则的挖掘过程：</p>
+<p><strong>寻找频繁项集，然后产生关联规则</strong>（满足最小支持度和置信度）</p>
+<p>难点在于寻找频繁项集，因为子集的数量太多了（$2^{项目个数}-1$）</p>
+<ol>
+<li><p>如果某个项集是频繁项集，他的子集也一定是（逆否：有子集不是频繁的他也一定不是）</p>
+</li>
+<li><p>从上面一条可以推断出，如果一个项集是小的，就不用再考虑包含他（超集）的了</p>
+</li>
+</ol>
+<p>因此，Apriori算法是，先找频繁1-项集（也就是只有一个元素的项集），由选出来的1-项集，去组合2-项集，验证组合出来的，3-项集……</p>
+<p>所以Aprioiri算法是一个逐层搜索的迭代算法</p>
+<h4 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h4><p>Apriori算法每处理一层就要读一次数据库</p>
+<p>PCY算法，FP-Tree</p>
+<p>兴趣度，AprioriAll</p>
+<h2 id="时间序列分析"><a href="#时间序列分析" class="headerlink" title="时间序列分析"></a>时间序列分析</h2><p>离群点outlier（奇异值anomaly），远离序列一般水平的极端大和极端小值</p>
+<p>加性离群点：之干扰发生的那一时刻T上的序列值$X_{T}$，不影响$X_{T+…}$</p>
+<p>新生离群点：干扰后面的序列</p>
+<p>水平迁移离群点：在这个时刻发生了结构性变化，在T时刻前后发生水平迁移</p>
+<p>暂时变更离群点：对后面有影响，但是影响很快变小</p>
+<h4 id="自回归模型-AR"><a href="#自回归模型-AR" class="headerlink" title="自回归模型 AR"></a>自回归模型 AR</h4><p>$X_{t}$为平稳且零均值的时间序列，$X_{t}$与其滞后一期$X_{t-1}$高度线性相关，但滞后二期、三期…相关较弱，用$X_{t}=\phi X_{t-1}+a_{t}$ 表示一阶自回归模型</p>
+<p>n阶自回归就是直到$X_{t-n}$都相关，是前面n项的线性组合</p>
+<p>理论上要求$a_{t}$是正态白噪声序列（平稳时间序列的协方差为0）</p>
+<h4 id="移动平均模型-MA"><a href="#移动平均模型-MA" class="headerlink" title="移动平均模型 MA"></a>移动平均模型 MA</h4><p>$X_{t}$为平稳且均值为零的时间序列，$X_{t}$与滞后期之间的相关性较弱，但与干扰项的滞后一期$a_{t-1}$相关较强。$X_{t}=a_{t}-\theta <em>{1}a</em>{t-1}$表示一阶移动平均模型</p>
+<p>m阶就是$X_{t}=a_{t}-\sum_{k=1}^{m}\theta <em>{k}a</em>{t-k}$</p>
+<h4 id="自回归移动平均模型-ARMA"><a href="#自回归移动平均模型-ARMA" class="headerlink" title="自回归移动平均模型 ARMA"></a>自回归移动平均模型 ARMA</h4><p>$X_{t}=\phi <em>{1}X</em>{t-1} + \phi <em>{2}X</em>{t-2} + a_{t} - \theta <em>{1}a</em>{t-1}$叫做2阶自回归、1阶移动平均模型</p>
+<h2 id="降维"><a href="#降维" class="headerlink" title="降维"></a>降维</h2><h4 id="主成分分析PCA"><a href="#主成分分析PCA" class="headerlink" title="主成分分析PCA"></a>主成分分析PCA</h4><p>把原来的p个具有一定相关性的指标，变为m个互不相关的指标</p>
+<p>每一个主成分都是原始变量的先行组合，$Y=\mu{X}$</p>
+<p>约束条件：</p>
+<ol>
+<li><p>系数的平方和为1，即$\mu_{i} ‘ \mu_{i}=1$，$\sum_{j=1}^{p}\mu_{ij}^{2}=1$</p>
+</li>
+<li><p> Y1是满足线性组合中的方差最大者，Y2是与Y1不相关的方差最大者，Y3……</p>
+</li>
+</ol>
+<p>从几何意义上看，是把Xi构成的坐标系旋转产生新的坐标系，形成了最大的样本方差</p>
+<h4 id="线性判别式分析-LDA-Fisher"><a href="#线性判别式分析-LDA-Fisher" class="headerlink" title="线性判别式分析 LDA / Fisher"></a>线性判别式分析 LDA / Fisher</h4><p>PCA是无监督的，LDA是有监督的，需要考虑标签</p>
+<p>LDA：投影后类内方差最小，类间方差最大</p>
+<h4 id="因子分析"><a href="#因子分析" class="headerlink" title="因子分析"></a>因子分析</h4><p>SVD 奇异值分解</p>
+<p>特征值分解是针对方针的，奇异值分解可以不是</p>
+<h2 id="文本数据处理"><a href="#文本数据处理" class="headerlink" title="文本数据处理"></a>文本数据处理</h2><h4 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h4><p>分析每个词对于文档的重要程度</p>
+<p>建立一个DxV的词频矩阵TF，D为语料库文档个数，V为词典中词的个数，矩阵每个元素表示词典中这个词在这篇文档中出现的频率</p>
+<p>建立一个大小为V的逆文本频率对角方阵IDF，词典中w个词，在df(w)篇文档中都有出现，那么w个词的逆文本频率定义为</p>
+<p>$$IDF(w)=log\frac{|D|}{df(w)}$$</p>
+<p>如果两个文本的TFxIDF结果余弦相似度越大，说明越相似</p>
+<h4 id="概率图"><a href="#概率图" class="headerlink" title="概率图"></a>概率图</h4><p>用图的形式表示随机变量之间条件依赖关系的概率模型，概率论和图论的结合</p>
+<h2 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h2><p><strong>自我选择偏差</strong></p>
+<p>在不考虑做出选择的原因的时候，就进行选择差异对 比</p>
+<p>在禁酒的学校， 学生嗜酒的概率低30%，完全戒酒的概率更高</p>
+<p><strong>大样本 随机 对照 双盲</strong></p>
+<p>双盲：为了客观公正，实验双方互不知道对方信息</p>
+<p><strong>缺失数据处理</strong></p>
+<p>热卡填充：找到最相似的赝本来填充</p>
+<p>knn：k近邻的加权平均</p>
+<p>回归：建立回归模型</p>
+<p><strong>不平衡数据处理</strong></p>
+<p>过采样：根据不平衡比例设置一个采样比例，对于每一少数类样本x，从knn中选择若干样本</p>
+<h2 id="线代"><a href="#线代" class="headerlink" title="线代"></a>线代</h2><ol>
+<li><p>矩阵满足结合律和分配律(AB)C=A(BC)，(A+B)C=AC+BC</p>
+</li>
+<li><p>(AB)’=B’A’，(A+B)’=A’+B’</p>
+</li>
+<li><p>奇异矩阵：方阵、行列式是0，不是0就是非奇异</p>
+</li>
+<li><p>$A^{-1}=A^{<em>}/|A|$，$A^{</em>}$是伴随矩阵，元素是$a_{ij}$代数余子式</p>
+<p>（去掉所在的行和列，带符号计算剩下的部分行列式的值）</p>
+</li>
+<li><p>k阶子式（矩阵中任取k行k列组成的方阵）的非零最高阶数k称为矩阵的秩 r(A)</p>
+<p>满秩矩阵：方阵，k=边长，否则是降秩矩阵</p>
+<p>秩就是行阶梯矩阵的阶梯数（非零行的数目）</p>
+</li>
+<li><p>增广矩阵：线性方程组Ax=B，A是稀疏矩阵，拼接上B就是增广矩阵</p>
+</li>
+<li><p>r(A)&lt;r(A,b)无解，r(A)=r(A,b)=n(未知数个数)，有唯一解，小于n的时候有无数个解</p>
+</li>
+<li><p>特征值：A是n阶方阵，存在一个向量$\xi$，使得$A\xi=\lambda\xi$，$\lambda$就是特征值，$\xi$就是属于$\lambda$的一个特征向量</p>
+<p>特征多项式：$|\lambda E-A|$。方程$|\lambda E -A|=0$称为特征方程</p>
+<p>一个特征向量只能有一个特征值，但一个特征值可以有无数个特征向量($k\xi$)</p>
+<p>$A^{m}$的特征值是$\lambda^{m}$，逆矩阵的特征值是$\lambda^{-1}$</p>
+</li>
+<li><p>相似矩阵：$B=P^{-1}AP$，A和B是相似的，P叫相似变换矩阵</p>
+</li>
+</ol>
+<h2 id="概率统计"><a href="#概率统计" class="headerlink" title="概率统计"></a>概率统计</h2><p><strong>事件运算性质</strong></p>
+<p>交换、结合、分配律，对偶律（$\overline{A\cap B}=\overline{A}\cup \overline{B}$，$\overline{A\cup B}=\overline{A}\cap \overline{B}$）</p>
+<p><strong>条件概率</strong></p>
+<p>$P(A|B)=\frac{P(AB)}{P(B)}$，不要求AB独立，$P(B)&gt;0$</p>
+<p><strong>互不相容</strong></p>
+<p>$P(A\cup B)=P(A)+P(B)-P(AB)$</p>
+<p>如果A和B互不相容$P(A\cup B)=P(A)+P(B)$</p>
+<p><strong>方差</strong></p>
+<p>$Var(X_{1}+/-X_{2})=Var(X_{1})+Var(X_{2})$，当$X_{1}X_{2}$相互独立</p>
+<p><strong>标准差</strong></p>
+<p>$\sigma(X_{1}+X_{2})=\sqrt{Var(X_{1})+Var(X_{2})}$，当其相互独立</p>
+<p><strong>假设检验</strong></p>
+<p>$H_{0}$为原假设，$H_{1}$为备择假设</p>
+<p>（1）$H_{0}:\mu\le\mu_{0},H_{1}:\mu&gt;\mu_{0}$</p>
+<p>（2）$H_{0}:\mu\ge\mu_{0},H_{1}:\mu&lt;\mu_{0}$</p>
+<p>（3）$H_{0}:\mu=\mu_{0},H_{1}:\mu\ne\mu_{0}$</p>
+<p>(1)(2)称为单边假设检验，(3)称为双边假设检验</p>
+<h2 id="得分排名"><a href="#得分排名" class="headerlink" title="得分排名"></a>得分排名</h2><p><strong>Elo</strong></p>
+<p>每一场比赛之后调整得分$r’(A)=r(A)+k(S_{A}-\mu_{A})$</p>
+<p>k是固定参数，比赛获胜$S_{A}=1$，反之-1，$\mu_{A}$是预期结果，如果A和B水平相同则为0，但如果几乎认定A会赢，就接近1，如果几乎必输，接近-1</p>
+<p><strong>基于有向图的排名</strong></p>
+<p>A胜B，画一条从A到B的箭头，最优排名的规则是画一个有向图（DAG，没有圈的图）使得违反有向边的顶点数至少</p>
+<p>np完全</p>
+<p><strong>PageRank</strong></p>
+<p>所有网页为顶点，网页之间的超链接为边集的有向图</p>
+<p>被越多网页超链接指向的网页越重要，被越重要的网页超链接指向的网页越重要</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/machine-learning/" class="category-chain-item">machine-learning</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/machine-learning/">#machine-learning</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>大数据复习</div>
+      <div>https://isolator-1.github.io/2024/01/05/ai/大数据复习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 5, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/13/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%BD%91%E7%BB%9C%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E5%A4%8D%E4%B9%A0/" title="网络与系统安全复习">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">网络与系统安全复习</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/05/windows/dll%E7%BA%BF%E7%A8%8B%E6%B3%A8%E5%85%A5/" title="dll线程注入">
+                        <span class="hidden-mobile">dll线程注入</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

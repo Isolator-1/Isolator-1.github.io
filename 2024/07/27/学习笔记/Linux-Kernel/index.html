@@ -1,0 +1,820 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="linux kernel 学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-Kernel#00">
+<meta property="og:url" content="https://isolator-1.github.io/2024/07/27/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="linux kernel 学习笔记">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/1.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/2.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/3.jpg">
+<meta property="article:published_time" content="2024-07-27T13:11:00.000Z">
+<meta property="article:modified_time" content="2024-07-30T13:53:14.179Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="kernel">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/1.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Linux-Kernel#00 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Linux-Kernel#00"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-27 21:11" pubdate>
+          July 27, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-Kernel#00</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>看源码查符号的网站：<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/">https://elixir.bootlin.com/</a></p>
+<p>源码包含如下内容</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/1.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>Documentation：文档，略</li>
+<li>arch：里面每一个文件夹都代表一个体系结构（比如x86，arm64），里面存放了所有和体系结构相关的代码</li>
+<li>block：里面包含“块设备”驱动程序的代码（比如SD卡、机械硬盘、固态硬盘就是块设备，叫块设备是因为只能以“块”为单位进行读写，与之相对的是字节设备驱动）</li>
+<li>crypto：存放许多加密、压缩、CRC校验等算法的源码</li>
+<li>drivers：包含linux内核设备驱动程序的源码，里面每一个文件夹都是一类设备（比如i2c、usb），驱动开发时要用到</li>
+<li>firmware：第三方设备驱动的固件（?)</li>
+<li>fs：各子文件夹内包含不同文件系统的实现（比如squashfs），外面还有一些共用的代码（比如挂载文件系统）</li>
+<li>include：和arch/…/内的include相对，这里存放和平台无关的头文件</li>
+<li>init：包含了内核启动的代码，<code>init/main.c</code>是包含其他各组件的内核核心代码</li>
+<li>ipc：进程间通讯的代码，比如信号量</li>
+<li>kernel：控制内核的代码</li>
+<li>lib：库函数，头文件的实现</li>
+<li>mm：内存管理代码</li>
+<li>net：网络协议代码</li>
+<li>scripts：编译内核的脚本</li>
+<li>security：访问控制（比如ACL）、权限管理、认证</li>
+<li>sound：声卡驱动</li>
+<li>tools：和内核交互的工具</li>
+<li>usr：早期用户空间代码</li>
+<li>virt：存放kvm的代码</li>
+</ul>
+<h2 id="Compile-kernel"><a href="#Compile-kernel" class="headerlink" title="Compile kernel"></a>Compile kernel</h2><p>一个ubuntu14.04，kernel版本是4.4.0</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ubuntu</span>@ubuntu:~$ uname -r<br><span class="hljs-attribute">4</span>.<span class="hljs-number">4</span>.<span class="hljs-number">0</span>-<span class="hljs-number">142</span>-generic<br></code></pre></td></tr></table></figure>
+
+<p>去下一个4.1.1的kernel（<a target="_blank" rel="noopener" href="https://www.kernel.org/%EF%BC%89">https://www.kernel.org/）</a></p>
+<p><a target="_blank" rel="noopener" href="https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.1.1.tar.gz">https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.1.1.tar.gz</a></p>
+<p>解压，进入，<code>make menuconfig</code>配置编译选项，保存到<code>.config</code></p>
+<p><code> make -j$(nproc) bzImage</code>，编译生成内核镜像</p>
+<p>结束之后提示生成了一个<code>./arch/x86/boot/bzImage</code>，但是在x86_64的相同路径下也有一个bzImage，一看发现x86_64这个是x86的那个符号链接。</p>
+<p>bzImage是压缩后的内核文件（即压缩后的vmlinux，vmlinux生成在根目录下）</p>
+<h2 id="Simulation"><a href="#Simulation" class="headerlink" title="Simulation"></a>Simulation</h2><p>有了kernel的bzImage，还需要一个磁盘文件，才能用qemu仿真</p>
+<p>依旧是下载（<a target="_blank" rel="noopener" href="https://busybox.net/%EF%BC%89%EF%BC%8C%E8%A7%A3%E5%8E%8B%EF%BC%8C%E7%84%B6%E5%90%8E%60make">https://busybox.net/），解压，然后`make</a> menuconfig`</p>
+<p>配置里勾选<code>Settings  -&gt;   [*] Build static binary (no shared libs) </code></p>
+<p>创建一个名为fs的镜像并挂载到当前机器上，将编译的busybox写入到镜像中，并且补上proc dev等一些目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">dd</span> <span class="hljs-keyword">if</span>=/dev/zero of=rootfs.img bs=1M count=10<br>mkfs.ext4 rootfs.img<br><span class="hljs-built_in">mkdir</span> fs<br><br>sudo mount -t ext4 -o loop rootfs.img ./fs<br>sudo make install CONFIG_PREFIX=./fs<br><br><span class="hljs-built_in">cd</span> fs<br>sudo <span class="hljs-built_in">mkdir</span> proc dev etc home mnt<br>sudo <span class="hljs-built_in">cp</span> -r ../examples/bootfloppy/etc/* etc/<br><br><span class="hljs-built_in">cd</span> ..<br>sudo <span class="hljs-built_in">chmod</span> -R 777 fs/<br>sudo umount fs<br></code></pre></td></tr></table></figure>
+
+
+
+<p>安装qemu系统仿真</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">sudo apt-<span class="hljs-built_in">get</span> install qemu-<span class="hljs-keyword">system</span>-x86<br>qemu-<span class="hljs-keyword">system</span>-x86_64<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">qemu-system-x86_64 -kernel ./linux-4.1.1/arch/x86/boot/bzImage -hda ./busybox-1.28.4/rootfs.img -append <span class="hljs-string">&quot;root=/dev/sda console=ttyS0&quot;</span> -nographic<br></code></pre></td></tr></table></figure>
+
+<p>指定kernel，文件系统，无图形界面，将输入输出重定向到当前命令行中</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/2.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>内核版本是编译i的4.1.1</p>
+<p><code>ctrl A </code> + <code>X</code> 退出qemu</p>
+<h2 id="Patch-Kernel"><a href="#Patch-Kernel" class="headerlink" title="Patch Kernel"></a>Patch Kernel</h2><p>修改<code>./arch/x86/syscalls/syscall_64.tbl</code>文件，添加一个新的syscall</p>
+<blockquote>
+<p>在<a target="_blank" rel="noopener" href="https://arttnba3.cn/2021/02/21/OS-0X01-LINUX-KERNEL-PART-II/#1-%E5%88%86%E9%85%8D%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%8F%B7">这篇文章</a>写的路径是arch/x86/entry/syscalls/syscall_64.tbl，去看了一下，5.x版本就多了一层叫做entry的目录</p>
+</blockquote>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">1000</span>	<span class="hljs-number">64</span>	mytestsyscall		sys_mytestsyscall<br></code></pre></td></tr></table></figure>
+
+<p>在<code>include/linux/syscalls.h</code>中声明这个系统调用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">asmlinkage <span class="hljs-type">long</span> <span class="hljs-title function_">sys_mytestsyscall</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>在<code>kernel/sys.c</code>中实现这个函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C">SYSCALL_DEFINE0(mytestsyscall)<br>&#123;<br>    printk(<span class="hljs-string">&quot;syscall 1000 called.\n\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="Replace-Kernel"><a href="#Replace-Kernel" class="headerlink" title="Replace Kernel"></a>Replace Kernel</h2><p>编译出bzImage之后</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs vim">sudo <span class="hljs-keyword">make</span> modules<br>sudo <span class="hljs-keyword">make</span> modules_install<br>sudo <span class="hljs-keyword">make</span> install<br>sudo <span class="hljs-keyword">update</span>-initramfs -<span class="hljs-keyword">c</span> -<span class="hljs-keyword">k</span> <span class="hljs-number">4.1</span>.<span class="hljs-number">1</span><br>sudo <span class="hljs-keyword">update</span>-grub<br>sudo apt-<span class="hljs-built_in">get</span> install linux-<span class="hljs-keyword">source</span><br></code></pre></td></tr></table></figure>
+
+<p>在<code>/etc/default/grub</code>里设置一下，开机时长按shift进入切换kernel的界面，切换内核到4.1.1</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs elixir">ubuntu<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>uname -r<br><span class="hljs-number">4.1</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>测试一下之前添加的syscall</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>&#123;<br>    syscall(<span class="hljs-number">1000</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs elixir">ubuntu<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>dmesg | grep <span class="hljs-string">&quot;syscall 1000&quot;</span><br>[  <span class="hljs-number">509.690784</span>] syscall <span class="hljs-number">1000</span> called.<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kernel/">#kernel</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux-Kernel#00</div>
+      <div>https://isolator-1.github.io/2024/07/27/学习笔记/Linux-Kernel/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>July 27, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/09/27/ai/binarized%20network/" title="Binarized Network">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Binarized Network</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/07/23/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/DirtyCow/" title="DirtyCow">
+                        <span class="hidden-mobile">DirtyCow</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

