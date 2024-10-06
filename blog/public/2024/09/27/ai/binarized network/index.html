@@ -16,27 +16,26 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="linux kernel">
+    <meta name="description" content="二值化神经网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux kernel 学习">
-<meta property="og:url" content="https://isolator-1.github.io/2023/05/01/linux%20kernel/linux%20kernel/index.html">
+<meta property="og:title" content="Binarized Network">
+<meta property="og:url" content="https://isolator-1.github.io/2024/09/27/ai/binarized%20network/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="linux kernel">
+<meta property="og:description" content="二值化神经网络">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/kernel/1.jpg">
-<meta property="article:published_time" content="2023-05-01T13:07:00.000Z">
-<meta property="article:modified_time" content="2023-09-14T01:44:32.258Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/AI/binarizednetwork1.jpg">
+<meta property="article:published_time" content="2024-09-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-27T17:02:34.738Z">
 <meta property="article:author" content="Isolator">
-<meta property="article:tag" content="驱动开发">
-<meta property="article:tag" content="kernel漏洞">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/kernel/1.jpg">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/AI/binarizednetwork1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>linux kernel 学习 - Isolator&#39;s Blog</title>
+  <title>Binarized Network - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="linux kernel 学习"></span>
+            <span id="subtitle" data-typed-text="Binarized Network"></span>
           
         </div>
 
@@ -226,8 +225,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-01 21:07" pubdate>
-          May 1, 2023 pm
+        <time datetime="2024-09-27 00:00" pubdate>
+          September 27, 2024 am
         </time>
       </span>
     
@@ -249,7 +248,7 @@
         
         
         
-          11 mins
+          10 mins
         
       </span>
     
@@ -287,34 +286,25 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">linux kernel 学习</h1>
+            <h1 style="display: none">Binarized Network</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="ubuntu源码编译安装"><a href="#ubuntu源码编译安装" class="headerlink" title="ubuntu源码编译安装"></a>ubuntu源码编译安装</h3><p>下载：<a target="_blank" rel="noopener" href="https://www.kernel.org/">https://www.kernel.org</a></p>
-<p>必要的编译环境，禁用证书</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get install gcc g++ clang cmake make flex bison libssl-dev<br>sudo apt-get install openssl<br>sudo apt-get install libssl-dev libelf-dev <br>./scripts/config --disable SYSTEM_TRUSTED_KEYS<br>./scripts/config --disable SYSTEM_REVOCATION_KEYS<br></code></pre></td></tr></table></figure>
+                <h2 id="Binarized-Network"><a href="#Binarized-Network" class="headerlink" title="Binarized Network"></a>Binarized Network</h2><p><strong>前向传播</strong></p>
+<p>把一个正常的NN，所有参数全部二值化，即<code>torch.sign</code>，大于等于0的浮点数全部变成1，否则全是-1；然后输入的样本也同样二值化。</p>
+<p>这时，在进行前向传播时，【做矩阵乘法，对应元素相乘，最后再相加】的这一过程，转换为【对应元素做XNOR操作，然后POPCOUNT操作】。对应点做XNOR的操作是在模拟元素相乘这一步骤，由于都是±1，可以转为逻辑操作；然后POPCOUNT操作是统计某个向量有多少个1（比如一个向量由5个0和3个1构成，那么POPCOUNT操作结果就是3）</p>
+<p><strong>反向传播</strong></p>
+<p>由于一开始有一个sign函数 $q=sign(r)$ ，loss对模型参数求梯度的时候，$\frac{\partial q}{\partial r}$ 梯度一定为0，没法用传统方法求梯度。所以把sign函数近似成Htanh函数。</p>
+<p>$Htanh(x)=Clip(x,-1,1)=max(-1,min(1,x))$函数长这个样子：</p>
+<p><img src="/img/AI/binarizednetwork1.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>求导就转化成了$\frac{\partial \text { loss }}{\partial r}=\frac{\partial \text { loss }}{\partial q} \frac{\partial H \tanh }{\partial r}$</p>
+<p>这样在$r\in [-1,1]$区间内，就有了梯度，梯度是1，其余地方梯度还是0</p>
+<p>(抄自 <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020993594">https://segmentfault.com/a/1190000020993594</a>)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">input</span> = torch.randn(<span class="hljs-number">4</span>, requires_grad = <span class="hljs-literal">True</span>)<br>output = torch.sign(<span class="hljs-built_in">input</span>)<br>loss = output.mean()<br>loss.backward()<br><span class="hljs-built_in">input</span><br>tensor([ <span class="hljs-number">0.9303</span>, -<span class="hljs-number">1.2768</span>,  <span class="hljs-number">0.0069</span>, -<span class="hljs-number">0.0968</span>], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">input</span>.grad<br>tensor([<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>])<br></code></pre></td></tr></table></figure>
 
-<p>编译的配置</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo make menuconfig # 最大化终端，否则图形界面显示不出来，使用默认配置直接save然后exit<br><span class="hljs-meta prompt_"># </span><span class="language-bash">如果不把Enbale loadable module support 勾上，生成的.config就不能modules_install</span><br>sudo make -j4 #代表编译线程个数<br></code></pre></td></tr></table></figure>
-
-<p>安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo make modules_install<br>sudo make install<br></code></pre></td></tr></table></figure>
-
-<p>打开引导菜单</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo gedit /etc/default/grub # 注释hidden项，修改停留时间GRUB_TIMEOUT=10<br>sudo update-grub<br>sudo reboot<br></code></pre></td></tr></table></figure>
-
-<p><img src="/img/kernel/1.jpg" srcset="/img/loading.gif" lazyload></p>
-<p>多出了新安装的6.3.1的kernel</p>
-<p>重启之后<code>uname -ra</code>会发现内核版本变了</p>
-<h3 id="驱动程序编写"><a href="#驱动程序编写" class="headerlink" title="驱动程序编写"></a>驱动程序编写</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//hello.c</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/init.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/module.h&gt;</span></span><br><br>MODULE_LICENSE(<span class="hljs-string">&quot;haidragon BSD/GPL&quot;</span>);<br><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">hello_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>&#123;<br>	printk(KERN_EMERG <span class="hljs-string">&quot;Load Hello World\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-type">static</span> <span class="hljs-type">void</span> hello <span class="hljs-title function_">exit</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    printk(KERN_EMERG <span class="hljs-string">&quot;Remove Hello world\n&quot;</span>);<br>&#125;<br><br>module_init(hello_init);<br>module_exit(hello_exit);<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment">#Makefile</span><br>KDIR:= /lib/modules/6.3.1/build<br><span class="hljs-section">all:</span><br>	make -C <span class="hljs-variable">$(KDIR)</span> M=<span class="hljs-variable">$(PWD)</span> modules<br><span class="hljs-section">clean:</span><br>	rm -f *.ko *.o *.mod.o *.mod.c *.symvers *.order<br></code></pre></td></tr></table></figure>
-
-<p>编译出来的<code>hello.ko</code>，用<code>insmod</code>安装，用<code>rmmod</code>卸载</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo insmod ./hello.ko<br>tail /var/log/kern.log #查看日志<br>sudo rmmod ./hello.ko<br>tail /var/log/kern.log #查看日志<br></code></pre></td></tr></table></figure>
-
+<p>直接算梯度都是0，修改一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">LBSign</span>(torch.autograd.Function):<br><span class="hljs-meta">	@staticmethod</span><br>	<span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">ctx, <span class="hljs-built_in">input</span></span>):<br>        <span class="hljs-keyword">return</span> torch.sign(<span class="hljs-built_in">input</span>)<br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">backward</span>(<span class="hljs-params">ctx, grad_output</span>):<br>        <span class="hljs-keyword">return</span> grad_output.clamp_(-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br><br>sign = LBSign.apply<br>params = torch.randn(<span class="hljs-number">4</span>, requires_grad = <span class="hljs-literal">True</span>)                <br>output = sign(params)<br>loss = output.mean()<br>loss.backward()       <br><br>params.grad<br>tensor(<span class="hljs-number">0.5000</span>, grad_fn=&lt;MeanBackward0&gt;)<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -333,7 +323,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/linux-kernel/" class="category-chain-item">linux kernel</a>
+  <a href="/categories/pytorch/" class="category-chain-item">pytorch</a>
   
   
 
@@ -348,9 +338,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/">#驱动开发</a>
-      
-        <a href="/tags/kernel%E6%BC%8F%E6%B4%9E/">#kernel漏洞</a>
+        <a href="/tags/pytorch/">#pytorch</a>
       
     </div>
   
@@ -362,8 +350,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>linux kernel 学习</div>
-      <div>https://isolator-1.github.io/2023/05/01/linux kernel/linux kernel/</div>
+      <div>Binarized Network</div>
+      <div>https://isolator-1.github.io/2024/09/27/ai/binarized network/</div>
     </div>
     <div class="license-meta">
       
@@ -375,7 +363,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>May 1, 2023</div>
+          <div>September 27, 2024</div>
         </div>
       
       
@@ -407,18 +395,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/10/%E5%9B%BA%E4%BB%B6%E4%BB%BF%E7%9C%9F/ctf-firmware/" title="固件逆向">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">固件逆向</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/03/14/ctf-pwn/%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6/" title="程序保护机制">
-                        <span class="hidden-mobile">程序保护机制</span>
+                      <a href="/2024/07/27/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/" title="Linux-Kernel#00">
+                        <span class="hidden-mobile">Linux-Kernel#00</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
