@@ -155,7 +155,7 @@ sudo apt-get install linux-source
 
 在`/etc/default/grub`里设置一下，开机时长按shift进入切换kernel的界面，切换内核到4.1.1
 
-![](/img/学习笔记/Linux-Kernel/3.jpg)
+![](/img/学习笔记/Linux-Kernel/3.png)
 
 ```
 ubuntu@ubuntu:~$ uname -r
