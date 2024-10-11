@@ -25,9 +25,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/1.jpg">
 <meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/2.jpg">
-<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/3.jpg">
+<meta property="og:image" content="https://isolator-1.github.io/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/3.png">
 <meta property="article:published_time" content="2024-07-27T13:11:00.000Z">
-<meta property="article:modified_time" content="2024-07-30T13:53:14.179Z">
+<meta property="article:modified_time" content="2024-10-06T11:34:52.656Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="kernel">
 <meta name="twitter:card" content="summary_large_image">
@@ -364,7 +364,7 @@
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs vim">sudo <span class="hljs-keyword">make</span> modules<br>sudo <span class="hljs-keyword">make</span> modules_install<br>sudo <span class="hljs-keyword">make</span> install<br>sudo <span class="hljs-keyword">update</span>-initramfs -<span class="hljs-keyword">c</span> -<span class="hljs-keyword">k</span> <span class="hljs-number">4.1</span>.<span class="hljs-number">1</span><br>sudo <span class="hljs-keyword">update</span>-grub<br>sudo apt-<span class="hljs-built_in">get</span> install linux-<span class="hljs-keyword">source</span><br></code></pre></td></tr></table></figure>
 
 <p>在<code>/etc/default/grub</code>里设置一下，开机时长按shift进入切换kernel的界面，切换内核到4.1.1</p>
-<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/3.jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Linux-Kernel/3.png" srcset="/img/loading.gif" lazyload></p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs elixir">ubuntu<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>uname -r<br><span class="hljs-number">4.1</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
 
 
