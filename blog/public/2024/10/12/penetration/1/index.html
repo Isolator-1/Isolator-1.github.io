@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://isolator-1.github.io/img/pene/1.png">
 <meta property="og:image" content="https://isolator-1.github.io/img/pene/2.png">
 <meta property="article:published_time" content="2024-10-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-10-12T10:35:35.267Z">
+<meta property="article:modified_time" content="2024-10-16T02:23:25.642Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="penetration">
 <meta name="twitter:card" content="summary_large_image">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.6k words
+          3.7k words
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          30 mins
+          31 mins
         
       </span>
     
@@ -292,14 +292,14 @@
             
               <div class="markdown-body">
                 
-                <hr>
-<p>title: 2023.11 月赛<br>tags: [ctf-misc]<br>date: 2023-11-25 15:06:00<br>categories: [ctf-misc]<br>excerpt: 月赛writeup</p>
-<hr>
-<h2 id="vulnhub-做题-JANGOW-1-0-1"><a href="#vulnhub-做题-JANGOW-1-0-1" class="headerlink" title="vulnhub 做题 JANGOW: 1.0.1"></a>vulnhub 做题 JANGOW: 1.0.1</h2><h3 id="用vmware开机分配不到ip"><a href="#用vmware开机分配不到ip" class="headerlink" title="用vmware开机分配不到ip"></a>用vmware开机分配不到ip</h3><p>开机时按e进入gnu grub的boot选项配置界面，把linux一行最后的 ro 改成 <code>rw single init=/bin/bash</code>, ctrl+x 保存重启。</p>
+                <h2 id="vulnhub-做题-JANGOW-1-0-1"><a href="#vulnhub-做题-JANGOW-1-0-1" class="headerlink" title="vulnhub 做题 JANGOW: 1.0.1"></a>vulnhub 做题 JANGOW: 1.0.1</h2><h3 id="用vmware开机分配不到ip"><a href="#用vmware开机分配不到ip" class="headerlink" title="用vmware开机分配不到ip"></a>用vmware开机分配不到ip</h3><p>开机时按e进入gnu grub的boot选项配置界面，把linux一行最后的 ro 改成 <code>rw single init=/bin/bash</code>, ctrl+x 保存重启。</p>
 <p>ip addr 可以查看有哪些网卡，然后打开 /etc/network/interfaces 把 primary network interface 里边的网卡替换成已有的。（也不知道这个interfaces里写的网卡是哪里来的，可能是因为我用的vmware不是virtualbox？）</p>
 <p>（还遇到了键盘按/结果出来的是;的问题，也不知道是咋回事😴）</p>
 <p><code>/etc/init.d/networking restart</code>, 然后重启虚拟机</p>
 <p>虽然本来该显示ip的REDE:还是什么都没有， 但是 nmap 已经可以扫到这个主机了</p>
+<blockquote>
+<p>注：ubuntu 17以后，已经没有/etc/network/interfaces，改用netplan，而配置这个netplan，需要修改/etc/netplan/*.yml，然后用netplan apply命令更新。但是由于这个命令会调用systemctl，在单用户下用不了，所以我能想到的方法就是在单用户模式下创建一个新用户，正常登陆进去再配置😶‍🌫️😶‍🌫️😶‍🌫️<del>（虽然感觉很弱智，但我也没找到更好的方法）</del></p>
+</blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs zsh">└─$ nmap -sn 192.168.169.0/24<br>Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-11 03:50 EDT<br>Nmap scan report for 192.168.169.2<br>Host is up (0.00053s latency).<br>Nmap scan report for 192.168.169.128<br>Host is up (0.00035s latency).<br>Nmap scan report for 192.168.169.129<br>Host is up (0.0022s latency).<br>Nmap done: 256 IP addresses (3 hosts up) scanned in 3.03 seconds<br></code></pre></td></tr></table></figure>
 
 <h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs zsh">PORT   STATE SERVICE VERSION<br>21/tcp open  ftp     vsftpd 3.0.3<br>80/tcp open  http    Apache httpd 2.4.18<br>|_http-server-header: Apache/2.4.18 (Ubuntu)<br>| http-ls: Volume /<br>| SIZE  TIME              FILENAME<br>| -     2021-06-10 18:05  site/<br>|_<br>|_http-title: Index of /<br></code></pre></td></tr></table></figure>
