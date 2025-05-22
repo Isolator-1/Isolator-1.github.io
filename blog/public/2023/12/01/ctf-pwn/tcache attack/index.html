@@ -23,12 +23,14 @@
 <meta property="og:site_name" content="Isolator&#39;s Blog">
 <meta property="og:description" content="tcache poisioning, tcache key leak, tcache double free">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://isolator-1.github.io/img/ctf-pwn/tcache_attack/1.jpg">
 <meta property="article:published_time" content="2023-12-01T09:58:00.000Z">
-<meta property="article:modified_time" content="2024-07-23T06:16:46.592Z">
+<meta property="article:modified_time" content="2025-05-22T06:09:23.587Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="ctf-pwn">
 <meta property="article:tag" content="heap">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/ctf-pwn/tcache_attack/1.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -313,7 +315,7 @@
 
 
 <h2 id="tcache-key-泄露"><a href="#tcache-key-泄露" class="headerlink" title="tcache key 泄露"></a>tcache key 泄露</h2><p>在2.29版本以后，chunk被free到tcache之后，fd字段会指向tcache结构体（就是那个0x290的chunk），在free的时候看到bk=tcache，会检查tcache中是否有这个块</p>
-<p>![](/img/ctf-pwn/tcache attack/1.jpg)</p>
+<p><img src="/img/ctf-pwn/tcache_attack/1.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>因此double free之前需要把这个字段给改掉，或者用它来泄露堆地址</p>
 <h3 id="diary"><a href="#diary" class="headerlink" title="diary"></a>diary</h3><h2 id="tcache-double-free"><a href="#tcache-double-free" class="headerlink" title="tcache double free"></a>tcache double free</h2><p>2.26 和 2.27较早的版本是没有double free 检查的，即可以连着2次free同一个chunk</p>
 <h3 id="ciscn-final-3"><a href="#ciscn-final-3" class="headerlink" title="ciscn_final_3"></a>ciscn_final_3</h3><p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#ciscn_2019_final_3">https://buuoj.cn/challenges#ciscn_2019_final_3</a></p>

